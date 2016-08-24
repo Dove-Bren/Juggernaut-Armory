@@ -3,3 +3,15 @@ build.gradle
 bin/
 build/
 eclipse/
+.gradle/
+gradle*
+run/
+forge-1.8.9*
+MinecraftForge-*
+Paulscode*
+CREDITS-fml.txt
+LICENSE-fml.txt
+*.launch
+.settings/
+.metadata/
+.project
