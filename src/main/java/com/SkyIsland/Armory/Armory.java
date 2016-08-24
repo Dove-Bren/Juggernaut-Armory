@@ -7,7 +7,6 @@ import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.items.WeaponItems;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.Mod;
@@ -37,6 +36,9 @@ public class Armory {
     {
         // some example code
         //System.out.println("DIRT BLOCK >> "+Blocks.dirt.getUnlocalizedName());
+
+	    
+	    WeaponItems.initItems();
     }
     
 	@EventHandler
@@ -54,8 +56,6 @@ public class Armory {
 	  	
 	    //init blocks
 	    WhetstoneBlock.preInit(); 
-	    
-	    WeaponItems.initItems();
 	  	
 	}
     

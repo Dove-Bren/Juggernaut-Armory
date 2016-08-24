@@ -33,7 +33,6 @@ public class WhetstoneBlock extends Block {
         //this.setBlockTextureName(Armory.MODID + ":" + unlocalizedName);
         // i think the registry name also doubles as the texture name??
         // nope. 
-        GameRegistry.registerBlock(this, unlocalizedName);
 	}
 	
 }

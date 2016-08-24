@@ -16,7 +16,7 @@ public final class WeaponItems {
 	
 	public static final void initItems() {
 		
-		itemMap = new EnumMap<>(Weapons.class);
+		itemMap = new EnumMap<Weapons, Item>(Weapons.class);
 		
 		itemMap.put(Weapons.BASE, new ConstructedSword("sword_base"));
 		GameRegistry.registerItem(itemMap.get(Weapons.BASE), "sword_base");
