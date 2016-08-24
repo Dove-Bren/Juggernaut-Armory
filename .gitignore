@@ -20,3 +20,8 @@ build
 # other
 eclipse
 run
+build.gradle
+.classpath
+bin/
+build/
+eclipse/

@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "armory",
+  "name": "Armory",
+  "description": "Expanded-Armory Mod",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["dove-bren", "Trigition"],
+  "credits": "",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
