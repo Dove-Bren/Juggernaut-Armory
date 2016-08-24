@@ -3,7 +3,8 @@ package com.SkyIsland.Armory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.SkyIsland.Armory.Blocks.WhetstoneBlock;
+import com.SkyIsland.Armory.blocks.WhetstoneBlock;
+import com.SkyIsland.Armory.items.WeaponItems;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -23,7 +24,7 @@ public class Armory {
 	@Instance(value = Armory.MODID) //Tell Forge what instance to use.
     public static Armory instance;
 	
-    public static final String MODID = "ArmoryMod";
+    public static final String MODID = "armory";
     
     public static final String VERSION = "0.1";
     
@@ -35,14 +36,14 @@ public class Armory {
     public void init(FMLInitializationEvent event)
     {
         // some example code
-        System.out.println("DIRT BLOCK >> "+Blocks.dirt.getUnlocalizedName());
+        //System.out.println("DIRT BLOCK >> "+Blocks.dirt.getUnlocalizedName());
     }
     
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 	  	
-	    Armory.creativeTab = new CreativeTabs("ageoftitans"){
+	    Armory.creativeTab = new CreativeTabs("armory"){
 		    	@Override
 		        @SideOnly(Side.CLIENT)
 		        public Item getTabIconItem(){
@@ -53,6 +54,8 @@ public class Armory {
 	  	
 	    //init blocks
 	    WhetstoneBlock.preInit(); 
+	    
+	    WeaponItems.initItems();
 	  	
 	}
     

@@ -1,4 +1,4 @@
-package com.SkyIsland.Armory.Proxy;
+package com.SkyIsland.Armory.proxy;
 
 public class ClientProxy extends CommonProxy {
 

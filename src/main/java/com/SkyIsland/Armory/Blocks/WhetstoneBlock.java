@@ -1,4 +1,4 @@
-package com.SkyIsland.Armory.Blocks;
+package com.SkyIsland.Armory.blocks;
 
 import com.SkyIsland.Armory.Armory;
 
@@ -28,10 +28,12 @@ public class WhetstoneBlock extends Block {
 		this.blockResistance = 45;
 		this.setStepSound(Block.soundTypeStone);
         //this.setBlockName(unlocalizedName); 1.7 method gone >:(
-		this.setRegistryName(unlocalizedName);
+		this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
         this.setCreativeTab(Armory.creativeTab);
         //this.setBlockTextureName(Armory.MODID + ":" + unlocalizedName);
         // i think the registry name also doubles as the texture name??
+        // nope. 
+        GameRegistry.registerBlock(this, unlocalizedName);
 	}
 	
 }
