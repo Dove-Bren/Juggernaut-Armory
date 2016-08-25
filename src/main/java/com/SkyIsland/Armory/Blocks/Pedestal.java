@@ -35,21 +35,24 @@ public class Pedestal extends BlockContainer {
 		
 		@Override
 		public void writeToNBT(NBTTagCompound tag) {
-			super.writeToNBT(tag);
-			if (heldRig == null)
-				tag.setTag("held", null);
-			else
+			if (heldRig != null)
 				tag.setTag("held", heldRig.getTagCompound());
+
+			super.writeToNBT(tag);
 		}
 		
 		@Override
 		public void readFromNBT(NBTTagCompound tag) {
+			
+			if (tag.hasKey("held")) {
+				NBTTagCompound nbt = tag.getCompoundTag("held");
+				if (nbt != null)
+					ItemStack.loadItemStackFromNBT(nbt);
+				else
+					heldRig = null;
+			}
+
 			super.readFromNBT(tag);
-			NBTTagCompound nbt = tag.getCompoundTag("held");
-			if (nbt != null)
-				ItemStack.loadItemStackFromNBT(nbt);
-			else
-				heldRig = null;
 		}
 		
 		@Override
@@ -60,6 +63,12 @@ public class Pedestal extends BlockContainer {
 		    return new S35PacketUpdateTileEntity(this.pos, 1, tagCompound);
 		}
 		
+		@Override
+		public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+		{
+		    return (oldState.getBlock() != newSate.getBlock());
+		}
+
 	}
 
 	public static Block block;
@@ -73,6 +82,7 @@ public class Pedestal extends BlockContainer {
 		block = new Pedestal();
         
         GameRegistry.registerBlock(block, unlocalizedName);	
+        GameRegistry.registerTileEntity(PedestalTileEntity.class, Armory.MODID + "_" + unlocalizedName);
 		
 	}
 	

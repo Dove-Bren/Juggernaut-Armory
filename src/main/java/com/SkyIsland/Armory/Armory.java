@@ -3,6 +3,7 @@ package com.SkyIsland.Armory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.items.WeaponItems;
 import com.SkyIsland.Armory.proxy.CommonProxy;
@@ -61,7 +62,8 @@ public class Armory {
 		    };
 	  	
 	    //init blocks
-	    WhetstoneBlock.preInit(); 
+	    WhetstoneBlock.preInit();
+	    Pedestal.preInit();
 	  	
 	    proxy.preInit();
 	}
