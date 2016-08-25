@@ -23,7 +23,7 @@ public class Armory {
 	@Instance(value = Armory.MODID) //Tell Forge what instance to use.
     public static Armory instance;
 	
-    public static final String MODID = "armory";
+    public static final String MODID = "skylander_armory";
     
     public static final String VERSION = "0.1";
     
