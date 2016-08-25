@@ -51,7 +51,7 @@ public class Armory {
 	public void preInit(FMLPreInitializationEvent event)
 	{
 	  	
-	    Armory.creativeTab = new CreativeTabs("armory"){
+	    Armory.creativeTab = new CreativeTabs(MODID){
 		    	@Override
 		        @SideOnly(Side.CLIENT)
 		        public Item getTabIconItem(){

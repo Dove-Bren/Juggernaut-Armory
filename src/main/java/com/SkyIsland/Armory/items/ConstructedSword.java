@@ -19,18 +19,25 @@ public class ConstructedSword extends ItemSword {
 	
 	public static ConstructedSword item;
 	
+	private static String name;
+	
 	private static final Item.ToolMaterial BASE_MATERIAL = EnumHelper.addToolMaterial("nullMetal", 1, 1, 1.0F, 1.0F, 1);
 
     public ConstructedSword(String unlocalizedName) {
         super(BASE_MATERIAL);
         item = this;
-        this.setUnlocalizedName(unlocalizedName);
+        this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
         //this.setTextureName(Armory.MODID + ":" + unlocalizedName);
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-        	.register(item, 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "inventory"));
         
         this.setCreativeTab(Armory.creativeTab);
         this.maxStackSize = 1;
+        
+        name = unlocalizedName;
+    }
+    
+    public static void clientInit() {
+    	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+    	.register(item, 0, new ModelResourceLocation(Armory.MODID + ":" + name, "inventory"));
     }
 
     @Override
