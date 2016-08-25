@@ -2,7 +2,7 @@ package com.SkyIsland.Armory.proxy;
 
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
-import com.SkyIsland.Armory.items.ConstructedSword;
+import com.SkyIsland.Armory.items.weapons.ASword;
 
 public class ClientProxy extends CommonProxy {
 
@@ -18,7 +18,7 @@ public class ClientProxy extends CommonProxy {
 	public void init() {
 		WhetstoneBlock.clientInit();
 		Pedestal.clientInit();
-		ConstructedSword.clientInit();
+		ASword.clientInit();
 	}
 
 	/**
