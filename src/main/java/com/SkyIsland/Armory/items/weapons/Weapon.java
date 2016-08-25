@@ -189,4 +189,167 @@ public abstract class Weapon extends Item {
 	    
 	}
 	
+//	/**
+//     * Attacks for the player the targeted entity with the currently equipped item.  The equipped item has hitEntity
+//     * called on it. Args: targetEntity
+//     */
+//    public void attackTargetEntity(EntityPlayer attacker, Entity targetEntity)
+//    {
+//        if (!net.minecraftforge.common.ForgeHooks.onPlayerAttackTarget(attacker, targetEntity)) return;
+//        if (targetEntity.canAttackWithItem())
+//        {
+//            if (!targetEntity.hitByEntity(attacker))
+//            {
+//                float f = (float)attacker.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+//                int i = 0;
+//                float f1 = 0.0F;
+//
+//                if (targetEntity instanceof EntityLivingBase)
+//                {
+//                    f1 = EnchantmentHelper.func_152377_a(attacker.getHeldItem(), ((EntityLivingBase)targetEntity).getCreatureAttribute());
+//                }
+//                else
+//                {
+//                    f1 = EnchantmentHelper.func_152377_a(attacker.getHeldItem(), EnumCreatureAttribute.UNDEFINED);
+//                }
+//
+//                i = i + EnchantmentHelper.getKnockbackModifier(attacker);
+//
+//                if (attacker.isSprinting())
+//                {
+//                    ++i;
+//                }
+//
+//                if (f > 0.0F || f1 > 0.0F)
+//                {
+//                    boolean flag = attacker.fallDistance > 0.0F && !attacker.onGround && !attacker.isOnLadder() && !attacker.isInWater() && !attacker.isPotionActive(Potion.blindness) && attacker.ridingEntity == null && targetEntity instanceof EntityLivingBase;
+//
+//                    if (flag && f > 0.0F)
+//                    {
+//                        f *= 1.5F;
+//                    }
+//
+//                    f = f + f1;
+//                    boolean flag1 = false;
+//                    int j = EnchantmentHelper.getFireAspectModifier(attacker);
+//
+//                    if (targetEntity instanceof EntityLivingBase && j > 0 && !targetEntity.isBurning())
+//                    {
+//                        flag1 = true;
+//                        targetEntity.setFire(1);
+//                    }
+//
+//                    double d0 = targetEntity.motionX;
+//                    double d1 = targetEntity.motionY;
+//                    double d2 = targetEntity.motionZ;
+//                    boolean flag2 = targetEntity.attackEntityFrom(DamageSource.causePlayerDamage(attacker), f);
+//
+//                    if (flag2)
+//                    {
+//                        if (i > 0)
+//                        {
+//                            targetEntity.addVelocity((double)(-MathHelper.sin(attacker.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F), 0.1D, (double)(MathHelper.cos(attacker.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F));
+//                            attacker.motionX *= 0.6D;
+//                            attacker.motionZ *= 0.6D;
+//                            attacker.setSprinting(false);
+//                        }
+//
+//                        if (targetEntity instanceof EntityPlayerMP && targetEntity.velocityChanged)
+//                        {
+//                            ((EntityPlayerMP)targetEntity).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(targetEntity));
+//                            targetEntity.velocityChanged = false;
+//                            targetEntity.motionX = d0;
+//                            targetEntity.motionY = d1;
+//                            targetEntity.motionZ = d2;
+//                        }
+//
+//                        if (flag)
+//                        {
+//                        	attacker.onCriticalHit(targetEntity);
+//                        }
+//
+//                        if (f1 > 0.0F)
+//                        {
+//                        	attacker.onEnchantmentCritical(targetEntity);
+//                        }
+//
+//                        if (f >= 18.0F)
+//                        {
+//                        	attacker.triggerAchievement(AchievementList.overkill);
+//                        }
+//
+//                        attacker.setLastAttacker(targetEntity);
+//
+//                        if (targetEntity instanceof EntityLivingBase)
+//                        {
+//                            EnchantmentHelper.applyThornEnchantments((EntityLivingBase)targetEntity, attacker);
+//                        }
+//
+//                        EnchantmentHelper.applyArthropodEnchantments(attacker, targetEntity);
+//                        ItemStack itemstack = attacker.getCurrentEquippedItem();
+//                        Entity entity = targetEntity;
+//
+//                        if (targetEntity instanceof EntityDragonPart)
+//                        {
+//                            IEntityMultiPart ientitymultipart = ((EntityDragonPart)targetEntity).entityDragonObj;
+//
+//                            if (ientitymultipart instanceof EntityLivingBase)
+//                            {
+//                                entity = (EntityLivingBase)ientitymultipart;
+//                            }
+//                        }
+//
+//                        if (itemstack != null && entity instanceof EntityLivingBase)
+//                        {
+//                            itemstack.hitEntity((EntityLivingBase)entity, attacker);
+//
+//                            if (itemstack.stackSize <= 0)
+//                            {
+//                            	attacker.destroyCurrentEquippedItem();
+//                            }
+//                        }
+//
+//                        if (targetEntity instanceof EntityLivingBase)
+//                        {
+//                        	attacker.addStat(StatList.damageDealtStat, Math.round(f * 10.0F));
+//
+//                            if (j > 0)
+//                            {
+//                                targetEntity.setFire(j * 4);
+//                            }
+//                        }
+//
+//                        attacker.addExhaustion(0.3F);
+//                    }
+//                    else if (flag1)
+//                    {
+//                        targetEntity.extinguish();
+//                    }
+//                }
+//            }
+//        }
+//        
+//        
+//    }
+
+	public float getAttackDamage() {
+		return attackDamage;
+	}
+
+	public float getSwingSpeed() {
+		return swingSpeed;
+	}
+
+	public boolean isCanBlock() {
+		return canBlock;
+	}
+
+	public float getBlockReduction() {
+		return blockReduction;
+	}
+
+	public DamageType getDamageType() {
+		return damageType;
+	}
+	
 }
