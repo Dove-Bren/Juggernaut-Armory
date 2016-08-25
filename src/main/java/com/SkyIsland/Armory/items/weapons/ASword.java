@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.items.weapons;
 
+import java.util.List;
+
 import com.SkyIsland.Armory.Armory;
 
 import net.minecraft.client.Minecraft;
@@ -7,12 +9,11 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class ASword extends Weapon {
 
-	//gonna be abstract. just wanna figure out sword stuff for now
-	
 	public static ASword item;
 	
 	private static String name;
@@ -20,10 +21,18 @@ public class ASword extends Weapon {
     public ASword(String unlocalizedName) {
         super();
         item = this;
+        
+        //forge setup
         this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
-        //this.setTextureName(Armory.MODID + ":" + unlocalizedName);
         
         this.maxStackSize = 1;
+
+        /////////////param setup
+
+        canBlock = true;
+        blockReduction = 0.2f;
+        
+        //////////////////////
         
         name = unlocalizedName;
     }
@@ -32,13 +41,6 @@ public class ASword extends Weapon {
     	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
     	.register(item, 0, new ModelResourceLocation(Armory.MODID + ":" + name, "inventory"));
     }
-
-//    @Override
-//    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean bool) {
-//        list.add("Dynamic b");
-//        list.add("its user to zip around the world as if");
-//        list.add("they were flying. Requires CR2 as fuel.");
-//    }
 
 //    @Override
 //    public boolean onItemUse(ItemStack tool,

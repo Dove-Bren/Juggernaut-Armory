@@ -1,6 +1,9 @@
 package com.SkyIsland.Armory.items.weapons;
 
+import java.util.List;
+
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.mechanics.DamageType;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.block.Block;
@@ -14,6 +17,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,15 +30,42 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class Weapon extends Item {
 
-	private float attackDamage;
+	/**
+	 * Damage inflicted per hit
+	 */
+	protected float attackDamage;
+	
+	/**
+	 * Number of seconds it takes to swing and be able to swing again. 0.0f results
+	 * in no change in swing speed
+	 */
+	protected float swingSpeed;
+	
+	protected boolean canBlock;
+	
+	/**
+	 * Percentage of damage reduced. If a negative number, the damage is rounded
+	 * to an integer and reduced as a constant
+	 */
+	protected float blockReduction;
+	
+	protected DamageType damageType;
 
-    public Weapon()
-    {
+    protected Weapon() {
+    	this(1.0f, 1.0f, false, 0.0f, DamageType.SLASH);
+    }
+    
+    protected Weapon(float attackDamage, float swingSpeed, boolean canBlock, float blockReduction, DamageType damageType) {
 //        this.maxStackSize = 1;
 //      this.setMaxDamage(material.getMaxUses());
 //      this.setCreativeTab(CreativeTabs.tabCombat);
 //      this.attackDamage = 4.0F + material.getDamageVsEntity();
         this.setCreativeTab(Armory.creativeTab);
+        this.attackDamage = attackDamage;
+        this.swingSpeed = swingSpeed;
+        this.canBlock = canBlock;
+        this.blockReduction = blockReduction;
+        this.damageType = damageType;
     }
 
     /**
@@ -144,5 +175,18 @@ public abstract class Weapon extends Item {
         multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier", (double)this.attackDamage, 0));
         return multimap;
     }
+    
+    /**
+     * Add default item lore stuff
+     */
+	@Override
+	public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean bool) {
+		list.add(EnumChatFormatting.DARK_RED + "Attack Damage: " + EnumChatFormatting.RESET + attackDamage);
+		list.add(EnumChatFormatting.GOLD + "Damage Type: " + EnumChatFormatting.RESET + damageType);
+		if (Math.abs(swingSpeed) < 0.001) {
+			list.add(EnumChatFormatting.DARK_GREEN + "Swing Speed: " + EnumChatFormatting.RESET + "+" + String.format("%.2f", 1.0f + swingSpeed) + "%");
+		}
+	    
+	}
 	
 }
