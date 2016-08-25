@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.mechanics;
 
+import com.SkyIsland.Armory.items.weapons.Weapon;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -8,7 +10,11 @@ import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.potion.Potion;
 import net.minecraft.stats.AchievementList;
@@ -109,11 +115,60 @@ public class ArmorModificationManager {
 //		
 //	}
 	
+	private float calculateProtection(Entity attacker, EntityLivingBase target) {
+		ItemStack inHand = null;
+		if (attacker instanceof EntityLivingBase) {
+			EntityLivingBase living = (EntityLivingBase) attacker;
+			inHand = living.getHeldItem();
+		}
+		
+		DamageType type;
+		
+		if (attacker instanceof EntityArrow) {
+			type = DamageType.PIERCE;
+		}
+		else if (inHand == null)
+			type = DamageType.SLASH;
+		else if (inHand.getItem() instanceof Weapon) {
+			type = ((Weapon) inHand.getItem()).getDamageType();
+		} else {
+			//something else
+			//swords are slash, axe are slash? crush? Regular items are crush?
+			Item item = inHand.getItem();
+			if (item instanceof ItemSword)
+				type = DamageType.SLASH;
+			else if (item instanceof ItemAxe)
+				type = DamageType.SLASH;
+			else if (item.getRegistryName().toLowerCase().contains("shovel"))
+				type = DamageType.CRUSH;
+			else if (item.getRegistryName().toLowerCase().contains("arrow"))
+				type = DamageType.PIERCE;
+			else
+				type = DamageType.CRUSH;
+		}
+		
+		ExtendedArmor armor = ExtendedArmor.get(event.entityLiving);
+		if (armor == null) {
+			//no extended attributes!
+			return;
+		}
+		
+		
+		
+		float protection = armor.getProtection(type);
+	}
+	
 	@EventHandler
-	public void onHitEntity(AttackEntityEvent event) {
+	public void onPlayerHitEntity(AttackEntityEvent event) {
+		if (event.isCanceled())
+			return;
 		
 		//Code from EntityPlayer's attackEntityWithCurrentItem method
 		event.setCanceled(true);
+		
+		//This only calculates the strength of the attack. IT doesn't
+		//do protection or anything like that!
+		
 		
 		Entity targetEntity = event.target;
 		if (targetEntity .canAttackWithItem())
