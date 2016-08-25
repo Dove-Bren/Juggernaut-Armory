@@ -1,4 +1,4 @@
-package com.SkyIsland.Armory.items;
+package com.SkyIsland.Armory.items.weapons.components;
 
 import net.minecraft.item.Item;
 
