@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "skylander_armory:blocks/whetstone_block"
+    }
+}

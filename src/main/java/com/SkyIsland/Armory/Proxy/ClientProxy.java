@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.proxy;
 
+import com.SkyIsland.Armory.blocks.WhetstoneBlock;
+
 public class ClientProxy extends CommonProxy {
 
 	/**
@@ -9,13 +11,18 @@ public class ClientProxy extends CommonProxy {
 	public void preInit() {
 	    // register my Items, Blocks, Entities, etc
 	}
+	
+	@Override
+	public void init() {
+		WhetstoneBlock.init();
+	}
 
 	/**
 	 * Do your mod setup. Build whatever data structures you care about. Register recipes,
 	 * send FMLInterModComms messages to other mods.
 	 */
 	public void load() {
-	  // register my Recipies
+		// register my Recipies
 	}
 
 	/**
