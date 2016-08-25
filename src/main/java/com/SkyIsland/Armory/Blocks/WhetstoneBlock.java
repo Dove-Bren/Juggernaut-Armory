@@ -4,6 +4,9 @@ import com.SkyIsland.Armory.Armory;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class WhetstoneBlock extends Block {
@@ -18,8 +21,13 @@ public class WhetstoneBlock extends Block {
 	
 		block = new WhetstoneBlock();
         
-        GameRegistry.registerBlock(block, unlocalizedName);		
+        GameRegistry.registerBlock(block, unlocalizedName);	
 		
+	}
+	
+	public static void init() {
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+		.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
 	}
 	
 	public WhetstoneBlock() {

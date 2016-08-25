@@ -9,6 +9,10 @@ public class CommonProxy  {
 	  {
 
 	  }
+	  
+	  public void init() {
+		  
+	  }
 
 	  /**
 	   * Do your mod setup. Build whatever data structures you care about. Register recipes,

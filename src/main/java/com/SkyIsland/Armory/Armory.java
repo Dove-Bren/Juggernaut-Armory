@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.items.WeaponItems;
+import com.SkyIsland.Armory.proxy.CommonProxy;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -12,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,6 +24,9 @@ public class Armory {
 
 	@Instance(value = Armory.MODID) //Tell Forge what instance to use.
     public static Armory instance;
+	
+    @SidedProxy(clientSide="com.SkyIsland.Armory.proxy.ClientProxy", serverSide="com.SkyIsland.Armory.proxy.CommonProxy")
+    public static CommonProxy proxy;
 	
     public static final String MODID = "skylander_armory";
     
@@ -39,6 +44,7 @@ public class Armory {
 
 	    
 	    WeaponItems.initItems();
+	    proxy.init();
     }
     
 	@EventHandler
@@ -57,6 +63,7 @@ public class Armory {
 	    //init blocks
 	    WhetstoneBlock.preInit(); 
 	  	
+	    proxy.preInit();
 	}
     
     //Event handling and registration stuff from Age of Titans
