@@ -51,7 +51,10 @@ public class Armory {
 	    ArmorItems.initItems();
 	    proxy.init();
 	    
-	    ArmorModificationManager.init(0.05f);
+	    float armorRate = 0.05f;
+	    float defaultRate = 0.70f;
+	    
+	    ArmorModificationManager.init(armorRate, defaultRate);
 	    ArmorManager.init();
     }
     

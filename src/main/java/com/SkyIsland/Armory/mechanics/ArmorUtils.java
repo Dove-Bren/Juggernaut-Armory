@@ -1,5 +1,6 @@
 package com.SkyIsland.Armory.mechanics;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 import com.SkyIsland.Armory.api.ArmorManager;
@@ -53,7 +54,19 @@ public final class ArmorUtils {
 	 */
 	private static Map<DamageType, Float> getVanillaValues(ItemStack armor) {
 		ItemArmor item = (ItemArmor) armor.getItem();
-		float rawPoints = (float) item.damageReduceAmount;
+		float points = (float) item.damageReduceAmount;
+		
+		points *= ArmorModificationManager.instance().defaultSplitRate;
+		
+		Map<DamageType, Float> map = new EnumMap<DamageType, Float>(DamageType.class);
+		
+		for (DamageType type : DamageType.values())
+		if (type.isByDefault())
+			map.put(type, points);
+		else
+			map.put(type, 0.0f);
+		
+		return map;
 	}
 	
 	/**

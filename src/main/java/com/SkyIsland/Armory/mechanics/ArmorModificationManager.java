@@ -45,12 +45,15 @@ public class ArmorModificationManager {
 	
 	private float armorRate;
 	
-	private ArmorModificationManager(float armorRate) {
+	public final float defaultSplitRate;
+	
+	private ArmorModificationManager(float armorRate, float defaultRate) {
 		this.armorRate = armorRate;
+		this.defaultSplitRate = defaultRate;
 	}
 	
-	public static final void init(float armorRate) {
-		instance = new ArmorModificationManager(armorRate);
+	public static final void init(float armorRate, float defaultRate) {
+		instance = new ArmorModificationManager(armorRate, defaultRate);
 		
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
