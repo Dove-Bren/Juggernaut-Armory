@@ -232,10 +232,12 @@ public class ArmorModificationManager {
 		
 		for (int i = 0; i < 4; i++) {
 			ItemStack armor = event.entityLiving.getCurrentArmor(i);
-			if (armor.getItem() instanceof Armor) {
-				((Armor) armor.getItem()).damage(event.entityLiving, armor, type);
-			} else {
-				armor.damageItem(damage, event.entityLiving);
+			if (armor != null) {
+				if (armor.getItem() instanceof Armor) {
+					((Armor) armor.getItem()).damage(event.entityLiving, armor, type);
+				} else {
+					armor.damageItem(damage, event.entityLiving);
+				}
 			}
 		}
 	}

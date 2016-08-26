@@ -90,6 +90,9 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 		if (type == null)
 			return 0.0f;
 		
+		refresh();
+		
+		System.out.println("Protection: " + armorMap.get(type));
 		return armorMap.get(type);
 	}
 	

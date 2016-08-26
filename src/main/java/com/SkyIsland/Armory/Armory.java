@@ -8,6 +8,7 @@ import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.WeaponItems;
+import com.SkyIsland.Armory.listeners.ItemListener;
 import com.SkyIsland.Armory.mechanics.ArmorModificationManager;
 import com.SkyIsland.Armory.proxy.CommonProxy;
 
@@ -38,7 +39,9 @@ public class Armory {
     
     public static Logger logger = LogManager.getLogger(MODID);
     
-    public static CreativeTabs creativeTab;		
+    public static CreativeTabs creativeTab;	
+    
+    public static ItemListener itemLister;
  
     @EventHandler
     public void init(FMLInitializationEvent event)
@@ -56,6 +59,8 @@ public class Armory {
 	    
 	    ArmorModificationManager.init(armorRate, defaultRate);
 	    ArmorManager.init();
+	    
+	    Armory.itemLister = new ItemListener();
     }
     
 	@EventHandler

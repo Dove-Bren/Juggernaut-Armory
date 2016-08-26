@@ -1,8 +1,8 @@
 package com.SkyIsland.Armory.api;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.SkyIsland.Armory.mechanics.DamageType;
 
@@ -57,7 +57,7 @@ public class ArmorManager {
 	}
 	
 	private ArmorManager() {
-		records = new TreeMap<ItemArmor, ArmorRecord>();
+		records = new HashMap<ItemArmor, ArmorRecord>();
 	}
 	
 	/**
