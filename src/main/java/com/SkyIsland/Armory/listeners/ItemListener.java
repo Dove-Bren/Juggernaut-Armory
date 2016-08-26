@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 
+import com.SkyIsland.Armory.chat.ChatFormat;
 import com.SkyIsland.Armory.mechanics.ArmorUtils;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
@@ -50,8 +51,8 @@ public class ItemListener {
 	}
 	
 	private static String formatProtection(DamageType type, float prot) {
-		return type.toString() + ": "
-				+ String.format("%.2f", prot);
+		return ChatFormat.ARMOR.wrap(
+				type.toString() + ": " + String.format("%.2f", prot));
 		//instead of prot, maybe do actual reduction? (based on client config?)
 		//TODO
 	}

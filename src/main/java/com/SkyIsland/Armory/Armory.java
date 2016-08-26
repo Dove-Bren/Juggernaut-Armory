@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.SkyIsland.Armory.api.ArmorManager;
+import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.items.ArmorItems;
@@ -59,6 +60,7 @@ public class Armory {
 	    
 	    ArmorModificationManager.init(armorRate, defaultRate);
 	    ArmorManager.init();
+	    WeaponManager.init();
 	    
 	    Armory.itemLister = new ItemListener();
     }
