@@ -121,7 +121,7 @@ public abstract class Armor extends ItemArmor {
 	 * are guaranteed to be non-null.
 	 * @return
 	 */
-	protected abstract Map<DamageType, Float> getProtectionMap(ItemStack stack);
+	public abstract Map<DamageType, Float> getProtectionMap(ItemStack stack);
 	
 	/**
 	 * Returns all armor pieces that are a part of this piece of armor.

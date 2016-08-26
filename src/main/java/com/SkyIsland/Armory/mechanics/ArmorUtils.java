@@ -25,7 +25,7 @@ public final class ArmorUtils {
 		//check to see if it's some of our custom armors
 		if (armor.getItem() instanceof Armor)
 			return getCustomValues(armor);
-		else if (ArmorManager.instance().hasArmorRegistered((ItemArmor) armor.getItem()) )
+		else if (ArmorManager.instance() != null && ArmorManager.instance().hasArmorRegistered((ItemArmor) armor.getItem()) )
 			return getDefinedValues(armor);
 		else
 			return getVanillaValues(armor);
@@ -39,7 +39,14 @@ public final class ArmorUtils {
 	 * @see {@code ArmorManager}
 	 */
 	private static Map<DamageType, Float> getDefinedValues(ItemStack armor) {
+		ItemArmor base = (ItemArmor) armor.getItem();
 		
+		Map<DamageType, Float> map = new EnumMap<DamageType, Float>(DamageType.class);
+		
+		for (DamageType type : DamageType.values())
+			map.put(type, ArmorManager.instance().getProtection(base, type));
+		
+		return map;
 	}
 
 	/**
@@ -76,6 +83,8 @@ public final class ArmorUtils {
 	 * @return
 	 */
 	private static Map<DamageType, Float> getCustomValues(ItemStack armor) {
+		Armor base = (Armor) armor.getItem();
 		
+		return base.getProtectionMap(armor);
 	}
 }

@@ -271,7 +271,7 @@ public class ArmorTorso extends Armor {
 	}
 
 	@Override
-	protected Map<DamageType, Float> getProtectionMap(ItemStack stack) {
+	public Map<DamageType, Float> getProtectionMap(ItemStack stack) {
 		Map<DamageType, Float> map = new EnumMap<DamageType, Float>(DamageType.class);
 		
 		//for (DamageType key : DamageType.values()) loop once, not multiple times
