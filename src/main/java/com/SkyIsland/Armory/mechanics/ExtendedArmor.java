@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -93,8 +94,20 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 	}
 	
 	public void refresh() {
+		//reset armor map
+		for (DamageType key : DamageType.values())
+			armorMap.put(key, 0.0f);
+		
 		//go through equip'ed items and update protection values
-		!
+		for (int i = 0; i < 4; i++) {
+			ItemStack equip = entity.getEquipmentInSlot(i + 1);
+			if (equip == null)
+				continue;
+			
+			Map<DamageType, Float> protection = ArmorUtils.getValues(equip);
+			for (DamageType key : DamageType.values())
+				armorMap.put(key, armorMap.get(key) + protection.get(key));
+		}
 	}
 	
 	public static void refresh(EntityLivingBase entity) {
