@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class ExtendedArmor implements IExtendedEntityProperties {
 
-	private static final String PROP_KEY = "ARMOR_EXTENDED";
+	private static final String PROP_KEY = "ArmorValues";
 	
 	private final EntityLivingBase entity;
 	
@@ -92,7 +92,6 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 		
 		refresh();
 		
-		System.out.println("Protection: " + armorMap.get(type));
 		return armorMap.get(type);
 	}
 	

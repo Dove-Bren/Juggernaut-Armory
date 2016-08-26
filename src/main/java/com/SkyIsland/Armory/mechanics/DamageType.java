@@ -1,5 +1,8 @@
 package com.SkyIsland.Armory.mechanics;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 public enum DamageType {
 	
 	SLASH("Slashing", true, true, true),
@@ -55,5 +58,18 @@ public enum DamageType {
 
 	public boolean isVisible() {
 		return visible;
+	}
+	
+	/**
+	 * Creates an enummap with each damage type initialized to 0.0f
+	 * @return
+	 */
+	public static Map<DamageType, Float> freshMap() {
+		Map<DamageType, Float> map = new EnumMap<DamageType, Float>(DamageType.class);
+		
+		for (DamageType key : values())
+			map.put(key, 0.0f);
+		
+		return map;
 	}
 }
