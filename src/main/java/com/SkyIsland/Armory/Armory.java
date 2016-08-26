@@ -47,6 +47,7 @@ public class Armory {
 
 	    
 	    WeaponItems.initItems();
+	    ArmorItems.initItems();
 	    proxy.init();
 	    
 	    ArmorModificationManager.init(0.05f);

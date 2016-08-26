@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public final class WeaponItems {
 
 	public static enum Weapons {
-		BASE;
+		SWORD;
 	}
 	
 	private static Map<Weapons, Item> itemMap;
@@ -20,9 +20,13 @@ public final class WeaponItems {
 		
 		itemMap = new EnumMap<Weapons, Item>(Weapons.class);
 		
-		itemMap.put(Weapons.BASE, new ASword("sword_base"));
-		GameRegistry.registerItem(itemMap.get(Weapons.BASE), "sword_base");
+		itemMap.put(Weapons.SWORD, new ASword("sword_base"));
+		GameRegistry.registerItem(itemMap.get(Weapons.SWORD), "sword_base");
 		
+	}
+	
+	public Item getWeaponBase(Weapons baseType) {
+		return itemMap.get(baseType);
 	}
 	
 }
