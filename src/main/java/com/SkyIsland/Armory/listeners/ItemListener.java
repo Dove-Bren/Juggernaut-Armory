@@ -1,6 +1,7 @@
 package com.SkyIsland.Armory.listeners;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -57,6 +59,21 @@ public class ItemListener {
 			} else if (stack.getItem() instanceof ItemSword ||
 					stack.getAttributeModifiers().containsKey(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName())) {
 				//weapon, from what it looks
+				
+				//remove attack damage line if it exists
+				if (!event.toolTip.isEmpty()) {
+				Iterator<String> it = event.toolTip.iterator();
+				while (it.hasNext()) {
+					String line = it.next();
+					if (line.contains(
+							StatCollector.translateToLocal("attribute.name." + (String) SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName())
+							)) {
+						it.remove();
+						break;
+					}
+				}
+				}
+				
 				float damageBoost = getDamageModifier(stack);
 				
 				Map<DamageType, Float> damageMap = WeaponUtils.getValues(stack, damageBoost);
@@ -84,7 +101,7 @@ public class ItemListener {
 	
 	private static float getDamageModifier(ItemStack stack) {
 		if (stack.getItem() instanceof ItemSword)
-			return ((ItemSword) stack.getItem()).getDamageVsEntity();
+			return ((ItemSword) stack.getItem()).getDamageVsEntity() + 4.0f; //4.0 constant from vanilla mechanics.
 		
 		float total = 0.0f;
 		Collection<AttributeModifier> modifiers = stack.getAttributeModifiers().get(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName());

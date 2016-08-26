@@ -102,12 +102,14 @@ public final class WeaponUtils {
 		
 			Item item = weapon.getItem();
 			String lower_name = item.getUnlocalizedName().toLowerCase();
-			System.out.println(lower_name);
 			if (item instanceof ItemSword)
 				map.put(DamageType.SLASH, defaultDamage);
 			else if (lower_name.contains("arrow"))
 				map.put(DamageType.PIERCE, defaultDamage);
-			else if (lower_name.contains("axe") || lower_name.contains("hatchet")) {
+			else if (lower_name.contains("pickaxe")) {
+				map.put(DamageType.PIERCE, defaultDamage * 0.5f);
+				map.put(DamageType.CRUSH, defaultDamage * 0.5f);
+			} else if (lower_name.contains("axe") || lower_name.contains("hatchet")) {
 				map.put(DamageType.SLASH, defaultDamage * 0.5f);
 				map.put(DamageType.CRUSH, defaultDamage * 0.5f);
 			} else if (lower_name.contains("shovel") || lower_name.contains("spade"))
