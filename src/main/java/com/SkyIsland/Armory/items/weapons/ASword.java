@@ -1,30 +1,19 @@
 package com.SkyIsland.Armory.items.weapons;
 
-import java.util.List;
-
-import com.SkyIsland.Armory.Armory;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class ASword extends Weapon {
 
 	public static ASword item;
 	
-	private static String name;
-	
     public ASword(String unlocalizedName) {
-        super();
+        super(unlocalizedName);
         item = this;
         
         //forge setup
-        this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
-        
         this.maxStackSize = 1;
 
         /////////////param setup
@@ -32,14 +21,6 @@ public class ASword extends Weapon {
         canBlock = true;
         blockReduction = 0.2f;
         
-        //////////////////////
-        
-        name = unlocalizedName;
-    }
-    
-    public static void clientInit() {
-    	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-    	.register(item, 0, new ModelResourceLocation(Armory.MODID + ":" + name, "inventory"));
     }
 
 //    @Override

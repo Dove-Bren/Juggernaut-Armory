@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -12,23 +13,18 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class ExtendedArmor implements IExtendedEntityProperties {
 
-	private static final String PROP_KEY = "ARMOR_EXTENDED";
+	private static final String PROP_KEY = "ArmorValues";
 	
 	private final EntityLivingBase entity;
 	
 	private Map<DamageType, Float> armorMap;
 	
 	private ExtendedArmor(EntityLivingBase entity) {
-		this(entity, 0.0f, 0.0f, 0.0f);
-	}
-	
-	private ExtendedArmor(EntityLivingBase entity, float slash, float pierce, float crush) {
 		this.entity = entity;
 		armorMap = new EnumMap<DamageType, Float>(DamageType.class);
 		
-		armorMap.put(DamageType.SLASH, slash);
-		armorMap.put(DamageType.PIERCE, pierce);
-		armorMap.put(DamageType.CRUSH, crush);
+		for (DamageType key : DamageType.values())
+			armorMap.put(key, 0.0f);
 	}
 	
 	@Override
@@ -44,6 +40,9 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
+		if (!compound.hasKey(PROP_KEY, NBT.TAG_COMPOUND))
+			return;
+		
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(PROP_KEY);
 
 		for (DamageType key : armorMap.keySet()) {
@@ -69,16 +68,55 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 	}
 	
 	/**
-	* Returns ExtendedArmor properties for entity
-	* This method is for convenience only; it will make your code look nicer
+	* Returns ExtendedArmor properties for entity.
+	* If the entity doesn't have defined armor, a default is created with 0's for
+	* protection values
+	* @see #ExtendedArmor(EntityLivingBase)
 	*/
-	public static final ExtendedArmor get(EntityLivingBase entity)
+	public static final ExtendedArmor get(EntityLivingBase entity, boolean create)
 	{
-		return (ExtendedArmor) entity.getExtendedProperties(PROP_KEY);
+		IExtendedEntityProperties prop = entity.getExtendedProperties(PROP_KEY);
+		if (prop == null && create)
+			prop = new ExtendedArmor(entity);
+		return (ExtendedArmor) (prop); 
 	}
 	
+	/**
+	 * Returns the protection to the given type.
+	 * @param type Type of damage to get protection for
+	 * @return the protection. If type is null, returns 0.0
+	 */
 	public float getProtection(DamageType type) {
+		if (type == null)
+			return 0.0f;
+		
+		refresh();
+		
 		return armorMap.get(type);
+	}
+	
+	public void refresh() {
+		//reset armor map
+		for (DamageType key : DamageType.values())
+			armorMap.put(key, 0.0f);
+		
+		
+		
+		//go through equip'ed items and update protection values
+		for (int i = 0; i < 4; i++) {
+			ItemStack equip = entity.getEquipmentInSlot(i + 1);
+			if (equip == null)
+				continue;
+			
+			Map<DamageType, Float> protection = ArmorUtils.getValues(equip);
+			for (DamageType key : DamageType.values())
+				armorMap.put(key, armorMap.get(key) + protection.get(key));
+		}
+	}
+	
+	public static void refresh(EntityLivingBase entity) {
+		ExtendedArmor instance = get(entity, true);
+		instance.refresh();
 	}
 
 }

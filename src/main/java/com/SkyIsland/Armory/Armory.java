@@ -3,9 +3,14 @@ package com.SkyIsland.Armory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.SkyIsland.Armory.api.ArmorManager;
+import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
+import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.WeaponItems;
+import com.SkyIsland.Armory.listeners.ItemListener;
+import com.SkyIsland.Armory.mechanics.ArmorModificationManager;
 import com.SkyIsland.Armory.proxy.CommonProxy;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -35,7 +40,9 @@ public class Armory {
     
     public static Logger logger = LogManager.getLogger(MODID);
     
-    public static CreativeTabs creativeTab;		
+    public static CreativeTabs creativeTab;	
+    
+    public static ItemListener itemLister;
  
     @EventHandler
     public void init(FMLInitializationEvent event)
@@ -45,7 +52,17 @@ public class Armory {
 
 	    
 	    WeaponItems.initItems();
+	    ArmorItems.initItems();
 	    proxy.init();
+	    
+	    float armorRate = 0.05f;
+	    float defaultRate = 0.70f;
+	    
+	    ArmorModificationManager.init(armorRate, defaultRate);
+	    ArmorManager.init();
+	    WeaponManager.init();
+	    
+	    Armory.itemLister = new ItemListener();
     }
     
 	@EventHandler

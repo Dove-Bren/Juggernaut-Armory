@@ -1,5 +1,9 @@
 package com.SkyIsland.Armory.mechanics;
 
+import java.util.Map;
+
+import com.SkyIsland.Armory.items.armor.Armor;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,8 +21,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Stores map with all players in it and their respective armor, for lookups to
@@ -34,23 +40,28 @@ public class ArmorModificationManager {
 		return instance;
 	}
 	
-	private ArmorModificationManager() {
-		
+	private float armorRate;
+	
+	public final float defaultSplitRate;
+	
+	private ArmorModificationManager(float armorRate, float defaultRate) {
+		this.armorRate = armorRate;
+		this.defaultSplitRate = defaultRate;
 	}
 	
-	public static final void init() {
-		instance = new ArmorModificationManager();
+	public static final void init(float armorRate, float defaultRate) {
+		instance = new ArmorModificationManager(armorRate, defaultRate);
 		
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
 	
-	@EventHandler
+	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)
 	{
 		/*
 		Be sure to check if the entity being constructed is the correct type for the extended properties you're about to add! The null check may not be necessary - I only use it to make sure properties are only registered once per entity
 		*/
-		if (event.entity instanceof EntityLivingBase && ExtendedArmor.get((EntityLivingBase) event.entity) == null)
+		if (event.entity instanceof EntityLivingBase && ExtendedArmor.get((EntityLivingBase) event.entity, false) == null)
 		// This is how extended properties are registered using our convenient method from earlier
 			ExtendedArmor.register((EntityLivingBase) event.entity);
 		// That will call the constructor as well as cause the init() method
@@ -109,11 +120,92 @@ public class ArmorModificationManager {
 //		
 //	}
 	
-	@EventHandler
-	public void onHitEntity(AttackEntityEvent event) {
+	private float calculateProtection(EntityLivingBase target, DamageType type) {
+		ExtendedArmor armor = ExtendedArmor.get(target, false);
+		if (armor == null) {
+			//no extended attributes!
+			return 0.0f;
+		}
+		
+		return armor.getProtection(type);
+	}
+	
+	@SubscribeEvent(priority=EventPriority.LOWEST)
+	public void onEntityHurt(LivingHurtEvent event) {
+		//here we calculate damage with out armor values
+		
+		//NOTE: bypassing armor means that damage will not be modified
+		//      through vanilla mechanics from armor.
+		event.source.setDamageBypassesArmor();
+		
+		//NOTE: damage reduction to potion effects and enchantments
+		//      is still done in the living entity class.
+		//      To turn off, we'd call event.source.setDamageIsAbsolute()
+		
+		//DamageType type = calculateDamageType(event.source, event.entityLiving);
+		//get damage values
+//		ItemStack inHand = null;
+//		if (event.source.getEntity() != null &&
+//				event.source.getEntity() instanceof EntityLivingBase) {
+//			EntityLivingBase living = (EntityLivingBase) event.source.getEntity();
+//			inHand = living.getHeldItem();
+//		}
+//		
+//		Map<DamageType, Float> damageMap = WeaponUtils.getValues(inHand);
+		Map<DamageType, Float> damageMap = WeaponUtils.getValues(event.source, event.ammount);
+		
+		System.out.println("Damage map: " + damageMap);
+		
+		float totalDamage = 0.0f;
+		for (DamageType type : DamageType.values()) {
+			float damage = damageMap.get(type);
+			if (damage <= 0.001f)
+				continue;
+			
+			float protection = calculateProtection(event.entityLiving, type);
+			float reduction = protection * armorRate; //what percentage to subtract off
+			
+			if (reduction < 0.0f)
+				reduction = 0.0f;
+			else if (reduction > 1.0f)
+				reduction = 1.0f;
+			
+			totalDamage += damage * (1.0f - reduction);
+			
+			//now damage armor. same damage points as vanilla
+			
+			int armorDamage = (int) (damage / 4.0f);
+			if (armorDamage < 0)
+				armorDamage = 1;
+			
+			for (int i = 0; i < 4; i++) {
+				ItemStack armor = event.entityLiving.getCurrentArmor(i);
+				if (armor != null) {
+					if (armor.getItem() instanceof Armor) {
+						for (int j = 0; j < armorDamage; j++)
+						((Armor) armor.getItem()).damage(event.entityLiving, armor, type);
+					} else {
+						armor.damageItem(armorDamage, event.entityLiving);
+					}
+				}
+			}
+		
+		}
+		
+		event.ammount = totalDamage;
+	}
+	
+	@SubscribeEvent
+	public void onPlayerHitEntity(AttackEntityEvent event) {
+		if (event.isCanceled())
+			return;
 		
 		//Code from EntityPlayer's attackEntityWithCurrentItem method
 		event.setCanceled(true);
+		
+		//This only calculates the strength of the attack. IT doesn't
+		//do protection or anything like that!
+		
 		
 		Entity targetEntity = event.target;
 		if (targetEntity .canAttackWithItem())
