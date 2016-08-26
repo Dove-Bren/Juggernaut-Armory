@@ -73,10 +73,10 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 	* protection values
 	* @see #ExtendedArmor(EntityLivingBase)
 	*/
-	public static final ExtendedArmor get(EntityLivingBase entity)
+	public static final ExtendedArmor get(EntityLivingBase entity, boolean create)
 	{
 		IExtendedEntityProperties prop = entity.getExtendedProperties(PROP_KEY);
-		if (prop == null)
+		if (prop == null && create)
 			prop = new ExtendedArmor(entity);
 		return (ExtendedArmor) (prop); 
 	}
@@ -101,6 +101,8 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 		for (DamageType key : DamageType.values())
 			armorMap.put(key, 0.0f);
 		
+		
+		
 		//go through equip'ed items and update protection values
 		for (int i = 0; i < 4; i++) {
 			ItemStack equip = entity.getEquipmentInSlot(i + 1);
@@ -114,7 +116,7 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 	}
 	
 	public static void refresh(EntityLivingBase entity) {
-		ExtendedArmor instance = get(entity);
+		ExtendedArmor instance = get(entity, true);
 		instance.refresh();
 	}
 
