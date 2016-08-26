@@ -1,25 +1,21 @@
 package com.SkyIsland.Armory.items.weapons;
 
-import java.util.List;
+import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.mechanics.DamageType;
-import com.google.common.collect.Multimap;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,10 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class Weapon extends Item {
 
-	/**
-	 * Damage inflicted per hit
-	 */
-	protected float attackDamage;
+	protected Map<DamageType, Float> damageMap;
 	
 	/**
 	 * Number of seconds it takes to swing and be able to swing again. 0.0f results
@@ -51,23 +44,23 @@ public abstract class Weapon extends Item {
 	 */
 	protected float blockReduction;
 	
-	protected DamageType damageType;
-	
     protected Weapon(String unlocalizedName) {
-    	this(unlocalizedName, 1.0f, 1.0f, false, 0.0f, DamageType.SLASH);
+    	this(unlocalizedName, null, 1.0f, false, 0.0f);
     }
     
-    protected Weapon(String unlocalizedName, float attackDamage, float swingSpeed, boolean canBlock, float blockReduction, DamageType damageType) {
+    protected Weapon(String unlocalizedName, Map<DamageType, Float> damageMap, float swingSpeed, boolean canBlock, float blockReduction) {
 //        this.maxStackSize = 1;
 //      this.setMaxDamage(material.getMaxUses());
 //      this.setCreativeTab(CreativeTabs.tabCombat);
 //      this.attackDamage = 4.0F + material.getDamageVsEntity();
         this.setCreativeTab(Armory.creativeTab);
-        this.attackDamage = attackDamage;
         this.swingSpeed = swingSpeed;
         this.canBlock = canBlock;
         this.blockReduction = blockReduction;
-        this.damageType = damageType;
+        this.damageMap = damageMap;
+        
+        if (this.damageMap == null)
+        	this.damageMap = DamageType.freshMap();
         
         this.setUnlocalizedName(unlocalizedName);
     }
@@ -82,7 +75,7 @@ public abstract class Weapon extends Item {
      */
     public float getDamageVsEntity()
     {
-        return attackDamage;
+        return damageMap.get(DamageType.SLASH);
     }
 
     public float getStrVsBlock(ItemStack stack, Block block)
@@ -177,26 +170,19 @@ public abstract class Weapon extends Item {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
-	public Multimap<String, AttributeModifier> getItemAttributeModifiers()
-    {
-        Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers();
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier", (double)this.attackDamage, 0));
-        return multimap;
-    }
-    
-    /**
-     * Add default item lore stuff
-     */
-	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean bool) {
-		list.add(EnumChatFormatting.DARK_RED + "Attack Damage: " + EnumChatFormatting.RESET + attackDamage);
-		list.add(EnumChatFormatting.GOLD + "Damage Type: " + EnumChatFormatting.RESET + damageType);
-		if (Math.abs(swingSpeed) < 0.001) {
-			list.add(EnumChatFormatting.DARK_GREEN + "Swing Speed: " + EnumChatFormatting.RESET + "+" + String.format("%.2f", 1.0f + swingSpeed) + "%");
-		}
-	    
-	}
+    //handled in item listener now
+//    /**
+//     * Add default item lore stuff
+//     */
+//	@Override
+//	public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean bool) {
+//		list.add(EnumChatFormatting.DARK_RED + "Attack Damage: " + EnumChatFormatting.RESET + attackDamage);
+//		list.add(EnumChatFormatting.GOLD + "Damage Type: " + EnumChatFormatting.RESET + damageType);
+//		if (Math.abs(swingSpeed) < 0.001) {
+//			list.add(EnumChatFormatting.DARK_GREEN + "Swing Speed: " + EnumChatFormatting.RESET + "+" + String.format("%.2f", 1.0f + swingSpeed) + "%");
+//		}
+//	    
+//	}
 	
 //	/**
 //     * Attacks for the player the targeted entity with the currently equipped item.  The equipped item has hitEntity
@@ -341,8 +327,12 @@ public abstract class Weapon extends Item {
 //        
 //    }
 
-	public float getAttackDamage() {
-		return attackDamage;
+	public float getAttackDamage(DamageType type) {
+		return damageMap.get(type);
+	}
+	
+	public Map<DamageType, Float> getDamageMap() {
+		return damageMap;
 	}
 
 	public float getSwingSpeed() {
@@ -357,8 +347,4 @@ public abstract class Weapon extends Item {
 		return blockReduction;
 	}
 
-	public DamageType getDamageType() {
-		return damageType;
-	}
-	
 }

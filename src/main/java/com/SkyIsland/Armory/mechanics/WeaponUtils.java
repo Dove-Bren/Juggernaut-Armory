@@ -4,7 +4,6 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.SkyIsland.Armory.api.WeaponManager;
-import com.SkyIsland.Armory.items.armor.Armor;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -108,7 +107,7 @@ public final class WeaponUtils {
 				map.put(DamageType.SLASH, defaultDamage);
 			else if (lower_name.contains("arrow"))
 				map.put(DamageType.PIERCE, defaultDamage);
-			else if (lower_name.contains("axe")) {
+			else if (lower_name.contains("axe") || lower_name.contains("hatchet")) {
 				map.put(DamageType.SLASH, defaultDamage * 0.5f);
 				map.put(DamageType.CRUSH, defaultDamage * 0.5f);
 			} else if (lower_name.contains("shovel") || lower_name.contains("spade"))
@@ -193,9 +192,9 @@ public final class WeaponUtils {
 	 * @param armor
 	 * @return
 	 */
-	private static Map<DamageType, Float> getCustomValues(ItemStack armor) {
-		Armor base = (Armor) armor.getItem();
+	private static Map<DamageType, Float> getCustomValues(ItemStack weapon) {
+		Weapon base = (Weapon) weapon.getItem();
 		
-		return base.getProtectionMap(armor);
+		return base.getDamageMap();
 	}
 }

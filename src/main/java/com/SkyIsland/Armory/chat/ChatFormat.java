@@ -9,8 +9,8 @@ import net.minecraft.util.EnumChatFormatting;
  */
 public enum ChatFormat {
 	
-	ARMOR(EnumChatFormatting.DARK_AQUA.toString()),
-	DAMAGE(EnumChatFormatting.DARK_AQUA.toString()),
+	ARMOR(EnumChatFormatting.BLUE.toString()),
+	DAMAGE(EnumChatFormatting.BLUE.toString()),
 	DAMAGE_TYPE(EnumChatFormatting.RESET.toString());
 	
 	private String prefix;
