@@ -102,6 +102,11 @@ public abstract class Armor extends ItemArmor {
 //		for (DamageType key : DamageType.values())
 //			protectionMap.put(key, 0.0f);
 	}
+    
+    public void clientInit() {
+    	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+    	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.getUnlocalizedName(), "inventory"));
+    }
 	
 	/**
 	 * Returns the total amount of protection this piece of armor provides

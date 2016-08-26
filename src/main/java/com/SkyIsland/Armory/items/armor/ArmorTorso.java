@@ -318,4 +318,9 @@ public class ArmorTorso extends Armor {
 		return parts;
 	}
 
+	@Override
+	public void clientInit() {
+		
+	}
+
 }

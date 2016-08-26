@@ -8,6 +8,8 @@ import com.google.common.collect.Multimap;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -50,12 +52,12 @@ public abstract class Weapon extends Item {
 	protected float blockReduction;
 	
 	protected DamageType damageType;
-
-    protected Weapon() {
-    	this(1.0f, 1.0f, false, 0.0f, DamageType.SLASH);
+	
+    protected Weapon(String unlocalizedName) {
+    	this(unlocalizedName, 1.0f, 1.0f, false, 0.0f, DamageType.SLASH);
     }
     
-    protected Weapon(float attackDamage, float swingSpeed, boolean canBlock, float blockReduction, DamageType damageType) {
+    protected Weapon(String unlocalizedName, float attackDamage, float swingSpeed, boolean canBlock, float blockReduction, DamageType damageType) {
 //        this.maxStackSize = 1;
 //      this.setMaxDamage(material.getMaxUses());
 //      this.setCreativeTab(CreativeTabs.tabCombat);
@@ -66,6 +68,13 @@ public abstract class Weapon extends Item {
         this.canBlock = canBlock;
         this.blockReduction = blockReduction;
         this.damageType = damageType;
+        
+        this.setUnlocalizedName(unlocalizedName);
+    }
+    
+    public void clientInit() {
+    	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+    	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.getUnlocalizedName(), "inventory"));
     }
 
     /**

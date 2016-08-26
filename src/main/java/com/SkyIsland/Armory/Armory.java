@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.SkyIsland.Armory.api.ArmorManager;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
+import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.WeaponItems;
 import com.SkyIsland.Armory.mechanics.ArmorModificationManager;
 import com.SkyIsland.Armory.proxy.CommonProxy;
