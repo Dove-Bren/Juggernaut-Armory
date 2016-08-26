@@ -18,4 +18,8 @@ public enum DamageType {
 	public String toString() {
 		return desc;
 	}
+
+	public String nbtKey() {
+		return desc;
+	}
 }

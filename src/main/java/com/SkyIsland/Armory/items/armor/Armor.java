@@ -9,8 +9,8 @@ import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -61,7 +61,16 @@ public abstract class Armor extends ItemArmor {
 		}
 		
 		public float getProtection(ItemStack stack, DamageType type) {
-			return protectionMap.get(type);
+			if (!stack.hasTagCompound())
+				stack.setTagCompound(new NBTTagCompound());
+			
+			NBTTagCompound nbt = stack.getTagCompound();
+			
+			float protection = 0.0f;
+			if (nbt.hasKey(type.nbtKey(), NBT.TAG_FLOAT))
+				protection = nbt.getFloat(type.nbtKey());
+			
+			return protection;
 		}
 		
 		@Override
@@ -113,6 +122,13 @@ public abstract class Armor extends ItemArmor {
 	 */
 	public abstract Collection<ArmorPiece> getArmorPieces();
 	
+	/**
+	 * Returns a collection of the itemstacks that make up the components
+	 * of this piece of armor. This should exclude any null elements
+	 * @return
+	 */
+	public abstract Collection<ItemStack> getNestedArmorStacks();
+	
 	@Override
 	public void setDamage(ItemStack stack, int damage) {
 		//  Important!
@@ -130,11 +146,20 @@ public abstract class Armor extends ItemArmor {
 	 * Each call to this method does 1 point of damage, spread out. Multiple calls
 	 * are expected when more damage is dealt to armor.
 	 */
-	public void damage(ItemStack stack, DamageType damageType) {
-		short damage = 0;
-		for (ArmorPiece piece : getArmorPieces()) {
-			damage = (short) Math.round(Math.ceil(piece.getProtection(damageType)));
-			
+	public void damage(EntityLivingBase owningEntity, ItemStack stack, DamageType damageType) {
+		
+		if (getNestedArmorStacks().isEmpty()) {
+			owningEntity.renderBrokenItemStack(stack);
+			if (stack.stackSize > 0)
+				stack.stackSize = 0;
+			return;
+		}
+		
+		int damage = 0;
+		for (ItemStack piece : getNestedArmorStacks()) {
+			damage = (int) Math.round(Math.ceil(
+					((ArmorPiece) piece.getItem()).getProtection(piece, damageType)));
+			piece.damageItem(damage, owningEntity);
 		}
 	}
 	

@@ -144,6 +144,11 @@ public class ArmorTorso extends Armor {
 
 		@Override
 		public void markDirty() {
+			
+			for (int i = 0; i < inv.length; i++)
+			if (inv[i] != null && inv[i].stackSize <= 0)
+				inv[i] = null;
+			
 			writeToNBT(baseStack.getTagCompound());
 		}
 
