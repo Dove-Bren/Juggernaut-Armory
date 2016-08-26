@@ -1,5 +1,6 @@
 package com.SkyIsland.Armory.mechanics;
 
+import com.SkyIsland.Armory.items.armor.Armor;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -120,13 +121,12 @@ public class ArmorModificationManager {
 //	}
 	
 	/**
-	 * Takes the attacker, figured out the damage being dealt, and then provided
-	 * the target's protection to the attack
+	 * Takes the attacker and figures out the type of damage
 	 * @param attacker
 	 * @param target
-	 * @return the protection, or 0.0f if no protection wrapper is found
+	 * @return The type of damage being applied
 	 */
-	private float calculateWeaponProtection(Entity attacker, EntityLivingBase target) {
+	private DamageType calculateWeaponDamageType(Entity attacker, EntityLivingBase target) {
 		ItemStack inHand = null;
 		if (attacker instanceof EntityLivingBase) {
 			EntityLivingBase living = (EntityLivingBase) attacker;
@@ -159,6 +159,10 @@ public class ArmorModificationManager {
 		
 		System.out.println("Damage type: " + type.name());
 		
+		return type;
+	}
+	
+	private float calculateProtection(EntityLivingBase target, DamageType type) {
 		ExtendedArmor armor = ExtendedArmor.get(target);
 		if (armor == null) {
 			//no extended attributes!
@@ -168,7 +172,7 @@ public class ArmorModificationManager {
 		return armor.getProtection(type);
 	}
 	
-	private float calculateProtection(DamageSource cause, EntityLivingBase target) {
+	private DamageType calculateDamageType(DamageSource cause, EntityLivingBase target) {
 		//check if we can delegate to entity damage protection call
 		
 		DamageType type;
@@ -178,7 +182,7 @@ public class ArmorModificationManager {
 		else if (cause.isMagicDamage())
 			type = DamageType.MAGIC;
 		else if (cause.getEntity() != null)
-			return calculateWeaponProtection(cause.getEntity(), target);
+			type = calculateWeaponDamageType(cause.getEntity(), target);
 		else if (cause.isProjectile()) {
 			if (cause.getSourceOfDamage() instanceof EntityArrow)
 				type = DamageType.PIERCE;
@@ -189,13 +193,7 @@ public class ArmorModificationManager {
 		
 		System.out.println("Damage type: " + type.name());
 			
-		ExtendedArmor armor = ExtendedArmor.get(target);
-		if (armor == null) {
-			//no extended attributes!
-			return 0.0f;
-		}
-		
-		return armor.getProtection(type);
+		return type;
 	}
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)
@@ -210,7 +208,8 @@ public class ArmorModificationManager {
 		//      is still done in the living entity class.
 		//      To turn off, we'd call event.source.setDamageIsAbsolute()
 		
-		float protection = calculateProtection(event.source, event.entityLiving);
+		DamageType type = calculateDamageType(event.source, event.entityLiving);
+		float protection = calculateProtection(event.entityLiving, type);
 		float reduction = protection * armorRate; //what percentage to subtract off
 		
 		if (reduction < 0.0f)
@@ -222,8 +221,20 @@ public class ArmorModificationManager {
 		event.ammount *= (1.0f - reduction);
 		
 		//finally, do armor damage
-		!
 		
+		//get armor damage. Same formula as vanilla
+		int damage = (int) (amount / 4.0f);
+		if (damage < 0)
+			damage = 1;
+		
+		for (int i = 0; i < 4; i++) {
+			ItemStack armor = event.entityLiving.getCurrentArmor(i);
+			if (armor.getItem() instanceof Armor) {
+				((Armor) armor.getItem()).damage(event.entityLiving, armor, type);
+			} else {
+				armor.damageItem(damage, event.entityLiving);
+			}
+		}
 	}
 	
 	@SubscribeEvent
