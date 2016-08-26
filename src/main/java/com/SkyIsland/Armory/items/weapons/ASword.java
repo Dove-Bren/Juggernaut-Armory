@@ -1,7 +1,5 @@
 package com.SkyIsland.Armory.items.weapons;
 
-import java.util.List;
-
 import com.SkyIsland.Armory.Armory;
 
 import net.minecraft.client.Minecraft;
@@ -9,7 +7,6 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 public class ASword extends Weapon {

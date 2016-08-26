@@ -19,16 +19,11 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 	private Map<DamageType, Float> armorMap;
 	
 	private ExtendedArmor(EntityLivingBase entity) {
-		this(entity, 0.0f, 0.0f, 0.0f);
-	}
-	
-	private ExtendedArmor(EntityLivingBase entity, float slash, float pierce, float crush) {
 		this.entity = entity;
 		armorMap = new EnumMap<DamageType, Float>(DamageType.class);
 		
-		armorMap.put(DamageType.SLASH, slash);
-		armorMap.put(DamageType.PIERCE, pierce);
-		armorMap.put(DamageType.CRUSH, crush);
+		for (DamageType key : DamageType.values())
+			armorMap.put(key, 0.0f);
 	}
 	
 	@Override
@@ -72,16 +67,39 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 	}
 	
 	/**
-	* Returns ExtendedArmor properties for entity
-	* This method is for convenience only; it will make your code look nicer
+	* Returns ExtendedArmor properties for entity.
+	* If the entity doesn't have defined armor, a default is created with 0's for
+	* protection values
+	* @see #ExtendedArmor(EntityLivingBase)
 	*/
 	public static final ExtendedArmor get(EntityLivingBase entity)
 	{
-		return (ExtendedArmor) entity.getExtendedProperties(PROP_KEY);
+		IExtendedEntityProperties prop = entity.getExtendedProperties(PROP_KEY);
+		if (prop == null)
+			prop = new ExtendedArmor(entity);
+		return (ExtendedArmor) (prop); 
 	}
 	
+	/**
+	 * Returns the protection to the given type.
+	 * @param type Type of damage to get protection for
+	 * @return the protection. If type is null, returns 0.0
+	 */
 	public float getProtection(DamageType type) {
+		if (type == null)
+			return 0.0f;
+		
 		return armorMap.get(type);
+	}
+	
+	public void refresh() {
+		//go through equip'ed items and update protection values
+		!
+	}
+	
+	public static void refresh(EntityLivingBase entity) {
+		ExtendedArmor instance = get(entity);
+		instance.refresh();
 	}
 
 }

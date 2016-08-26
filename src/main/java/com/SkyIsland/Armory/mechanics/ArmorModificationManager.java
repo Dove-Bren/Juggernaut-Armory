@@ -10,6 +10,7 @@ import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
@@ -134,11 +135,10 @@ public class ArmorModificationManager {
 		
 		DamageType type;
 		
-		//if (attacker instanceof EntityArrow)
-			//type = DamageType.PIERCE;
-		//else
+		System.out.println("entity: " + attacker);
+		
 		if (inHand == null)
-			type = DamageType.SLASH;
+			type = DamageType.CRUSH;
 		else if (inHand.getItem() instanceof Weapon)
 			type = ((Weapon) inHand.getItem()).getDamageType();
 		else {
@@ -157,6 +157,8 @@ public class ArmorModificationManager {
 				type = DamageType.CRUSH;
 		}
 		
+		System.out.println("Damage type: " + type.name());
+		
 		ExtendedArmor armor = ExtendedArmor.get(target);
 		if (armor == null) {
 			//no extended attributes!
@@ -168,8 +170,6 @@ public class ArmorModificationManager {
 	
 	private float calculateProtection(DamageSource cause, EntityLivingBase target) {
 		//check if we can delegate to entity damage protection call
-		if (cause.getEntity() != null)
-			return calculateWeaponProtection(cause.getEntity(), target);
 		
 		DamageType type;
 				
@@ -177,10 +177,17 @@ public class ArmorModificationManager {
 			type = DamageType.CRUSH;
 		else if (cause.isMagicDamage())
 			type = DamageType.MAGIC;
-		else if (cause.isProjectile())
-			type = DamageType.PIERCE;
-		else
+		else if (cause.getEntity() != null)
+			return calculateWeaponProtection(cause.getEntity(), target);
+		else if (cause.isProjectile()) {
+			if (cause.getSourceOfDamage() instanceof EntityArrow)
+				type = DamageType.PIERCE;
+			else
+				type = DamageType.CRUSH; //think fireball, snowball, etc that hits you
+		} else
 			type = DamageType.OTHER;
+		
+		System.out.println("Damage type: " + type.name());
 			
 		ExtendedArmor armor = ExtendedArmor.get(target);
 		if (armor == null) {
@@ -211,7 +218,11 @@ public class ArmorModificationManager {
 		else if (reduction > 1.0f)
 			reduction = 1.0f;
 		
+		float amount = event.ammount; //store for armor damage
 		event.ammount *= (1.0f - reduction);
+		
+		//finally, do armor damage
+		!
 		
 	}
 	
