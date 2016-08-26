@@ -90,12 +90,16 @@ public class ArmorManager {
 	}
 	
 	public float getProtection(ItemArmor armor, DamageType damageType) {
-		if (!records.containsKey(damageType))
+		if (!records.containsKey(armor))
 			return 0.0f;
 		
-		ArmorRecord record = records.get(damageType);
+		ArmorRecord record = records.get(armor);
 		
 		return record.getProtection(damageType);
+	}
+	
+	public boolean hasArmorRegistered(ItemArmor armor) {
+		return records.containsKey(armor);
 	}
 	
 }

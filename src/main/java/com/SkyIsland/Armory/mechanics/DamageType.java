@@ -2,16 +2,23 @@ package com.SkyIsland.Armory.mechanics;
 
 public enum DamageType {
 	
-	SLASH("Slashing"),
-	PIERCE("Piercing"),
-	CRUSH("Crushing"),
-	MAGIC("Magic"),
-	OTHER("Other");
+	SLASH("Slashing", true),
+	PIERCE("Piercing", true),
+	CRUSH("Crushing", true),
+	MAGIC("Magic", false),
+	OTHER("Other", false);
 	
 	private String desc;
 	
-	private DamageType(String desc) {
+	/**
+	 * Indicates whether or not unregistered pieces of armor get some of their
+	 * protection applied to this type of damage
+	 */
+	private boolean byDefault;
+	
+	private DamageType(String desc, boolean def) {
 		this.desc = desc;
+		this.byDefault = def;
 	}
 	
 	@Override
@@ -21,5 +28,9 @@ public enum DamageType {
 
 	public String nbtKey() {
 		return desc;
+	}
+
+	public boolean isByDefault() {
+		return byDefault;
 	}
 }
