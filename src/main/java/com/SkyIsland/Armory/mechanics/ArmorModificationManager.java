@@ -10,7 +10,6 @@ import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
@@ -23,8 +22,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Stores map with all players in it and their respective armor, for lookups to
@@ -40,17 +41,19 @@ public class ArmorModificationManager {
 		return instance;
 	}
 	
-	private ArmorModificationManager() {
-		
+	private float armorRate;
+	
+	private ArmorModificationManager(float armorRate) {
+		this.armorRate = armorRate;
 	}
 	
-	public static final void init() {
-		instance = new ArmorModificationManager();
+	public static final void init(float armorRate) {
+		instance = new ArmorModificationManager(armorRate);
 		
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
 	
-	@EventHandler
+	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)
 	{
 		/*
@@ -115,7 +118,14 @@ public class ArmorModificationManager {
 //		
 //	}
 	
-	private float calculateProtection(Entity attacker, EntityLivingBase target) {
+	/**
+	 * Takes the attacker, figured out the damage being dealt, and then provided
+	 * the target's protection to the attack
+	 * @param attacker
+	 * @param target
+	 * @return the protection, or 0.0f if no protection wrapper is found
+	 */
+	private float calculateWeaponProtection(Entity attacker, EntityLivingBase target) {
 		ItemStack inHand = null;
 		if (attacker instanceof EntityLivingBase) {
 			EntityLivingBase living = (EntityLivingBase) attacker;
@@ -124,14 +134,14 @@ public class ArmorModificationManager {
 		
 		DamageType type;
 		
-		if (attacker instanceof EntityArrow) {
-			type = DamageType.PIERCE;
-		}
-		else if (inHand == null)
+		//if (attacker instanceof EntityArrow)
+			//type = DamageType.PIERCE;
+		//else
+		if (inHand == null)
 			type = DamageType.SLASH;
-		else if (inHand.getItem() instanceof Weapon) {
+		else if (inHand.getItem() instanceof Weapon)
 			type = ((Weapon) inHand.getItem()).getDamageType();
-		} else {
+		else {
 			//something else
 			//swords are slash, axe are slash? crush? Regular items are crush?
 			Item item = inHand.getItem();
@@ -147,18 +157,67 @@ public class ArmorModificationManager {
 				type = DamageType.CRUSH;
 		}
 		
-		ExtendedArmor armor = ExtendedArmor.get(event.entityLiving);
+		ExtendedArmor armor = ExtendedArmor.get(target);
 		if (armor == null) {
 			//no extended attributes!
-			return;
+			return 0.0f;
 		}
 		
-		
-		
-		float protection = armor.getProtection(type);
+		return armor.getProtection(type);
 	}
 	
-	@EventHandler
+	private float calculateProtection(DamageSource cause, EntityLivingBase target) {
+		//check if we can delegate to entity damage protection call
+		if (cause.getEntity() != null)
+			return calculateWeaponProtection(cause.getEntity(), target);
+		
+		DamageType type;
+				
+		if (cause.isExplosion())
+			type = DamageType.CRUSH;
+		else if (cause.isMagicDamage())
+			type = DamageType.MAGIC;
+		else if (cause.isProjectile())
+			type = DamageType.PIERCE;
+		else
+			type = DamageType.OTHER;
+			
+		ExtendedArmor armor = ExtendedArmor.get(target);
+		if (armor == null) {
+			//no extended attributes!
+			return 0.0f;
+		}
+		
+		return armor.getProtection(type);
+	}
+	
+	@SubscribeEvent(priority=EventPriority.LOWEST)
+	public void onEntityHurt(LivingHurtEvent event) {
+		
+		
+		//here we calculate damage with out armor values
+		
+		//NOTE: bypassing armor means that damage will not be modified
+		//      through vanilla mechanics from armor.
+		event.source.setDamageBypassesArmor();
+		
+		//NOTE: damage reduction to potion effects and enchantments
+		//      is still done in the living entity class.
+		//      To turn off, we'd call event.source.setDamageIsAbsolute()
+		
+		float protection = calculateProtection(event.source, event.entityLiving);
+		float reduction = protection * armorRate; //what percentage to subtract off
+		
+		if (reduction < 0.0f)
+			reduction = 0.0f;
+		else if (reduction > 1.0f)
+			reduction = 1.0f;
+		
+		event.ammount *= (1.0f - reduction);
+		
+	}
+	
+	@SubscribeEvent
 	public void onPlayerHitEntity(AttackEntityEvent event) {
 		if (event.isCanceled())
 			return;
