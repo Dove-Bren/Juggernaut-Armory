@@ -3,7 +3,7 @@ package com.SkyIsland.Armory.items;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.SkyIsland.Armory.items.weapons.ASword;
+import com.SkyIsland.Armory.items.armor.ArmorTorso;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -20,7 +20,7 @@ public final class ArmorItems {
 		
 		itemMap = new EnumMap<Armors, Item>(Armors.class);
 		
-		itemMap.put(Armors.TORSO, new ASword("torso_base"));
+		itemMap.put(Armors.TORSO, new ArmorTorso("torso_base"));
 		GameRegistry.registerItem(itemMap.get(Armors.TORSO), "torso_base");
 		
 	}

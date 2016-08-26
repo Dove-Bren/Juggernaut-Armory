@@ -94,8 +94,10 @@ public abstract class Armor extends ItemArmor {
 	
 	private static final ArmorMaterial material = EnumHelper.addArmorMaterial("armor_null_material", "none", 1, new int[] {1, 1, 1, 1}, 1);
 	
-	protected Armor(int armorType) {
+	protected Armor(int armorType, String unlocalizedName) {
 		super(material, 0, armorType);
+		
+		this.setUnlocalizedName(unlocalizedName);
 //		protectionMap = new EnumMap<DamageType, Float>(DamageType.class);
 //		for (DamageType key : DamageType.values())
 //			protectionMap.put(key, 0.0f);

@@ -234,20 +234,10 @@ public class ArmorTorso extends Armor {
 		
 	}
 	
-	private static ArmorTorso instance;
-	
-	public static final void init() {
-		instance = new ArmorTorso();
-	}
-	
-	public static final ArmorTorso instance() {
-		return instance;
-	}
-	
 	protected Map<Slot, ArmorPiece> pieces;
 	
-	protected ArmorTorso() {
-		super(1);
+	public ArmorTorso(String unlocalizedName) {
+		super(1, unlocalizedName);
 		pieces = new EnumMap<Slot, ArmorPiece>(Slot.class);
 		
 		//initialize slot pieces
