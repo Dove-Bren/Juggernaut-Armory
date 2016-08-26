@@ -66,6 +66,9 @@ public abstract class Armor extends ItemArmor {
 		
 		@Override
 		public boolean equals(Object o) {
+			if (o == null)
+				return false;
+			
 			if (o instanceof ArmorPiece)
 				return ((ArmorPiece) o).uniqueKey.equals(uniqueKey);
 			
@@ -95,37 +98,20 @@ public abstract class Armor extends ItemArmor {
 	 * @param type
 	 * @return Total protection
 	 */
-	public abstract float getTotalProtection(DamageType type);
+	public abstract float getTotalProtection(ItemStack stack, DamageType type);
 	
 	/**
 	 * Returns a full map that maps a Damage Type to a float. These values
 	 * are guaranteed to be non-null.
 	 * @return
 	 */
-	protected abstract Map<DamageType, Float> getProtectionMap();
+	protected abstract Map<DamageType, Float> getProtectionMap(ItemStack stack);
 	
 	/**
 	 * Returns all armor pieces that are a part of this piece of armor.
 	 * @return
 	 */
 	public abstract Collection<ArmorPiece> getArmorPieces();
-	
-	protected abstract int getNumberOfPieces();
-	
-	@Override
-	public int getSizeInventory() {
-		return getNumberOfPieces();
-	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 1;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return true;
-	}
 	
 	@Override
 	public void setDamage(ItemStack stack, int damage) {

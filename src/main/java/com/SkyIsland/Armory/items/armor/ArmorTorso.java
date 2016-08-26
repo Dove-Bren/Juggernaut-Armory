@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class ArmorTorso extends Armor {
@@ -71,7 +70,7 @@ public class ArmorTorso extends Armor {
 		}
 	}
 	
-	private static class TorsoComponents implements IInventory {
+	private class TorsoComponents implements IInventory {
 
 		private static final String DEFAULT_NAME = "Torso Components";
 		
@@ -200,7 +199,9 @@ public class ArmorTorso extends Armor {
 			if (slot == null)
 				return false; //not in a valid index
 			
-			return stack.getItem().equals(slot);
+			System.out.println("Testing for equals from slot (does this work??)");
+			
+			return stack.getItem().equals(pieces.get(slot));
 		}
 
 		@Override
@@ -226,25 +227,48 @@ public class ArmorTorso extends Armor {
 		
 	}
 	
-	private Map<Slot, ArmorPiece> pieces;
+	private static ArmorTorso instance;
+	
+	public static final void init() {
+		instance = new ArmorTorso();
+	}
+	
+	public static final ArmorTorso instance() {
+		return instance;
+	}
+	
+	protected Map<Slot, ArmorPiece> pieces;
 	
 	protected ArmorTorso() {
 		super(1);
 		pieces = new EnumMap<Slot, ArmorPiece>(Slot.class);
 		
 		//initialize slot pieces
-		pieces.put(Slot.BREASTPLATE, new ArmorPiece());
+		pieces.put(Slot.BREASTPLATE, new ArmorPiece("breastplate"));
+		pieces.put(Slot.VAMBRACE, new ArmorPiece("vambrace"));
+		pieces.put(Slot.PAULDRON_LEFT, new ArmorPiece("pauldron_left"));
+		pieces.put(Slot.PAULDRON_RIGHT, new ArmorPiece("pauldron_right"));
+		pieces.put(Slot.CAPE, new ArmorPiece("cape"));
 	}
 
 	@Override
 	public float getTotalProtection(ItemStack stack, DamageType type) {
 		float protection = 0.0f;
 		
+		TorsoComponents components = new TorsoComponents(stack);
+		
 		for (Slot slot : Slot.values())
-		if (slot.isContributingPiece())
-		if (pieces.get(slot) != null) {
-			protection += pieces.get(slot).getProtection(type);
+		if (slot.isContributingPiece()) {
+			//fetch the item from the nbt of the item
+			//then ask the item piece what it's protecton is
+			ItemStack piece = components.getStackInSlot(slot.getInventoryPosition());
+			if (piece != null) {
+				protection += ((ArmorPiece) piece.getItem()).getProtection(piece, type);
+			}
 		}
+//		if (pieces.get(slot) != null) {
+//			protection += pieces.get(slot).getProtection(type);
+//		}
 		
 		return protection;
 	}
@@ -254,14 +278,16 @@ public class ArmorTorso extends Armor {
 		Map<DamageType, Float> map = new EnumMap<DamageType, Float>(DamageType.class);
 		
 		//for (DamageType key : DamageType.values()) loop once, not multiple times
-		for (Slot slot : Slot.values())
-		if (slot.isContributingPiece()) {
-			for (DamageType type : DamageType.values()) {
-				float prot = map.get(type) == null ? 0.0f : map.get(type),
-					  add = pieces.get(slot) == null ? 0.0f : pieces.get(slot).getProtection(type);
-				map.put(type, prot + add);
-			}
-		}
+//		for (Slot slot : Slot.values())
+//		if (slot.isContributingPiece()) {
+//			for (DamageType type : DamageType.values()) {
+//				float prot = map.get(type) == null ? 0.0f : map.get(type),
+//					  add = pieces.get(slot) == null ? 0.0f : pieces.get(slot).getProtection(type);
+//				map.put(type, prot + add);
+//			}
+//		}
+		for (DamageType key : DamageType.values())
+		map.put(key, getTotalProtection(stack, key));
 		
 		return map;
 	}
@@ -272,22 +298,13 @@ public class ArmorTorso extends Armor {
 	}
 	
 	public boolean setArmorPiece(ItemStack stack, Slot slot, ItemStack piece) {
-		boolean has = stack.getSubCompound(COMPONENT_LIST_KEY, true)
-				.hasKey(slot.getKey(), NBT.TAG_COMPOUND);
+		TorsoComponents components = new TorsoComponents(stack);
 		
-		stack.getSubCompound(COMPONENT_LIST_KEY, true)
-			.setTag(slot.getKey(), piece.);
+		boolean has = components.getStackInSlot(slot.getInventoryPosition()) != null;
+		
+		components.setInventorySlotContents(slot.getInventoryPosition(), piece);
 		
 		return has;
-	}
-	
-	@Override
-	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-		super.onCreated(stack, worldIn, playerIn);
-		
-		//set defaults for each slot, if it doesn't exist
-		// (super creates COMPONENT_LIST if it doesn't exist, so this is safe)
-		NBTTagCompound tag = stack.getTagCompound().getCompoundTag(COMPONENT_LIST_KEY);
 	}
 
 }
