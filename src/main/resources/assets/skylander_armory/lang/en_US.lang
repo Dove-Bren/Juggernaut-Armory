@@ -1,2 +1,6 @@
-item.sword_base.name=Armory Sword Base
-tile.whetstone_block.name=Whetstone Block
+item.skylander_armory_sword_base.name=Armory Sword Base
+
+tile.skylander_armory_whetstone_block.name=Whetstone Block
+tile.skylander_armory_pedestal.name=Pedestal
+
+itemGroup.skylander_armory=Skylander Armory

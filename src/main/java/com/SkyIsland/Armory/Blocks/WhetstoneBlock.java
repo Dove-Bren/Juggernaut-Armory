@@ -25,7 +25,7 @@ public class WhetstoneBlock extends Block {
 		
 	}
 	
-	public static void init() {
+	public static void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 		.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
 	}

@@ -1,4 +1,4 @@
-package com.SkyIsland.Armory.items;
+package com.SkyIsland.Armory.items.weapons;
 
 import java.util.List;
 
@@ -7,37 +7,39 @@ import com.SkyIsland.Armory.Armory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.EnumHelper;
 
-public class ConstructedSword extends ItemSword {
+public class ASword extends Weapon {
 
-	//gonna be abstract. just wanna figure out sword stuff for now
+	public static ASword item;
 	
-	public static ConstructedSword item;
+	private static String name;
 	
-	private static final Item.ToolMaterial BASE_MATERIAL = EnumHelper.addToolMaterial("nullMetal", 1, 1, 1.0F, 1.0F, 1);
-
-    public ConstructedSword(String unlocalizedName) {
-        super(BASE_MATERIAL);
+    public ASword(String unlocalizedName) {
+        super();
         item = this;
-        this.setUnlocalizedName(unlocalizedName);
-        //this.setTextureName(Armory.MODID + ":" + unlocalizedName);
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-        	.register(item, 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "inventory"));
         
-        this.setCreativeTab(Armory.creativeTab);
+        //forge setup
+        this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
+        
         this.maxStackSize = 1;
-    }
 
-    @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List<String> list, boolean bool) {
-        list.add("A technologically advanced sword that allows");
-        list.add("its user to zip around the world as if");
-        list.add("they were flying. Requires CR2 as fuel.");
+        /////////////param setup
+
+        canBlock = true;
+        blockReduction = 0.2f;
+        
+        //////////////////////
+        
+        name = unlocalizedName;
+    }
+    
+    public static void clientInit() {
+    	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+    	.register(item, 0, new ModelResourceLocation(Armory.MODID + ":" + name, "inventory"));
     }
 
 //    @Override
@@ -102,5 +104,17 @@ public class ConstructedSword extends ItemSword {
     	
     	return stack;
     }
+
+	@Override
+	public EnumAction getItemUseAction(ItemStack stack) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getTotalEnchantability() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
 	
 }
