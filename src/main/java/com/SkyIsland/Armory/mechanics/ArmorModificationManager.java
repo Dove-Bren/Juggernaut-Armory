@@ -193,8 +193,6 @@ public class ArmorModificationManager {
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void onEntityHurt(LivingHurtEvent event) {
-		
-		
 		//here we calculate damage with out armor values
 		
 		//NOTE: bypassing armor means that damage will not be modified

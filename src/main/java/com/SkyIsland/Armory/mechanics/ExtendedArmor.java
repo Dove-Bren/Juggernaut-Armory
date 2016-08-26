@@ -44,6 +44,9 @@ public class ExtendedArmor implements IExtendedEntityProperties {
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
+		if (!compound.hasKey(PROP_KEY, NBT.TAG_COMPOUND))
+			return;
+		
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(PROP_KEY);
 
 		for (DamageType key : armorMap.keySet()) {

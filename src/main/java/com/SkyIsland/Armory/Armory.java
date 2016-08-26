@@ -3,9 +3,11 @@ package com.SkyIsland.Armory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.SkyIsland.Armory.api.ArmorManager;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.items.WeaponItems;
+import com.SkyIsland.Armory.mechanics.ArmorModificationManager;
 import com.SkyIsland.Armory.proxy.CommonProxy;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -46,6 +48,9 @@ public class Armory {
 	    
 	    WeaponItems.initItems();
 	    proxy.init();
+	    
+	    ArmorModificationManager.init(0.05f);
+	    ArmorManager.init();
     }
     
 	@EventHandler
