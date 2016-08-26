@@ -127,7 +127,7 @@ public abstract class Armor extends ItemArmor {
 	 * of this piece of armor. This should exclude any null elements
 	 * @return
 	 */
-	public abstract Collection<ItemStack> getNestedArmorStacks();
+	public abstract Collection<ItemStack> getNestedArmorStacks(ItemStack stack);
 	
 	@Override
 	public void setDamage(ItemStack stack, int damage) {
@@ -148,7 +148,7 @@ public abstract class Armor extends ItemArmor {
 	 */
 	public void damage(EntityLivingBase owningEntity, ItemStack stack, DamageType damageType) {
 		
-		if (getNestedArmorStacks().isEmpty()) {
+		if (getNestedArmorStacks(stack).isEmpty()) {
 			owningEntity.renderBrokenItemStack(stack);
 			if (stack.stackSize > 0)
 				stack.stackSize = 0;
@@ -156,7 +156,7 @@ public abstract class Armor extends ItemArmor {
 		}
 		
 		int damage = 0;
-		for (ItemStack piece : getNestedArmorStacks()) {
+		for (ItemStack piece : getNestedArmorStacks(stack)) {
 			damage = (int) Math.round(Math.ceil(
 					((ArmorPiece) piece.getItem()).getProtection(piece, damageType)));
 			piece.damageItem(damage, owningEntity);
