@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.blocks;
 
+import org.lwjgl.opengl.GL11;
+
 import com.SkyIsland.Armory.Armory;
 
 import net.minecraft.block.Block;
@@ -7,6 +9,9 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -21,6 +26,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Pedestal extends BlockContainer {
@@ -35,8 +41,11 @@ public class Pedestal extends BlockContainer {
 		
 		@Override
 		public void writeToNBT(NBTTagCompound tag) {
-			if (heldRig != null)
-				tag.setTag("held", heldRig.getTagCompound());
+			if (heldRig != null) {
+				NBTTagCompound itemTag = new NBTTagCompound();
+				heldRig.writeToNBT(itemTag);
+				tag.setTag("held", itemTag);
+			}
 
 			super.writeToNBT(tag);
 		}
@@ -47,11 +56,11 @@ public class Pedestal extends BlockContainer {
 			if (tag.hasKey("held")) {
 				NBTTagCompound nbt = tag.getCompoundTag("held");
 				if (nbt != null)
-					ItemStack.loadItemStackFromNBT(nbt);
+					heldRig = ItemStack.loadItemStackFromNBT(nbt);
 				else
 					heldRig = null;
 			}
-
+			
 			super.readFromNBT(tag);
 		}
 		
@@ -64,9 +73,46 @@ public class Pedestal extends BlockContainer {
 		}
 		
 		@Override
+		public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.S35PacketUpdateTileEntity pkt)
+	    {
+			NBTTagCompound tag = pkt.getNbtCompound();
+			readFromNBT(tag);
+	    }
+		
+		@Override
 		public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
 		{
-		    return (oldState.getBlock() != newSate.getBlock());
+		    //return (oldState.getBlock() != newSate.getBlock());
+			return true;
+		}
+		
+		public static class Renderer extends TileEntitySpecialRenderer<PedestalTileEntity> {
+
+			@SuppressWarnings("deprecation")
+			@Override
+			public void renderTileEntityAt(PedestalTileEntity te, double x, double y, double z, float partialTicks,
+					int destroyStage) {
+
+				System.out.print(".");
+				if (te.heldRig == null)
+					return;
+				System.out.print(" ");
+				
+				GlStateManager.pushMatrix();
+				
+				//don't use GL11 stuff, use the manager
+				//GL11.glTranslated(x, y + 1.0f, z);
+				GlStateManager.translate(x + 0.5, y + 1.0, z + 0.5);
+				GlStateManager.enableRescaleNormal();
+				GlStateManager.scale(1.0, 1.0, 1.0); //tweak for making smaller!
+				
+				Minecraft.getMinecraft().getRenderItem().renderItem(te.heldRig, TransformType.GROUND);
+				GlStateManager.disableRescaleNormal();
+				
+				GL11.glPopMatrix();
+				
+			}
+			
 		}
 
 	}
@@ -83,12 +129,12 @@ public class Pedestal extends BlockContainer {
         
         GameRegistry.registerBlock(block, unlocalizedName);	
         GameRegistry.registerTileEntity(PedestalTileEntity.class, Armory.MODID + "_" + unlocalizedName);
-		
 	}
 	
 	public static void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 		.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
+		ClientRegistry.bindTileEntitySpecialRenderer(PedestalTileEntity.class, new PedestalTileEntity.Renderer());
 	}
 	
 	public Pedestal() {
@@ -109,6 +155,16 @@ public class Pedestal extends BlockContainer {
 		return new PedestalTileEntity();
 	}
 	
+	@Override
+	public int getRenderType() {
+		return -1; //not sure why
+	}
+	
+	@Override
+	public boolean isOpaqueCube() {
+		return false; //might not fill up whole block		
+	}
+	
     /**
      * Called by ItemBlocks after a block is set in the world, to allow post-place logic
      */
@@ -123,10 +179,33 @@ public class Pedestal extends BlockContainer {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
     	PedestalTileEntity ent = fetchTileEntity(worldIn, pos);
     	if (ent != null) {
-    		System.out.println("Block activated");
+    		
+    		ItemStack inHand = playerIn.getHeldItem();
+    		if (inHand == null) {
+    			//remove
+    			dePedestal(ent, playerIn);
+    		} else
+    			enPedestal(ent, playerIn);
+    		
     	}
     	
     	return true;
+    }
+    
+    private void dePedestal(PedestalTileEntity ent, EntityPlayer player) {
+    	if (ent.heldRig == null)
+    		return;
+    	player.inventory.addItemStackToInventory(ent.heldRig);
+    	ent.heldRig = null;
+    }
+    
+    private void enPedestal(PedestalTileEntity ent, EntityPlayer player) {
+    	if (ent.heldRig != null) {
+    		dePedestal(ent, player);
+    		return;
+    	}
+    	
+    	ent.heldRig = player.getHeldItem().splitStack(1);
     }
     
     @Override
