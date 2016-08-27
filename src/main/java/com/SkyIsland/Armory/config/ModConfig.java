@@ -155,7 +155,7 @@ public class ModConfig {
 	
 	private static int discriminator = 0;
 	
-	private static final String CHANNEL_NAME = "armory_config_channel";
+	private static final String CHANNEL_NAME = "armconfig_channel";
 	
 	public Configuration base;
 	
@@ -238,6 +238,7 @@ public class ModConfig {
 		if (localValues.containsKey(key)) {
 			if (key.getDefault().getClass().isAssignableFrom(newValue.getClass())) {
 				localValues.put(key, newValue);
+				Armory.logger.info("Added value to local key ==================================");
 				return true;
 			} else {
 				Armory.logger.warn("Bad attempted config assignment: "

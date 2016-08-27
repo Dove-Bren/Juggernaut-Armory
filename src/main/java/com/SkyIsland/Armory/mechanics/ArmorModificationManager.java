@@ -179,7 +179,7 @@ public class ArmorModificationManager {
 				armorDamage = 1;
 			
 			for (int i = 0; i < 4; i++) {
-				ItemStack armor = event.entityLiving.getCurrentArmor(i);
+				ItemStack armor = event.entityLiving.getEquipmentInSlot(i + 1);//.getCurrentArmor(i);
 				if (armor != null) {
 					if (armor.getItem() instanceof Armor) {
 						for (int j = 0; j < armorDamage; j++)

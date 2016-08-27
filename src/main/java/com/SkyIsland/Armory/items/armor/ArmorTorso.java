@@ -320,7 +320,8 @@ public class ArmorTorso extends Armor {
 
 	@Override
 	public void clientInit() {
-		
+		super.clientInit();
+		; //nothing else to do
 	}
 
 }

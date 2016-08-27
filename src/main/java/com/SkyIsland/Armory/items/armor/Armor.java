@@ -56,6 +56,10 @@ public abstract class Armor extends ItemArmor {
 			this.canRepair = false;
 			this.setUnlocalizedName(Armory.MODID + "_armorpiece_" + itemKey);
 			
+			
+		}
+		
+		public void clientInit() {
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 	    	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + Armory.MODID + "_armorpiece_" + itemKey, "inventory"));
 		}
