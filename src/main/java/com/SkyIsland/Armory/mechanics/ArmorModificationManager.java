@@ -59,21 +59,6 @@ public class ArmorModificationManager {
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
 	
-	///TEST CODE/////////////////////////////
-	
-	@SubscribeEvent
-	public void onTest(UseHoeEvent event) {
-		ItemStack stack;
-		Map<DamageType, Float> map = DamageType.freshMap();
-		map.put(DamageType.PIERCE, 50.0f);
-		
-		stack = Weapon.constructWeapon(
-				WeaponItems.getWeaponBase(Weapons.SWORD), map);
-		event.entityPlayer.inventory.addItemStackToInventory(stack);
-	}
-	
-	/////////////////////////////////////////
-	
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)
 	{

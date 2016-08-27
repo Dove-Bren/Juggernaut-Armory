@@ -9,6 +9,7 @@ import java.util.Map;
 import org.lwjgl.input.Keyboard;
 
 import com.SkyIsland.Armory.chat.ChatFormat;
+import com.SkyIsland.Armory.items.weapons.Weapon;
 import com.SkyIsland.Armory.mechanics.ArmorUtils;
 import com.SkyIsland.Armory.mechanics.DamageType;
 import com.SkyIsland.Armory.mechanics.WeaponUtils;
@@ -56,8 +57,9 @@ public class ItemListener {
 						event.toolTip.add("[Hold Shift]");
 					}
 				}
-			} else if (stack.getItem() instanceof ItemSword ||
-					stack.getAttributeModifiers().containsKey(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName())) {
+			} else if (stack.getItem() instanceof Weapon 
+					|| stack.getItem() instanceof ItemSword
+					|| stack.getAttributeModifiers().containsKey(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName())) {
 				//weapon, from what it looks
 				
 				//remove attack damage line if it exists
