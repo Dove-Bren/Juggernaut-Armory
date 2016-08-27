@@ -336,9 +336,10 @@ public abstract class Weapon extends Item {
 		return blockReduction;
 	}
 	
-	public static ItemStack constructWeapon(Weapon base, Map<DamageType, Float> damageMap) {
+	public static ItemStack constructWeapon(Weapon base, String name, Map<DamageType, Float> damageMap) {
 		ItemStack stack = new ItemStack(base);
 		
+		stack.setStackDisplayName(name);
 		if (!stack.hasTagCompound())
 			stack.setTagCompound(new NBTTagCompound());
 		
