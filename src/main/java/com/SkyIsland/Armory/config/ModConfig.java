@@ -6,7 +6,9 @@ import java.util.Map;
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.network.RequestServerConfigMessage;
 import com.SkyIsland.Armory.config.network.ResponseServerConfigMessage;
+import com.SkyIsland.Armory.config.network.ServerConfigMessage;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -166,8 +168,9 @@ public class ModConfig {
 		
 		channel = NetworkRegistry.INSTANCE.newSimpleChannel(CHANNEL_NAME);
 		
-		channel.registerMessage(RequestServerConfigMessage.Handler.class, RequestServerConfigMessage.class, discriminator++, Side.SERVER);
-		channel.registerMessage(ResponseServerConfigMessage.Handler.class, ResponseServerConfigMessage.class, discriminator++, Side.CLIENT);
+		//channel.registerMessage(RequestServerConfigMessage.Handler.class, RequestServerConfigMessage.class, discriminator++, Side.SERVER);
+		//channel.registerMessage(ResponseServerConfigMessage.Handler.class, ResponseServerConfigMessage.class, discriminator++, Side.CLIENT);
+		channel.registerMessage(ServerConfigMessage.Handler.class, ServerConfigMessage.class, discriminator++, Side.CLIENT);
 		
 		Key.Category.deployCategories(base);
 		initConfig();
@@ -223,7 +226,12 @@ public class ModConfig {
 	
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent event) {
-		System.out.println("=================================================");
+		if (event.player instanceof EntityPlayerMP) {
+			Armory.logger.info("sending config overrides to client...");
+			Armory.proxy.sendServerConfig((EntityPlayerMP) event.player);
+		} else {
+			Armory.logger.info("Ignoring player join event, as no MP =========================================");
+		}
 	}
 	
 	public boolean updateLocal(Key key, Object newValue) {

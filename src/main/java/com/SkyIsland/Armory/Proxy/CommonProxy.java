@@ -1,5 +1,10 @@
 package com.SkyIsland.Armory.proxy;
 
+import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.config.network.ServerConfigMessage;
+
+import net.minecraft.entity.player.EntityPlayerMP;
+
 public class CommonProxy  {
 	
 	/**
@@ -31,7 +36,7 @@ public class CommonProxy  {
 		  
 	  }
 
-	public void requestServerConfig() {
-		; //do nothing on server side
+	public void sendServerConfig(EntityPlayerMP player) {
+		ModConfig.channel.sendTo(new ServerConfigMessage(ModConfig.config), player);
 	}
 }
