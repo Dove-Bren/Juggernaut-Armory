@@ -30,4 +30,8 @@ public class CommonProxy  {
 	  {
 		  
 	  }
+
+	public void requestServerConfig() {
+		; //do nothing on server side
+	}
 }

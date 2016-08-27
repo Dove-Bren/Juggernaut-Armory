@@ -2,8 +2,10 @@ package com.SkyIsland.Armory.proxy;
 
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
-import com.SkyIsland.Armory.items.ArmorItems.Armors;
+import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.config.network.RequestServerConfigMessage;
 import com.SkyIsland.Armory.items.ArmorItems;
+import com.SkyIsland.Armory.items.ArmorItems.Armors;
 import com.SkyIsland.Armory.items.WeaponItems;
 import com.SkyIsland.Armory.items.WeaponItems.Weapons;
 
@@ -42,5 +44,10 @@ public class ClientProxy extends CommonProxy {
 	 */
 	public void postInit() {
 	
+	}
+	
+	@Override
+	public void requestServerConfig() {
+		ModConfig.channel.sendToServer(new RequestServerConfigMessage());
 	}
 }

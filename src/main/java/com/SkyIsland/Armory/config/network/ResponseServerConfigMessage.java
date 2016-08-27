@@ -21,6 +21,8 @@ public class ResponseServerConfigMessage implements IMessage {
 		@Override
 		public IMessage onMessage(ResponseServerConfigMessage message, MessageContext ctx) {
 			//have tag, now read it into local config
+			System.out.println(message.tag);
+			
 			for (ModConfig.Key key : ModConfig.Key.values())
 			if (key.isServerBound()) {
 				//load up value from nbt tag

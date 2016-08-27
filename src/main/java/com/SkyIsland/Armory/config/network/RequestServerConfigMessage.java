@@ -19,7 +19,7 @@ public class RequestServerConfigMessage implements IMessage {
 
 		@Override
 		public ResponseServerConfigMessage onMessage(RequestServerConfigMessage message, MessageContext ctx) {
-			Armory.logger.info("Recieved config request from client");
+			Armory.logger.info("====================================================================================================================================Recieved config request from client");
 			return new ResponseServerConfigMessage(ModConfig.config);
 		}
 		
