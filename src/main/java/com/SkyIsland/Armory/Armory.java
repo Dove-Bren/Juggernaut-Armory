@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = Armory.MODID, version = Armory.VERSION)
+@Mod(modid = Armory.MODID, name = "Skylander Armory", version = Armory.VERSION, guiFactory = "com.SkyIsland.Armory.config.ConfigGuiFactory")
 public class Armory {
 
 	@Instance(value = Armory.MODID) //Tell Forge what instance to use.

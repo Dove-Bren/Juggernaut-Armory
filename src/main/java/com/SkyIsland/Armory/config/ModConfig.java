@@ -1,6 +1,11 @@
 package com.SkyIsland.Armory.config;
 
+import com.SkyIsland.Armory.Armory;
+
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ModConfig {
 
@@ -60,16 +65,31 @@ public class ModConfig {
 		protected Object getDefault() {
 			return def;
 		}
+		
+		/**
+		 * Returns whether this config option can be changed at runtime
+		 * @return
+		 */
+		public boolean isRuntime() {
+			if (category == Category.SERVER)
+				return false;
+			
+			//add other cases as they come
+			
+			return true;
+		}
 	}
 	
 	public static ModConfig config;
 	
-	private Configuration base;
+	public Configuration base;
 	
 	public ModConfig(Configuration config) {
 		this.base = config;
 		ModConfig.config = this;
 		initConfig();
+		
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	private void initConfig() {
@@ -103,5 +123,13 @@ public class ModConfig {
 	public Boolean get(Key key, Boolean defaultValue) {
 		return base.getBoolean(key.getKey(), key.getCategory(), defaultValue,
 				key.getDescription());
+	}
+	
+	@SubscribeEvent
+	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
+		if(eventArgs.modID.equals(Armory.MODID)) {
+			//nothing to do now. This is where the hook happens
+			//TODO
+		}
 	}
 }
