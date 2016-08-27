@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -123,13 +124,13 @@ public class ModConfig {
 				tag = new NBTTagCompound();
 			
 			if (def instanceof Float)
-				tag.setFloat(key, config.getFloatValue(this)); 
+				tag.setFloat(key, config.getFloatValue(this, false)); 
 			else if (def instanceof Boolean)
-				tag.setBoolean(key, config.getBooleanValue(this));
+				tag.setBoolean(key, config.getBooleanValue(this, false));
 			else if (def instanceof Integer)
-				tag.setInteger(key, config.getIntValue(this));
+				tag.setInteger(key, config.getIntValue(this, false));
 			else
-				tag.setString(key, config.getStringValue(this));
+				tag.setString(key, config.getStringValue(this, false));
 		}
 
 		public Object valueFromNBT(NBTTagCompound tag) {
@@ -208,7 +209,7 @@ public class ModConfig {
 	private void loadLocals() {
 		for (Key key : Key.values())
 		if (key.isServerBound() || !key.isRuntime()) {
-			localValues.put(key, getRawObject(key));
+			localValues.put(key, getRawObject(key, true));
 		}
 	}
 	
@@ -232,6 +233,13 @@ public class ModConfig {
 		}
 	}
 	
+	@SubscribeEvent
+	public void onPlayerDisconnect(WorldEvent.Unload event) {
+		//reset config
+		Armory.logger.info("Resetting config local values");
+		loadLocals();
+	}
+	
 	public boolean updateLocal(Key key, Object newValue) {
 		if (localValues.containsKey(key)) {
 			if (key.getDefault().getClass().isAssignableFrom(newValue.getClass())) {
@@ -252,67 +260,67 @@ public class ModConfig {
 	// I wanted to make this dynamic, but there's no
 	// configuration.get() that returns a blank object
 	////////////////////////////////////////////////////////////
-	protected boolean getBooleanValue(Key key) {
+	protected boolean getBooleanValue(Key key, boolean ignoreLocal) {
 		//DOESN'T cast check. Know what you're doing before you do it
-		if (localValues.containsKey(key))
+		if (!ignoreLocal && localValues.containsKey(key))
 			return (Boolean) localValues.get(key);
 		
 		return base.getBoolean(key.getKey(), key.getCategory(), (Boolean) key.getDefault(),
 				key.getDescription());
 	}
 
-	protected float getFloatValue(Key key) {
+	protected float getFloatValue(Key key, boolean ignoreLocal) {
 		//DOESN'T cast check. Know what you're doing before you do it
-		if (localValues.containsKey(key))
+		if (!ignoreLocal && localValues.containsKey(key))
 			return (Float) localValues.get(key);
 		
 		return base.getFloat(key.getKey(), key.getCategory(), (Float) key.getDefault(),
 				Float.MIN_VALUE, Float.MAX_VALUE, key.getDescription());
 	}
 
-	protected int getIntValue(Key key) {
+	protected int getIntValue(Key key, boolean ignoreLocal) {
 		//DOESN'T cast check. Know what you're doing before you do it
-		if (localValues.containsKey(key))
+		if (!ignoreLocal && localValues.containsKey(key))
 			return (Integer) localValues.get(key);
 		
 		return base.getInt(key.getKey(), key.getCategory(), (Integer) key.getDefault(),
 				Integer.MIN_VALUE, Integer.MAX_VALUE, key.getDescription());
 	}
 
-	protected String getStringValue(Key key) {
+	protected String getStringValue(Key key, boolean ignoreLocal) {
 		//DOESN'T cast check. Know what you're doing before you do it
-		if (localValues.containsKey(key))
+		if (!ignoreLocal && localValues.containsKey(key))
 			return (String) localValues.get(key);
 		
 		return base.getString(key.getKey(), key.getCategory(), (String) key.getDefault(),
 				key.getDescription());
 	}
 	
-	private Object getRawObject(Key key) {
+	private Object getRawObject(Key key, boolean ignoreLocal) {
 		if (key.getDefault() instanceof Float)
-			return getFloatValue(key); 
+			return getFloatValue(key, ignoreLocal); 
 		else if (key.getDefault() instanceof Boolean)
-			return getBooleanValue(key);
+			return getBooleanValue(key, ignoreLocal);
 		else if (key.getDefault() instanceof Integer)
-			return getIntValue(key);
+			return getIntValue(key, ignoreLocal);
 		else
-			return getStringValue(key);
+			return getStringValue(key, ignoreLocal);
 	}
 	
 	public boolean getMechanicsEnabled() {
-		return getBooleanValue(Key.ENABLE_MECHANICS);
+		return getBooleanValue(Key.ENABLE_MECHANICS, false);
 	}
 	
 	public boolean getShowZeros() {
-		return getBooleanValue(Key.SHOW_ZEROS);
+		return getBooleanValue(Key.SHOW_ZEROS, false);
 	}
 	
 	public float getArmorRate() {
-		return getFloatValue(Key.ARMOR_RATE);
+		return getFloatValue(Key.ARMOR_RATE, false);
 	}
 	
 	public float getDefaultRatio() {
-		return getFloatValue(Key.DEFAULT_RATIO);
+		return getFloatValue(Key.DEFAULT_RATIO, false);
 	}
 	
 }

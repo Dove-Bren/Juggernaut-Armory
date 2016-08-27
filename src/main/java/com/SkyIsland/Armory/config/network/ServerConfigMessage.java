@@ -1,5 +1,6 @@
 package com.SkyIsland.Armory.config.network;
 
+import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
 
 import io.netty.buffer.ByteBuf;
@@ -21,6 +22,7 @@ public class ServerConfigMessage implements IMessage {
 		@Override
 		public IMessage onMessage(ServerConfigMessage message, MessageContext ctx) {
 			//have tag, now read it into local config
+			Armory.logger.info("Reading server config overrides");
 
 			for (ModConfig.Key key : ModConfig.Key.values())
 			if (key.isServerBound()) {
