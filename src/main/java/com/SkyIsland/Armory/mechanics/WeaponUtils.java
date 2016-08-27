@@ -32,9 +32,9 @@ public final class WeaponUtils {
 		
 		//check to see if it's some of our weapons
 		if (weapon.getItem() instanceof Weapon)
-			return getCustomValues(weapon);
+			return getCustomValues(weapon, defaultDamage);
 		else if (WeaponManager.instance() != null && WeaponManager.instance().hasWeaponRegistered(weapon.getItem()))
-			return getDefinedValues(weapon);
+			return getDefinedValues(weapon, defaultDamage);
 		else
 			return getVanillaValues(weapon, defaultDamage);
 	}
@@ -69,11 +69,14 @@ public final class WeaponUtils {
 	 * @return
 	 * @see {@code WeaponManager}
 	 */
-	private static Map<DamageType, Float> getDefinedValues(ItemStack weapon) {
+	private static Map<DamageType, Float> getDefinedValues(ItemStack weapon, float defaultDamage) {
 		Map<DamageType, Float> map = new EnumMap<DamageType, Float>(DamageType.class);
 		
 		for (DamageType type : DamageType.values())
 			map.put(type, WeaponManager.instance().getDamage(weapon.getItem(), type));
+		
+		//adjust additional damage from player's
+		factorModifier(map, defaultDamage);
 		
 		return map;
 	}
@@ -194,9 +197,35 @@ public final class WeaponUtils {
 	 * @param armor
 	 * @return
 	 */
-	private static Map<DamageType, Float> getCustomValues(ItemStack weapon) {
+	private static Map<DamageType, Float> getCustomValues(ItemStack weapon, float defaultDamage) {
 		Weapon base = (Weapon) weapon.getItem();
 		
-		return base.getDamageMap();
+		//adjust additional damage from player's
+		Map<DamageType, Float> map = base.getDamageMap();
+		factorModifier(map, defaultDamage);
+		
+		return map;
+	}
+	
+	/**
+	 * Takes the given map and adds the extra points according to which types of
+	 * damage already have damage. For example, a pure slash weapon will get
+	 * all points added striaght to the slash entry. A weapon that does equal
+	 * parts slash and pierce damage would get half added to each.
+	 * @param damageMap
+	 * @param extraDamage
+	 */
+	private static void factorModifier(Map<DamageType, Float> damageMap, float extraDamage) {
+		float total = 0.0f;
+		for (DamageType key : DamageType.values()) {
+			total += damageMap.get(key);
+		}
+		
+		float old;
+		for (DamageType key : DamageType.values()) {
+			old = damageMap.get(key);
+			damageMap.put(key, old
+					+ ((old / total) * extraDamage) );
+		}
 	}
 }
