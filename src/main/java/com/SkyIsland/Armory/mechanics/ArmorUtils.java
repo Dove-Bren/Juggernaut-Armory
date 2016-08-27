@@ -4,6 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.SkyIsland.Armory.api.ArmorManager;
+import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.armor.Armor;
 
 import net.minecraft.item.ItemArmor;
@@ -63,7 +64,7 @@ public final class ArmorUtils {
 		ItemArmor item = (ItemArmor) armor.getItem();
 		float points = (float) item.damageReduceAmount;
 		
-		points *= ArmorModificationManager.instance().defaultSplitRate;
+		points *= ModConfig.config.getDefaultRatio();//ArmorModificationManager.instance().defaultSplitRate;
 		
 		Map<DamageType, Float> map = new EnumMap<DamageType, Float>(DamageType.class);
 		

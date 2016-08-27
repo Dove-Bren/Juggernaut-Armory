@@ -2,6 +2,7 @@ package com.SkyIsland.Armory.mechanics;
 
 import java.util.Map;
 
+import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.armor.Armor;
 
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -40,17 +41,11 @@ public class ArmorModificationManager {
 		return instance;
 	}
 	
-	private float armorRate;
-	
-	public final float defaultSplitRate;
-	
-	private ArmorModificationManager(float armorRate, float defaultRate) {
-		this.armorRate = armorRate;
-		this.defaultSplitRate = defaultRate;
+	private ArmorModificationManager() {
 	}
 	
-	public static final void init(float armorRate, float defaultRate) {
-		instance = new ArmorModificationManager(armorRate, defaultRate);
+	public static final void init() {
+		instance = new ArmorModificationManager();
 		
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
@@ -132,6 +127,10 @@ public class ArmorModificationManager {
 	
 	@SubscribeEvent(priority=EventPriority.LOWEST)
 	public void onEntityHurt(LivingHurtEvent event) {
+		if (!ModConfig.config.getMechanicsEnabled()) {
+    		return;
+    	}
+		
 		//here we calculate damage with out armor values
 		
 		//NOTE: bypassing armor means that damage will not be modified
@@ -161,7 +160,7 @@ public class ArmorModificationManager {
 				continue;
 			
 			float protection = calculateProtection(event.entityLiving, type);
-			float reduction = protection * armorRate; //what percentage to subtract off
+			float reduction = protection * ModConfig.config.getArmorRate(); //what percentage to subtract off
 			
 			if (reduction < 0.0f)
 				reduction = 0.0f;
@@ -195,6 +194,10 @@ public class ArmorModificationManager {
 	
 	@SubscribeEvent
 	public void onPlayerHitEntity(AttackEntityEvent event) {
+		if (!ModConfig.config.getMechanicsEnabled()) {
+    		return;
+    	}
+		
 		if (event.isCanceled())
 			return;
 		

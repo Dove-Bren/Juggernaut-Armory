@@ -51,16 +51,12 @@ public class Armory {
     {
         // some example code
         //System.out.println("DIRT BLOCK >> "+Blocks.dirt.getUnlocalizedName());
-
 	    
 	    WeaponItems.initItems();
 	    ArmorItems.initItems();
 	    proxy.init();
 	    
-	    float armorRate = 0.05f;
-	    float defaultRate = 0.70f;
-	    
-	    ArmorModificationManager.init(armorRate, defaultRate);
+	    ArmorModificationManager.init();
 	    ArmorManager.init();
 	    WeaponManager.init();
 	    
