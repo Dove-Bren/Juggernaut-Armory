@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
-import com.SkyIsland.Armory.config.network.RequestServerConfigMessage;
-import com.SkyIsland.Armory.config.network.ResponseServerConfigMessage;
 import com.SkyIsland.Armory.config.network.ServerConfigMessage;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -238,7 +236,6 @@ public class ModConfig {
 		if (localValues.containsKey(key)) {
 			if (key.getDefault().getClass().isAssignableFrom(newValue.getClass())) {
 				localValues.put(key, newValue);
-				Armory.logger.info("Added value to local key ==================================");
 				return true;
 			} else {
 				Armory.logger.warn("Bad attempted config assignment: "

@@ -21,7 +21,6 @@ public class ServerConfigMessage implements IMessage {
 		@Override
 		public IMessage onMessage(ServerConfigMessage message, MessageContext ctx) {
 			//have tag, now read it into local config
-			System.out.println(message.tag);
 
 			for (ModConfig.Key key : ModConfig.Key.values())
 			if (key.isServerBound()) {

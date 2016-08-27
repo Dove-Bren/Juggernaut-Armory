@@ -154,8 +154,6 @@ public class ArmorModificationManager {
 //		Map<DamageType, Float> damageMap = WeaponUtils.getValues(inHand);
 		Map<DamageType, Float> damageMap = WeaponUtils.getValues(event.source, event.ammount);
 		
-		System.out.println("Damage map: " + damageMap);
-		
 		float totalDamage = 0.0f;
 		for (DamageType type : DamageType.values()) {
 			float damage = damageMap.get(type);
