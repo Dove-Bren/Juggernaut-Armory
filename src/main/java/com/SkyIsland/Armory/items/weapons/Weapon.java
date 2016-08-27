@@ -15,8 +15,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class Weapon extends Item {
 
-	protected Map<DamageType, Float> damageMap;
+	private static final String DAMAGE_KEY = "DamageComponents";
 	
 	/**
 	 * Number of seconds it takes to swing and be able to swing again. 0.0f results
@@ -57,11 +59,6 @@ public abstract class Weapon extends Item {
         this.swingSpeed = swingSpeed;
         this.canBlock = canBlock;
         this.blockReduction = blockReduction;
-        this.damageMap = damageMap;
-        
-        if (this.damageMap == null)
-        	this.damageMap = DamageType.freshMap();
-        
         this.setUnlocalizedName(unlocalizedName);
     }
     
@@ -75,7 +72,7 @@ public abstract class Weapon extends Item {
      */
     public float getDamageVsEntity()
     {
-        return damageMap.get(DamageType.SLASH);
+        return 1.0f;
     }
 
     public float getStrVsBlock(ItemStack stack, Block block)
@@ -327,14 +324,6 @@ public abstract class Weapon extends Item {
 //        
 //    }
 
-	public float getAttackDamage(DamageType type) {
-		return damageMap.get(type);
-	}
-	
-	public Map<DamageType, Float> getDamageMap() {
-		return damageMap;
-	}
-
 	public float getSwingSpeed() {
 		return swingSpeed;
 	}
@@ -345,6 +334,62 @@ public abstract class Weapon extends Item {
 
 	public float getBlockReduction() {
 		return blockReduction;
+	}
+	
+	public static ItemStack constructWeapon(Weapon base, Map<DamageType, Float> damageMap) {
+		ItemStack stack = new ItemStack(base);
+		
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		if (!stack.getTagCompound().hasKey(DAMAGE_KEY, NBT.TAG_COMPOUND))
+			stack.getTagCompound().setTag(DAMAGE_KEY, new NBTTagCompound());
+		
+		NBTTagCompound nbt = stack.getTagCompound().getCompoundTag(DAMAGE_KEY);
+		
+		for (DamageType type : DamageType.values())
+		if (damageMap.containsKey(type)) {
+			nbt.setFloat(type.name(), damageMap.get(type));
+		}
+		
+		return stack;
+	}
+
+	@Override
+	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+		super.onCreated(stack, worldIn, playerIn);
+		
+		//create nbt compound for itemstack
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		NBTTagCompound tag = stack.getTagCompound();
+		if (!tag.hasKey(DAMAGE_KEY, NBT.TAG_COMPOUND))
+			tag.setTag(DAMAGE_KEY, new NBTTagCompound());
+	}
+	
+	public Map<DamageType, Float> getDamageMap(ItemStack stack) {
+		if (stack == null || !stack.hasTagCompound())
+			return DamageType.freshMap();
+		
+		if (!stack.getTagCompound().hasKey(DAMAGE_KEY, NBT.TAG_COMPOUND))
+			stack.getTagCompound().setTag(DAMAGE_KEY, new NBTTagCompound());
+		
+		Map<DamageType, Float> map = DamageType.freshMap();
+		NBTTagCompound nbt = stack.getTagCompound().getCompoundTag(DAMAGE_KEY);
+		
+		for (DamageType type : DamageType.values()) {
+			if (!nbt.hasKey(type.name(), NBT.TAG_FLOAT))
+				map.put(type, 0.0f);
+			else
+				map.put(type, nbt.getFloat(type.name()));
+		}
+		
+		return map;
+	}
+	
+	public float getDamage(ItemStack stack, DamageType type) {
+		return getDamageMap(stack).get(type);
 	}
 
 }

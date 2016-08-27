@@ -201,7 +201,7 @@ public final class WeaponUtils {
 		Weapon base = (Weapon) weapon.getItem();
 		
 		//adjust additional damage from player's
-		Map<DamageType, Float> map = base.getDamageMap();
+		Map<DamageType, Float> map = base.getDamageMap(weapon);
 		factorModifier(map, defaultDamage);
 		
 		return map;
