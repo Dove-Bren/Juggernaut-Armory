@@ -42,7 +42,7 @@ public class ItemListener {
 	
 				List<String> hiddenList = new LinkedList<String>();
 				for (DamageType type : DamageType.values())
-				if (ModConfig.config.get(ModConfig.Key.SHOW_ZEROS, false) || protectionMap.get(type) != 0.0f)
+				if (ModConfig.config.getShowZeros() || protectionMap.get(type) != 0.0f)
 				if (type.isVisible()) {
 					if (type.alwaysShow())
 						event.toolTip.add(formatProtection(type, protectionMap.get(type)));
@@ -84,7 +84,7 @@ public class ItemListener {
 				List<String> hiddenList = new LinkedList<String>();
 				for (DamageType type : DamageType.values())
 				if (type.isVisible())
-				if (ModConfig.config.get(ModConfig.Key.SHOW_ZEROS, false) || damageMap.get(type) != 0.0f) {
+				if (ModConfig.config.getShowZeros() || damageMap.get(type) != 0.0f) {
 					if (type.alwaysShow())
 						event.toolTip.add(formatDamage(type, damageMap.get(type)));
 					else
