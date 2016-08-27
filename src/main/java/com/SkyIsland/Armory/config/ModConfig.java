@@ -15,14 +15,17 @@ public class ModConfig {
 		DEFAULT_RATIO(Category.SERVER, "default_rate", new Float(0.70f), "How many armor points to preserve on armor pieces that aren't defined. For example, vanilla diamond helmets (3.0 defense) receive (3.0 * default_rate) protection in all base areas. Default is 0.7"),
 		SHOW_ZEROS(Category.DISPLAY, "show_zeros", false, "When displaying damage or protection properties, should 0's be displayed? Default is false");
 		
-		private static enum Category {
-			SERVER("armory_server"),
-			DISPLAY("armory_display");
+		protected static enum Category {
+			SERVER("server", "Core properties that MUST be syncronized bytween the server and client. Client values ignored"),
+			DISPLAY("display", "Item tag information and gui display options");
 			
 			private String categoryName;
 			
-			private Category(String name) {
+			private String comment;
+			
+			private Category(String name, String tooltip) {
 				categoryName = name;
+				comment = tooltip;
 			}
 			
 			public String getName() {
@@ -32,6 +35,11 @@ public class ModConfig {
 			@Override
 			public String toString() {
 				return getName();
+			}
+			
+			public static void deployCategories(Configuration config) {
+				for (Category cat : values())
+					config.setCategoryComment(cat.categoryName, cat.comment);
 			}
 		}
 		
@@ -87,7 +95,10 @@ public class ModConfig {
 	public ModConfig(Configuration config) {
 		this.base = config;
 		ModConfig.config = this;
+		
+		Key.Category.deployCategories(base);
 		initConfig();
+		
 		
 		MinecraftForge.EVENT_BUS.register(this);
 	}
