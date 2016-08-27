@@ -9,6 +9,7 @@ import java.util.Map;
 import org.lwjgl.input.Keyboard;
 
 import com.SkyIsland.Armory.chat.ChatFormat;
+import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 import com.SkyIsland.Armory.mechanics.ArmorUtils;
 import com.SkyIsland.Armory.mechanics.DamageType;
@@ -30,7 +31,6 @@ public class ItemListener {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
-	
 	@SubscribeEvent
 	public void onItemTooltip(ItemTooltipEvent event){
 		ItemStack stack = event.itemStack;
@@ -42,6 +42,7 @@ public class ItemListener {
 	
 				List<String> hiddenList = new LinkedList<String>();
 				for (DamageType type : DamageType.values())
+				if (ModConfig.config.get(ModConfig.Key.SHOW_ZEROS, false) || protectionMap.get(type) != 0.0f)
 				if (type.isVisible()) {
 					if (type.alwaysShow())
 						event.toolTip.add(formatProtection(type, protectionMap.get(type)));
@@ -82,7 +83,8 @@ public class ItemListener {
 				
 				List<String> hiddenList = new LinkedList<String>();
 				for (DamageType type : DamageType.values())
-				if (type.isVisible()) {
+				if (type.isVisible())
+				if (ModConfig.config.get(ModConfig.Key.SHOW_ZEROS, false) || damageMap.get(type) != 0.0f) {
 					if (type.alwaysShow())
 						event.toolTip.add(formatDamage(type, damageMap.get(type)));
 					else

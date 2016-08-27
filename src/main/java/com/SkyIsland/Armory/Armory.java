@@ -7,6 +7,7 @@ import com.SkyIsland.Armory.api.ArmorManager;
 import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
+import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.WeaponItems;
 import com.SkyIsland.Armory.listeners.ItemListener;
@@ -16,6 +17,7 @@ import com.SkyIsland.Armory.proxy.CommonProxy;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -83,6 +85,8 @@ public class Armory {
 	    Pedestal.preInit();
 	  	
 	    proxy.preInit();
+	    
+	    new ModConfig(new Configuration(event.getSuggestedConfigurationFile()));
 	}
     
     //Event handling and registration stuff from Age of Titans

@@ -2,10 +2,7 @@ package com.SkyIsland.Armory.mechanics;
 
 import java.util.Map;
 
-import com.SkyIsland.Armory.items.WeaponItems;
-import com.SkyIsland.Armory.items.WeaponItems.Weapons;
 import com.SkyIsland.Armory.items.armor.Armor;
-import com.SkyIsland.Armory.items.weapons.Weapon;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -26,7 +23,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
