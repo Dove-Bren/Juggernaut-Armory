@@ -3,6 +3,8 @@ package com.SkyIsland.Armory.blocks;
 import org.lwjgl.opengl.GL11;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.config.ModConfig.Key;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 
 import net.minecraft.block.Block;
@@ -95,20 +97,26 @@ public class Pedestal extends BlockContainer {
 			public void renderTileEntityAt(PedestalTileEntity te, double x, double y, double z, float partialTicks,
 					int destroyStage) {
 
-				System.out.print(".");
 				if (te.heldRig == null)
 					return;
-				System.out.print(" ");
 				
 				GlStateManager.pushMatrix();
+				
+
 				
 				//don't use GL11 stuff, use the manager
 				//GL11.glTranslated(x, y + 1.0f, z);
 				GlStateManager.translate(x + 0.5, y + 1.0, z + 0.5);
-				
-				if (te.heldRig.getItem() instanceof ItemSword
-						|| te.heldRig.getItem() instanceof Weapon)
-					GlStateManager.rotate(45.0f, 0.5f, 0.5f, 0.5f);
+
+//				if (te.heldRig.getItem() instanceof ItemSword
+//						|| te.heldRig.getItem() instanceof Weapon)
+				GlStateManager.rotate(225.0f, 0.0f, 0.0f, 1.0f);
+//					GlStateManager.rotate(
+//							ModConfig.config.getTestValue(Key.ROTATE_ANGLE),
+//							ModConfig.config.getTestValue(Key.ROTATE_X),
+//							ModConfig.config.getTestValue(Key.ROTATE_Y),
+//							ModConfig.config.getTestValue(Key.ROTATE_Z));
+					
 				
 				GlStateManager.enableRescaleNormal();
 				GlStateManager.scale(1.0, 1.0, 1.0); //tweak for making smaller!
@@ -164,7 +172,7 @@ public class Pedestal extends BlockContainer {
 	
 	@Override
 	public int getRenderType() {
-		return -1; //not sure why
+		return 3; //not sure why
 	}
 	
 	@Override
@@ -192,7 +200,7 @@ public class Pedestal extends BlockContainer {
     			//remove
     			dePedestal(ent, playerIn);
     		} else
-    			enPedestal(ent, playerIn);
+    			return enPedestal(ent, playerIn);
     		
     	}
     	
@@ -206,13 +214,19 @@ public class Pedestal extends BlockContainer {
     	ent.heldRig = null;
     }
     
-    private void enPedestal(PedestalTileEntity ent, EntityPlayer player) {
+    private boolean enPedestal(PedestalTileEntity ent, EntityPlayer player) {
     	if (ent.heldRig != null) {
     		dePedestal(ent, player);
-    		return;
+    		return true;
     	}
     	
-    	ent.heldRig = player.getHeldItem().splitStack(1);
+    	if (player.getHeldItem().getItem() instanceof ItemSword
+    			|| player.getHeldItem().getItem() instanceof Weapon) {
+    		ent.heldRig = player.getHeldItem().splitStack(1);
+    		return true;
+    	}
+    	else
+    		return false;
     }
     
     @Override
