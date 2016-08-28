@@ -10,6 +10,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.SkyIsland.Armory.chat.ChatFormat;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.items.armor.Armor.ArmorPiece;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 import com.SkyIsland.Armory.mechanics.ArmorUtils;
 import com.SkyIsland.Armory.mechanics.DamageType;
@@ -35,7 +36,8 @@ public class ItemListener {
 	public void onItemTooltip(ItemTooltipEvent event){
 		ItemStack stack = event.itemStack;
 		if (stack != null) {
-			if (stack.getItem() instanceof ItemArmor) {
+			if (stack.getItem() instanceof ItemArmor
+					|| stack.getItem() instanceof ArmorPiece) {
 		
 			
 				Map<DamageType, Float> protectionMap = ArmorUtils.getValues(stack);

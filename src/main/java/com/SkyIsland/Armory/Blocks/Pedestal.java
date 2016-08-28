@@ -3,6 +3,7 @@ package com.SkyIsland.Armory.blocks;
 import org.lwjgl.opengl.GL11;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.items.weapons.Weapon;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -18,6 +19,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
@@ -103,6 +105,11 @@ public class Pedestal extends BlockContainer {
 				//don't use GL11 stuff, use the manager
 				//GL11.glTranslated(x, y + 1.0f, z);
 				GlStateManager.translate(x + 0.5, y + 1.0, z + 0.5);
+				
+				if (te.heldRig.getItem() instanceof ItemSword
+						|| te.heldRig.getItem() instanceof Weapon)
+					GlStateManager.rotate(45.0f, 0.5f, 0.5f, 0.5f);
+				
 				GlStateManager.enableRescaleNormal();
 				GlStateManager.scale(1.0, 1.0, 1.0); //tweak for making smaller!
 				

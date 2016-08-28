@@ -6,6 +6,7 @@ import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ArmorItems.Armors;
 import com.SkyIsland.Armory.items.WeaponItems;
 import com.SkyIsland.Armory.items.WeaponItems.Weapons;
+import com.SkyIsland.Armory.items.armor.Armor.ArmorPiece;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -49,5 +50,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void sendServerConfig(EntityPlayerMP player) {
 		; //do nothing on client side
+	}
+	
+	@Override
+	public void registerArmorPiece(ArmorPiece armorPiece) {
+		super.registerArmorPiece(armorPiece);
+		armorPiece.clientInit();
 	}
 }

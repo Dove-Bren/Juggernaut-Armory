@@ -2,8 +2,13 @@ package com.SkyIsland.Armory.mechanics;
 
 import java.util.Map;
 
+import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.items.ArmorItems;
+import com.SkyIsland.Armory.items.ArmorItems.Armors;
 import com.SkyIsland.Armory.items.armor.Armor;
+import com.SkyIsland.Armory.items.armor.ArmorTorso;
+import com.SkyIsland.Armory.items.armor.ExtendedArmorMaterial;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -24,6 +29,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -49,6 +55,52 @@ public class ArmorModificationManager {
 		
 		MinecraftForge.EVENT_BUS.register(instance);
 	}
+	
+	///TEST CODE/////////////////////////////
+	
+			@SubscribeEvent
+			public void onTest(UseHoeEvent event) {
+				ItemStack stack;
+				
+//				
+//				stack = Weapon.constructWeapon(
+//						WeaponItems.getWeaponBase(Weapons.SWORD), map);
+				
+				ExtendedArmorMaterial material = Armory.material;
+				ItemStack piece = ((ArmorTorso) ArmorItems.getArmorBase(Armors.TORSO)).getComponentItem(ArmorTorso.Slot.BREASTPLATE)
+						.constructPiece(material);
+				ItemStack piece3 = ((ArmorTorso) ArmorItems.getArmorBase(Armors.TORSO)).getComponentItem(ArmorTorso.Slot.PAULDRON_LEFT)
+						.constructPiece(material);
+				
+				ItemStack piece2 = ((ArmorTorso) ArmorItems.getArmorBase(Armors.TORSO)).getComponentItem(ArmorTorso.Slot.BREASTPLATE)
+						.constructPiece(material);
+				
+				stack = new ItemStack(ArmorItems.getArmorBase(Armors.TORSO));
+				((ArmorTorso) ArmorItems.getArmorBase(Armors.TORSO))
+					.setArmorPiece(stack, ArmorTorso.Slot.BREASTPLATE, 
+							piece
+							);
+				((ArmorTorso) ArmorItems.getArmorBase(Armors.TORSO))
+				.setArmorPiece(stack, ArmorTorso.Slot.PAULDRON_LEFT, 
+						piece3
+						);
+				
+				/**
+			     * Creates a new Extended material from the provided values
+			     * @param name Name of the material
+			     * @param texturePrefix prefix to all textures of this material
+			     * @param baseDurability Durability based. Part durability ratios are multiplied by this to get actual part durability
+			     * @param majorPartRatios Part-to-part ratio of protection amongst the four armor pieces. Arrangement is per {@link ArmorSlot}
+			     * @param fullProtectionMap Map between damage types and the <i>total protection from a complete set</i> made from this material.
+			     * @param enchantability
+			     * @param baseMaterial Material used to create and repair things
+			     */
+				
+				event.entityPlayer.inventory.addItemStackToInventory(stack);
+				event.entityPlayer.inventory.addItemStackToInventory(piece2);
+			}
+			
+		/////////////////////////////////////////
 	
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)

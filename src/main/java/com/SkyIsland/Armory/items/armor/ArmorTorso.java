@@ -20,9 +20,10 @@ public class ArmorTorso extends Armor {
 
 	public static enum Slot {
 		BREASTPLATE(1, "Breastplate", true),
-		VAMBRACE(2, "Vambrace", true),
-		PAULDRON_LEFT(3, "Pauldron_Left", true),
-		PAULDRON_RIGHT(4, "Pauldron_Right", true),
+		VAMBRACE_LEFT(2, "Vambrace_Left", true),
+		VAMBRACE_RIGHT(3, "Vambrace_Right", true),
+		PAULDRON_LEFT(4, "Pauldron_Left", true),
+		PAULDRON_RIGHT(5, "Pauldron_Right", true),
 		CAPE(0, "Cape", false);
 		
 		public static Slot FromSlot(int inventoryPos) {
@@ -241,11 +242,59 @@ public class ArmorTorso extends Armor {
 		pieces = new EnumMap<Slot, ArmorPiece>(Slot.class);
 		
 		//initialize slot pieces
-		pieces.put(Slot.BREASTPLATE, new ArmorPiece("breastplate"));
-		pieces.put(Slot.VAMBRACE, new ArmorPiece("vambrace"));
-		pieces.put(Slot.PAULDRON_LEFT, new ArmorPiece("pauldron_left"));
-		pieces.put(Slot.PAULDRON_RIGHT, new ArmorPiece("pauldron_right"));
-		pieces.put(Slot.CAPE, new ArmorPiece("cape"));
+		Map<DamageType, Float> pieceContribution;
+		
+		pieceContribution = DamageType.freshMap();
+			pieceContribution.put(DamageType.SLASH, 0.40f);
+			pieceContribution.put(DamageType.PIERCE, 0.60f);
+			pieceContribution.put(DamageType.CRUSH, 0.50f);
+			pieceContribution.put(DamageType.MAGIC, 0.10f);
+			pieceContribution.put(DamageType.OTHER, 0.20f);
+		pieces.put(Slot.BREASTPLATE, new ArmorPiece("breastplate", ArmorSlot.TORSO, pieceContribution, 1.2f));
+		
+		pieceContribution = DamageType.freshMap();
+			pieceContribution.put(DamageType.SLASH, 0.20f);
+			pieceContribution.put(DamageType.PIERCE, 0.10f);
+			pieceContribution.put(DamageType.CRUSH, 0.05f);
+			pieceContribution.put(DamageType.MAGIC, 0.40f);
+			pieceContribution.put(DamageType.OTHER, 0.20f);
+		pieces.put(Slot.VAMBRACE_LEFT, new ArmorPiece("vambrace_left", ArmorSlot.TORSO, pieceContribution, 0.8f));
+		
+		pieceContribution = DamageType.freshMap();
+			pieceContribution.put(DamageType.SLASH, 0.30f);
+			pieceContribution.put(DamageType.PIERCE, 0.10f);
+			pieceContribution.put(DamageType.CRUSH, 0.05f);
+			pieceContribution.put(DamageType.MAGIC, 0.20f);
+			pieceContribution.put(DamageType.OTHER, 0.20f);
+		pieces.put(Slot.VAMBRACE_RIGHT, new ArmorPiece("vambrace_right", ArmorSlot.TORSO, pieceContribution, 0.8f));
+		
+		pieceContribution = DamageType.freshMap();
+			pieceContribution.put(DamageType.SLASH, 0.05f);
+			pieceContribution.put(DamageType.PIERCE, 0.10f);
+			pieceContribution.put(DamageType.CRUSH, 0.20f);
+			pieceContribution.put(DamageType.MAGIC, 0.15f);
+			pieceContribution.put(DamageType.OTHER, 0.20f);
+		pieces.put(Slot.PAULDRON_LEFT, new ArmorPiece("pauldron_left", ArmorSlot.TORSO, pieceContribution, 0.7f));
+		
+		pieceContribution = DamageType.freshMap();
+			pieceContribution.put(DamageType.SLASH, 0.05f);
+			pieceContribution.put(DamageType.PIERCE, 0.10f);
+			pieceContribution.put(DamageType.CRUSH, 0.20f);
+			pieceContribution.put(DamageType.MAGIC, 0.15f);
+			pieceContribution.put(DamageType.OTHER, 0.20f);
+		pieces.put(Slot.PAULDRON_RIGHT, new ArmorPiece("pauldron_right", ArmorSlot.TORSO, pieceContribution, 0.7f));
+		
+		pieceContribution = DamageType.freshMap();
+			pieceContribution.put(DamageType.SLASH, 0.0f);
+			pieceContribution.put(DamageType.PIERCE, 0.0f);
+			pieceContribution.put(DamageType.CRUSH, 0.0f);
+			pieceContribution.put(DamageType.MAGIC, 0.0f);
+			pieceContribution.put(DamageType.OTHER, 0.0f);
+		pieces.put(Slot.CAPE, new ArmorPiece("cape", ArmorSlot.TORSO, pieceContribution, 1.0f));
+	}
+	
+	public ArmorPiece getComponentItem(Slot slot) {
+		return pieces.get(slot);
 	}
 
 	@Override

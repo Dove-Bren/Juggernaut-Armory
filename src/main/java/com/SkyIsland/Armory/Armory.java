@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory;
 
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,9 +11,12 @@ import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.ArmorItems;
+import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.items.WeaponItems;
+import com.SkyIsland.Armory.items.armor.ExtendedArmorMaterial;
 import com.SkyIsland.Armory.listeners.ItemListener;
 import com.SkyIsland.Armory.mechanics.ArmorModificationManager;
+import com.SkyIsland.Armory.mechanics.DamageType;
 import com.SkyIsland.Armory.proxy.CommonProxy;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -45,6 +50,8 @@ public class Armory {
     public static CreativeTabs creativeTab;	
     
     public static ItemListener itemLister;
+
+	public static ExtendedArmorMaterial material;
  
     @EventHandler
     public void init(FMLInitializationEvent event)
@@ -83,8 +90,26 @@ public class Armory {
 	    proxy.preInit();
 	    
 	    new ModConfig(new Configuration(event.getSuggestedConfigurationFile()));
+	    new ModelRegistry();
+	    
+	    Map<DamageType, Float> map = DamageType.freshMap();
+		map.put(DamageType.SLASH, 14.0f);
+		map.put(DamageType.PIERCE, 12.0f);
+		map.put(DamageType.CRUSH, 10.0f);
+		map.put(DamageType.MAGIC, 0.0f);
+		map.put(DamageType.OTHER, 0.0f);
+	    
+	    material = new ExtendedArmorMaterial(
+				"void",
+				"void",
+				100,
+				new float[]{.15f, .4f, .3f, .15f},
+				map,
+				25,
+				Items.iron_ingot
+				);
 	}
-    
+	
     //Event handling and registration stuff from Age of Titans
     //    \/   \/     \/    \/   \/    \/    \/     \/
     

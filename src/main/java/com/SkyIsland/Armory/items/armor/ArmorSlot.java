@@ -1,0 +1,31 @@
+package com.SkyIsland.Armory.items.armor;
+
+public enum ArmorSlot {
+	HELMET(0),
+	TORSO(1),
+	LEGS(2),
+	FEET(3);
+	
+	private int slot;
+	
+	private ArmorSlot(int slot) {
+		this.slot = slot;
+	}
+	
+	public int getSlot() {
+		return slot;
+	}
+
+	/**
+	 * Looks up which enum member corresponds to the vanilla constant armor piece
+	 * @param armorType
+	 * @return the ArmorSlot the type corresponds to, or null if none
+	 */
+	public static ArmorSlot getSlot(int armorType) {
+		for (ArmorSlot slot : values())
+			if (slot.slot == armorType)
+				return slot;
+		
+		return null;
+	}
+}
