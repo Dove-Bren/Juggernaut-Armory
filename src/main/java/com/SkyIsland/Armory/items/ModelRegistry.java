@@ -142,7 +142,8 @@ public class ModelRegistry {
 //		}
 
 		for (Entry<String, ISmartItemModel> registered : wholeMap.entrySet()) {
-			event.modelRegistry.putObject(new ModelResourceLocation(registered.getKey()),
+			System.out.println("injecting: " + registered.getKey());
+			event.modelRegistry.putObject(new ModelResourceLocation(registered.getKey(), "inventory"),
 					registered.getValue());
 		}
 	}
