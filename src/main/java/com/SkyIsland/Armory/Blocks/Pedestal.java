@@ -3,8 +3,6 @@ package com.SkyIsland.Armory.blocks;
 import org.lwjgl.opengl.GL11;
 
 import com.SkyIsland.Armory.Armory;
-import com.SkyIsland.Armory.config.ModConfig;
-import com.SkyIsland.Armory.config.ModConfig.Key;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 
 import net.minecraft.block.Block;

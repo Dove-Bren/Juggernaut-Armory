@@ -2,7 +2,6 @@ package com.SkyIsland.Armory.items.armor;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.UUID;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.items.ModelRegistry;
@@ -12,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

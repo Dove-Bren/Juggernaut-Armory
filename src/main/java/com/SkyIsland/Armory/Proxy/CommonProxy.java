@@ -1,6 +1,5 @@
 package com.SkyIsland.Armory.proxy;
 
-import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.config.network.ServerConfigMessage;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
