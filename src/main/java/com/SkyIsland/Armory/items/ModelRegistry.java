@@ -10,7 +10,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.SkyIsland.Armory.Armory;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -143,7 +142,8 @@ public class ModelRegistry {
 //		}
 
 		for (Entry<String, ISmartItemModel> registered : wholeMap.entrySet()) {
-			event.modelRegistry.putObject(new ModelResourceLocation(registered.getKey()),
+			System.out.println("injecting: " + registered.getKey());
+			event.modelRegistry.putObject(new ModelResourceLocation(registered.getKey(), "inventory"),
 					registered.getValue());
 		}
 	}

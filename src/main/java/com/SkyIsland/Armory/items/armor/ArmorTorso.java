@@ -376,8 +376,7 @@ public class ArmorTorso extends Armor {
 
 	@Override
 	protected ISmartItemModel getSmartModel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArmorSmartModel(this, null);
 	}
 
 }

@@ -1,53 +1,49 @@
 package com.SkyIsland.Armory.items.armor;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.SkyIsland.Armory.Armory;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.ISmartItemModel;
 
 @SuppressWarnings("deprecation")
-public class ArmorPieceSmartModel implements ISmartItemModel {
+public class ArmorSmartModel implements ISmartItemModel {
 	
-	private ArmorPiece originPiece;
-	
-	private String texturePrefix;
+	//private Armor originPiece;
 	
 	private IBakedModel baseModel;
 	
-	public ArmorPieceSmartModel(ArmorPiece piece, IBakedModel baseModel, float zheight) {
-		this.originPiece = piece;
+	private Collection<ItemStack> subItems;
+	
+	public ArmorSmartModel(Armor base, IBakedModel baseModel) {
+		//this.originPiece = base;
 		this.baseModel = baseModel;
-		//this.zheight = zheight;
-		
 	}
 	
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
-		texturePrefix = "";
-		if (stack != null && stack.getItem() instanceof ArmorPiece) {
-			texturePrefix = ((ArmorPiece) stack.getItem()).getUnderlyingMaterial(stack);
+		if (stack != null && stack.getItem() instanceof Armor) {
+			subItems = ((Armor) stack.getItem()).getNestedArmorStacks(stack);
+		} else {
+			subItems = new LinkedList<ItemStack>();
 		}
-		//return this;
+		return this;
 		
-		ModelManager manager = Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-				.getModelManager();
-		
-		IBakedModel model = manager.getModel(
-						new ModelResourceLocation(Armory.MODID + ":" + texturePrefix + "_" + originPiece.getModelSuffix(), "inventory")
-						);
-		
+//		ModelManager manager = Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+//				.getModelManager();
+//		
+//		IBakedModel model = manager.getModel(
+//						new ModelResourceLocation(Armory.MODID + ":" + texturePrefix + "_" + originPiece.getModelSuffix(), "inventory")
+//						);
+//		
 		//Minecraft.getMinecraft().getRenderItem().getItemModelMesher().
 		
 //		if (model == null || model == manager.getMissingModel()) {
@@ -57,7 +53,7 @@ public class ArmorPieceSmartModel implements ISmartItemModel {
 //			System.out.println("Successful [" + Armory.MODID + ":" + texturePrefix + "_" + originPiece.getModelSuffix() + "]");
 //		}
 		
-		return model;
+//		return model;
 		
 //		TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(
 //				Armory.MODID + ":" + texturePrefix + "_" + originPiece.getModelSuffix());
@@ -72,23 +68,49 @@ public class ArmorPieceSmartModel implements ISmartItemModel {
 	}
 
 	@Override
-	public List<BakedQuad> getFaceQuads(EnumFacing p_177551_1_) {
-		if (baseModel == null) {
-			return new ArrayList<BakedQuad>();
+	public List<BakedQuad> getFaceQuads(EnumFacing facing) {
+		List<BakedQuad> quadList = new LinkedList<BakedQuad>();
+		if (baseModel != null)
+			quadList.addAll(baseModel.getFaceQuads(facing));
+		
+		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+		
+		if (subItems != null && !subItems.isEmpty())
+		for (ItemStack stack : subItems) {
+			IBakedModel model = mesher.getItemModel(stack);
+			if (model == null || model == mesher.getModelManager().getMissingModel()) {
+				System.out.println("Failed to get model for " + stack);
+			} else
+			quadList.addAll(
+					Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+					.getItemModel(stack).getFaceQuads(facing)
+					);
 		}
-		return baseModel.getFaceQuads(p_177551_1_);
+		
+		return quadList;
 	}
 
 	@Override
 	public List<BakedQuad> getGeneralQuads() {
-		return new LinkedList<BakedQuad>();
-//		if (bakery == null)
-//			bakery = new FaceBakery();
-//		
-//		List<BakedQuad> quadList = new LinkedList<BakedQuad>();
-//		
-//		if (baseModel != null)
-//			quadList.addAll(baseModel.getGeneralQuads());
+		List<BakedQuad> quadList = new LinkedList<BakedQuad>();
+		if (baseModel != null)
+			quadList.addAll(baseModel.getGeneralQuads());
+		
+		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+		
+		if (subItems != null && !subItems.isEmpty())
+		for (ItemStack stack : subItems) {
+			IBakedModel model = mesher.getItemModel(stack);
+			if (model == null || model == mesher.getModelManager().getMissingModel()) {
+				System.out.println("Failed to get model for " + stack);
+			} else
+			quadList.addAll(
+					model.getGeneralQuads()
+					);
+		}
+		
+		return quadList;
+		
 //		
 //		TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(
 //				Armory.MODID + ":" + texturePrefix + "_" + originPiece.getModelSuffix());
