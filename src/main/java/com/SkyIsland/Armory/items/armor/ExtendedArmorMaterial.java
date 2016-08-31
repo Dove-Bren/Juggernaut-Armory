@@ -6,10 +6,12 @@ import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Extended armor material that breaks down protection into different damage types.
@@ -17,6 +19,8 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
  * @see {@link net.minecraft.item.ItemArmor.ArmorMaterial}
  */
 public class ExtendedArmorMaterial {
+	
+	private static final String textureLocation = "";
 	
 	private String name;
 	
@@ -86,8 +90,10 @@ public class ExtendedArmorMaterial {
         	Armory.logger.warn("Duplicate material being registered: " + name
         			+ "! Taking newest version as version");
         }
+        Armory.proxy.registerMaterial(this);
         
         registeredMaterials.put(name, this);
+        ModelRegistry.instance.registerTexture(new ResourceLocation(Armory.MODID + ":" + textureLocation + texturePrefix));
     }
     
     private static float[] defaultRatios() {

@@ -6,7 +6,8 @@ import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ArmorItems.Armors;
 import com.SkyIsland.Armory.items.WeaponItems;
 import com.SkyIsland.Armory.items.WeaponItems.Weapons;
-import com.SkyIsland.Armory.items.armor.Armor.ArmorPiece;
+import com.SkyIsland.Armory.items.armor.ArmorPiece;
+import com.SkyIsland.Armory.items.armor.ExtendedArmorMaterial;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -56,5 +57,11 @@ public class ClientProxy extends CommonProxy {
 	public void registerArmorPiece(ArmorPiece armorPiece) {
 		super.registerArmorPiece(armorPiece);
 		armorPiece.clientInit();
+	}
+
+	@Override
+	public void registerMaterial(ExtendedArmorMaterial extendedArmorMaterial) {
+//		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+//		.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
 	}
 }

@@ -25,10 +25,8 @@ public class ModConfig {
 		ARMOR_RATE(Category.SERVER, "armor_rate", new Float(0.045f), true, "Damage reduction per 1.0 armor points. Default is 0.45, which means 20 armor points (max) reduces damage by (20 * 0.45 = 0.90 = 90%)"),
 		DEFAULT_RATIO(Category.SERVER, "default_rate", new Float(0.70f), true, "How many armor points to preserve on armor pieces that aren't defined. For example, vanilla diamond helmets (3.0 defense) receive (3.0 * default_rate) protection in all base areas. Default is 0.7"),
 		SHOW_ZEROS(Category.DISPLAY, "show_zeros", false, "When displaying damage or protection properties, should 0's be displayed? Default is false"),
-		ROTATE_ANGLE(Category.TEST, "rotate_angle", new Float(45.0f), false, "angle"),
-		ROTATE_X(Category.TEST, "rotate_x", new Float(0.5f), false, "x"),
-		ROTATE_Y(Category.TEST, "rotate_y", new Float(1.0f), false, "y"),
-		ROTATE_Z(Category.TEST, "rotate_z", new Float(0.5f), false, "z");
+		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
+		DEPTH_N(Category.TEST, "depth_n", new Float(0.1f), false, "north depth");
 		
 		protected static enum Category {
 			SERVER("server", "Core properties that MUST be syncronized bytween the server and client. Client values ignored"),

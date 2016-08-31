@@ -68,6 +68,8 @@ public class Armory {
 	    WeaponManager.init();
 	    
 	    Armory.itemLister = new ItemListener();
+	    
+	    ModelRegistry.instance.performInjection();
     }
     
 	@EventHandler
@@ -108,6 +110,7 @@ public class Armory {
 				25,
 				Items.iron_ingot
 				);
+	    
 	}
 	
     //Event handling and registration stuff from Age of Titans

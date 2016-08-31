@@ -3,7 +3,6 @@ package com.SkyIsland.Armory.items;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.items.armor.Armor;
 import com.SkyIsland.Armory.items.armor.ArmorTorso;
 
@@ -21,8 +20,8 @@ public final class ArmorItems {
 		
 		itemMap = new EnumMap<Armors, Armor>(Armors.class);
 		
-		itemMap.put(Armors.TORSO, new ArmorTorso(Armory.MODID + "_torso_base"));
-		GameRegistry.registerItem(itemMap.get(Armors.TORSO), Armory.MODID + "_torso_base");
+		itemMap.put(Armors.TORSO, new ArmorTorso("torso_base"));
+		GameRegistry.registerItem(itemMap.get(Armors.TORSO), "torso_base");
 		
 	}
 	

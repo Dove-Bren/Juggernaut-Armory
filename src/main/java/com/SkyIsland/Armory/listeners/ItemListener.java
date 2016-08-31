@@ -10,7 +10,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.SkyIsland.Armory.chat.ChatFormat;
 import com.SkyIsland.Armory.config.ModConfig;
-import com.SkyIsland.Armory.items.armor.Armor.ArmorPiece;
+import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 import com.SkyIsland.Armory.mechanics.ArmorUtils;
 import com.SkyIsland.Armory.mechanics.DamageType;

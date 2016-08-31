@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class ArmorTorso extends Armor {
@@ -371,6 +372,12 @@ public class ArmorTorso extends Armor {
 	public void clientInit() {
 		super.clientInit();
 		; //nothing else to do
+	}
+
+	@Override
+	protected ISmartItemModel getSmartModel() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

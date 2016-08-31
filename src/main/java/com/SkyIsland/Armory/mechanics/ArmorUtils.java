@@ -6,7 +6,7 @@ import java.util.Map;
 import com.SkyIsland.Armory.api.ArmorManager;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.armor.Armor;
-import com.SkyIsland.Armory.items.armor.Armor.ArmorPiece;
+import com.SkyIsland.Armory.items.armor.ArmorPiece;
 
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
