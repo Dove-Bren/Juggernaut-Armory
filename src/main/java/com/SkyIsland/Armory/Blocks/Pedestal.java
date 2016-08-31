@@ -1,13 +1,20 @@
 package com.SkyIsland.Armory.blocks;
 
+import java.util.Random;
+
 import org.lwjgl.opengl.GL11;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.config.ModConfig.Key;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -48,7 +55,7 @@ public class Pedestal extends BlockContainer {
 				heldRig.writeToNBT(itemTag);
 				tag.setTag("held", itemTag);
 			}
-
+			
 			super.writeToNBT(tag);
 		}
 		
@@ -98,22 +105,32 @@ public class Pedestal extends BlockContainer {
 				if (te.heldRig == null)
 					return;
 				
+				boolean rotate = false;
+				if (te.getBlockMetadata() > 3) //3 and 4 are W and E facings
+					rotate = true;
+				
 				GlStateManager.pushMatrix();
 				
 
 				
 				//don't use GL11 stuff, use the manager
 				//GL11.glTranslated(x, y + 1.0f, z);
-				GlStateManager.translate(x + 0.5, y + 1.0, z + 0.5);
+				GlStateManager.translate(x + 0.5, y + 0.85, z + 0.5);
+				
+
+				
+				if (rotate) {
+				GlStateManager.rotate(90.0f, 0.0f, 1.0f, 0.0f);
+//				GlStateManager.rotate(
+//						ModConfig.config.getTestValue(Key.ROTATE_ANGLE),
+//						ModConfig.config.getTestValue(Key.ROTATE_X),
+//						ModConfig.config.getTestValue(Key.ROTATE_Y),
+//						ModConfig.config.getTestValue(Key.ROTATE_Z));
+				}
 
 //				if (te.heldRig.getItem() instanceof ItemSword
 //						|| te.heldRig.getItem() instanceof Weapon)
 				GlStateManager.rotate(225.0f, 0.0f, 0.0f, 1.0f);
-//					GlStateManager.rotate(
-//							ModConfig.config.getTestValue(Key.ROTATE_ANGLE),
-//							ModConfig.config.getTestValue(Key.ROTATE_X),
-//							ModConfig.config.getTestValue(Key.ROTATE_Y),
-//							ModConfig.config.getTestValue(Key.ROTATE_Z));
 					
 				
 				GlStateManager.enableRescaleNormal();
@@ -136,6 +153,8 @@ public class Pedestal extends BlockContainer {
 	
 	public static final String unlocalizedName = "pedestal";
 	
+	protected static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+	
 	public static void preInit() {
 	
 		block = new Pedestal();
@@ -152,8 +171,10 @@ public class Pedestal extends BlockContainer {
 	
 	public Pedestal() {
 		super(Material.ground);
-		this.blockHardness = 200;
 		this.blockResistance = 45;
+		
+		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		
 		this.setStepSound(Block.soundTypeStone);
         //this.setBlockName(unlocalizedName); 1.7 method gone >:(
 		this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
@@ -178,11 +199,92 @@ public class Pedestal extends BlockContainer {
 		return false; //might not fill up whole block		
 	}
 	
+	private void setFacing(World worldIn, BlockPos pos, IBlockState state) {
+		if (!worldIn.isRemote)
+        {
+            Block block = worldIn.getBlockState(pos.north()).getBlock();
+            Block block1 = worldIn.getBlockState(pos.south()).getBlock();
+            Block block2 = worldIn.getBlockState(pos.west()).getBlock();
+            Block block3 = worldIn.getBlockState(pos.east()).getBlock();
+            EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+
+            if (enumfacing == EnumFacing.NORTH && block.isFullBlock() && !block1.isFullBlock())
+            {
+                enumfacing = EnumFacing.SOUTH;
+            }
+            else if (enumfacing == EnumFacing.SOUTH && block1.isFullBlock() && !block.isFullBlock())
+            {
+                enumfacing = EnumFacing.NORTH;
+            }
+            else if (enumfacing == EnumFacing.WEST && block2.isFullBlock() && !block3.isFullBlock())
+            {
+                enumfacing = EnumFacing.EAST;
+            }
+            else if (enumfacing == EnumFacing.EAST && block3.isFullBlock() && !block2.isFullBlock())
+            {
+                enumfacing = EnumFacing.WEST;
+            }
+
+            worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
+        }
+	}
+	
+	@Override
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+		setFacing(worldIn, pos, state);
+	}
+	
+	
+	/**
+     * Get the Item that this Block should drop when harvested.
+     */
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
+        return Item.getItemFromBlock(block);
+    }
+
+    /**
+     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
+     * IBlockstate
+     */
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+    }
+	
     /**
      * Called by ItemBlocks after a block is set in the world, to allow post-place logic
      */
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-    	worldIn.setBlockState(pos, state, 3);
+    	worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+    }
+    
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
+        EnumFacing enumfacing = EnumFacing.getFront(meta);
+
+        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+        {
+            enumfacing = EnumFacing.NORTH;
+        }
+
+        return this.getDefaultState().withProperty(FACING, enumfacing);
+    }
+    
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((EnumFacing)state.getValue(FACING)).getIndex();
+    }
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {FACING});
     }
 	
     /**
