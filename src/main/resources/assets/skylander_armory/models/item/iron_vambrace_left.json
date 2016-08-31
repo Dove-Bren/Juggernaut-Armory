@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "skylander_armory:blocks/whetstone_block"
+        "layer0": "items/arrow"
     },
     "display": {
         "thirdperson": {

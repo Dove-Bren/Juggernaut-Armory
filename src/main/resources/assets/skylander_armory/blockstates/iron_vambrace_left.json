@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "inventory": { "model": "skylander_armory:item/apieces/iron_vambrace_left" }
+    }
+}

@@ -73,6 +73,11 @@ public class ArmorModificationManager {
 						.constructPiece(material);
 				ItemStack piece4 = ((ArmorTorso) ArmorItems.getArmorBase(Armors.TORSO)).getComponentItem(ArmorTorso.Slot.VAMBRACE_LEFT)
 						.constructPiece(material);
+
+				ItemStack piece5 = ((ArmorTorso) ArmorItems.getArmorBase(Armors.TORSO)).getComponentItem(ArmorTorso.Slot.VAMBRACE_LEFT)
+						.constructPiece(
+								ExtendedArmorMaterial.lookupMaterial("iron")
+								);
 				
 				ItemStack piece2 = ((ArmorTorso) ArmorItems.getArmorBase(Armors.TORSO)).getComponentItem(ArmorTorso.Slot.BREASTPLATE)
 						.constructPiece(material);
@@ -101,6 +106,7 @@ public class ArmorModificationManager {
 				event.entityPlayer.inventory.addItemStackToInventory(stack);
 				event.entityPlayer.inventory.addItemStackToInventory(piece2);
 				event.entityPlayer.inventory.addItemStackToInventory(piece4);
+				event.entityPlayer.inventory.addItemStackToInventory(piece5);
 			}
 			
 		/////////////////////////////////////////

@@ -96,21 +96,20 @@ public class ModelRegistry {
 	
 	@SideOnly(Side.CLIENT)
 	public void performInjection() {
-		for (ResourceLocation sprite : textureList) {
-			int i = 1;
+		for (Entry<String, Pair<Item, ISmartItemModel>> model : componentMap.entrySet()) {
 			List<ModelResourceLocation> vars = new LinkedList<ModelResourceLocation>();
-			for (Entry<String, Pair<Item, ISmartItemModel>> model : componentMap.entrySet()) {
+			for (ResourceLocation sprite : textureList) {
 				System.out.println("injecting: " + sprite.toString() + "_" + model.getKey());
 //				Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(
 //						model.getValue().getLeft(), i++,
 //						new ModelResourceLocation(sprite.toString() + "_" + model.getKey())
 //						);
-				vars.add(new ModelResourceLocation(sprite.toString() + "_" + model.getKey()));
+				vars.add(new ModelResourceLocation(sprite.toString() + "_" + model.getKey(), "inventory"));
 			}
 			
-//			ModelBakery.registerItemVariants(model.getValue().getLeft(), 
-//					vars
-//					);
+			ModelBakery.registerItemVariants(model.getValue().getLeft(), 
+					vars.toArray(new ModelResourceLocation[1])
+					);
 		}
 	}
 	

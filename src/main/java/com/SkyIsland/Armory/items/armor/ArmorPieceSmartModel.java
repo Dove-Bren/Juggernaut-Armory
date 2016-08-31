@@ -59,12 +59,12 @@ public class ArmorPieceSmartModel implements ISmartItemModel {
 		
 		//Minecraft.getMinecraft().getRenderItem().getItemModelMesher().
 		
-		if (model == null || model == manager.getMissingModel()) {
-			System.out.println("Failed to fetch model for: "
-					+ Armory.MODID + ":" + texturePrefix + "_" + originPiece.getModelSuffix());
-		} else {
-			System.out.println("Successful [" + Armory.MODID + ":" + texturePrefix + "_" + originPiece.getModelSuffix() + "]");
-		}
+//		if (model == null || model == manager.getMissingModel()) {
+//			System.out.println("Failed to fetch model for: "
+//					+ Armory.MODID + ":" + texturePrefix + "_" + originPiece.getModelSuffix());
+//		} else {
+//			System.out.println("Successful [" + Armory.MODID + ":" + texturePrefix + "_" + originPiece.getModelSuffix() + "]");
+//		}
 		
 		return model;
 		
