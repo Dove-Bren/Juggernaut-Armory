@@ -10,6 +10,7 @@ import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.forge.ForgeBlocks;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.items.WeaponItems;
@@ -61,6 +62,7 @@ public class Armory {
 	    
 	    WeaponItems.initItems();
 	    ArmorItems.initItems();
+	    ForgeBlocks.initBlocks();
 	    proxy.init();
 	    
 	    ArmorModificationManager.init();
