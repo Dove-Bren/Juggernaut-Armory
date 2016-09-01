@@ -22,9 +22,13 @@ public class ModConfigGui extends GuiConfig {
 	private static List<IConfigElement> fetchComponents() {
 		List<IConfigElement> elementList = new LinkedList<IConfigElement>();
 		
-		for (Key key : ModConfig.Key.values())
-		if (key.isRuntime()) {
-			elementList.add(new ConfigElement(ModConfig.config.base.getCategory(key.getCategory())));
+//		for (Key key : ModConfig.Key.values())
+//		if (key.isRuntime()) {
+//			elementList.add(new ConfigElement(ModConfig.config.base.getCategory(key.getCategory())));
+//		}
+		
+		for (Key.Category category : ModConfig.Key.Category.values()) {
+			elementList.add(new ConfigElement(ModConfig.config.base.getCategory(category.getName())));
 		}
 		
 		return elementList;

@@ -1,7 +1,10 @@
 package com.SkyIsland.Armory.config;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.network.ServerConfigMessage;
@@ -25,14 +28,20 @@ public class ModConfig {
 		ARMOR_RATE(Category.SERVER, "armor_rate", new Float(0.045f), true, "Damage reduction per 1.0 armor points. Default is 0.45, which means 20 armor points (max) reduces damage by (20 * 0.45 = 0.90 = 90%)"),
 		DEFAULT_RATIO(Category.SERVER, "default_rate", new Float(0.70f), true, "How many armor points to preserve on armor pieces that aren't defined. For example, vanilla diamond helmets (3.0 defense) receive (3.0 * default_rate) protection in all base areas. Default is 0.7"),
 		SHOW_ZEROS(Category.DISPLAY, "show_zeros", false, "When displaying damage or protection properties, should 0's be displayed? Default is false"),
-		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
-		DEPTH_N(Category.TEST, "depth_n", new Float(0.1f), false, "north depth"),
-		ROTATE_ANGLE(Category.TEST, "rotate_angle", new Float(45.0f), false, "angle"),
-		ROTATE_X(Category.TEST, "rotate_x", new Float(0.5f), false, "x"),
-		ROTATE_Y(Category.TEST, "rotate_y", new Float(1.0f), false, "y"),
-		ROTATE_Z(Category.TEST, "rotate_z", new Float(0.5f), false, "z");
+		PEDESTAL_WIDTH(Category.TEST, "width", new Float(1.0f), false, "pedestal width (x)"),
+		PEDESTAL_DEPTH(Category.TEST, "depth", new Float(1.0f), false, "pedestal depth (z)"),
+		PEDESTAL_HEIGHT(Category.TEST, "height", new Float(1.0f), false, "pedestal height (y)"),
+		PEDESTAL_ADDED_HEIGHT(Category.TEST, "sword height", new Float(1.0f), false, "pedestal height with sword (y)");
 		
-		protected static enum Category {
+		
+//		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
+//		DEPTH_N(Category.TEST, "depth_n", new Float(0.1f), false, "north depth"),
+//		ROTATE_ANGLE(Category.TEST, "rotate_angle", new Float(45.0f), false, "angle"),
+//		ROTATE_X(Category.TEST, "rotate_x", new Float(0.5f), false, "x"),
+//		ROTATE_Y(Category.TEST, "rotate_y", new Float(1.0f), false, "y"),
+//		ROTATE_Z(Category.TEST, "rotate_z", new Float(0.5f), false, "z");
+		
+		public static enum Category {
 			SERVER("server", "Core properties that MUST be syncronized bytween the server and client. Client values ignored"),
 			DISPLAY("display", "Item tag information and gui display options"),
 			TEST("test", "Options used just for debugging and development");
@@ -55,7 +64,7 @@ public class ModConfig {
 				return getName();
 			}
 			
-			public static void deployCategories(Configuration config) {
+			protected static void deployCategories(Configuration config) {
 				for (Category cat : values())
 					config.setCategoryComment(cat.categoryName, cat.comment);
 			}
@@ -152,6 +161,17 @@ public class ModConfig {
 				return tag.getInteger(key);
 			else
 				return tag.getString(key);
+		}
+		
+		public static Collection<Key> getCategoryKeys(Category category) {
+			Set<Key> set = new HashSet<Key>();
+			
+			for (Key key : values()) {
+				if (key.category == category)
+					set.add(key);
+			}
+			
+			return set;
 		}
 	}
 	

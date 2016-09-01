@@ -5,8 +5,6 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
 import com.SkyIsland.Armory.Armory;
-import com.SkyIsland.Armory.config.ModConfig;
-import com.SkyIsland.Armory.config.ModConfig.Key;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 
 import net.minecraft.block.Block;
@@ -32,11 +30,15 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Pedestal extends BlockContainer {
 	
@@ -146,6 +148,14 @@ public class Pedestal extends BlockContainer {
 		}
 
 	}
+	
+	private static final float BLOCK_WIDTH = 0.5f;
+	
+	private static final float BLOCK_DEPTH = 0.26f;
+	
+	private static final float BLOCK_HEIGHT = 0.5f;
+	
+	private static final float BLOCK_HEIGHT_FULL = 1.3f;
 
 	public static Block block;
 	
@@ -164,8 +174,10 @@ public class Pedestal extends BlockContainer {
 	}
 	
 	public static void clientInit() {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-		.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
+		for (int i = 0; i < 6; i++) {
+			Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+			.register(Item.getItemFromBlock(block), i, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
+		}
 		ClientRegistry.bindTileEntitySpecialRenderer(PedestalTileEntity.class, new PedestalTileEntity.Renderer());
 	}
 	
@@ -361,5 +373,48 @@ public class Pedestal extends BlockContainer {
     		return (PedestalTileEntity) entity;
     	
     	return null;
+    }
+    
+    //bounding box stuff adapated from BlockDoor
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos) {
+        this.setBlockBoundsBasedOnState(worldIn, pos);
+        return super.getSelectedBoundingBox(worldIn, pos);
+    }
+
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
+        this.setBlockBoundsBasedOnState(worldIn, pos);
+        return super.getCollisionBoundingBox(worldIn, pos, state);
+    }
+
+    public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos) {
+        IBlockState state = worldIn.getBlockState(pos);
+        
+        if (state.getBlock() != this) {
+        	return;
+        }
+        
+        EnumFacing facing = state.getValue(FACING);
+        
+        boolean rotate = (facing == EnumFacing.WEST || facing == EnumFacing.EAST);
+        
+        float x = BLOCK_WIDTH;//ModConfig.config.getTestValue(Key.PEDESTAL_WIDTH);
+        float y = BLOCK_HEIGHT;//ModConfig.config.getTestValue(Key.PEDESTAL_HEIGHT);
+        float z = BLOCK_DEPTH;//ModConfig.config.getTestValue(Key.PEDESTAL_DEPTH);
+        
+        if (rotate) {
+        	float temp = x;
+        	x = z;
+        	z = temp;
+        }
+        
+        TileEntity e = worldIn.getTileEntity(pos);
+        if (e != null && e instanceof PedestalTileEntity) {
+        	if (((PedestalTileEntity) e).heldRig != null)
+        		y = BLOCK_HEIGHT_FULL;//ModConfig.config.getTestValue(Key.PEDESTAL_ADDED_HEIGHT);
+        }
+        
+        
+        this.setBlockBounds(.5f - x, 0.0f, .5f - z, .5f + x, y, .5f + z);
     }
 }
