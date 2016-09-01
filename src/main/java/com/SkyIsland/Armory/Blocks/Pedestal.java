@@ -174,7 +174,6 @@ public class Pedestal extends BlockContainer {
 	}
 	
 	public static void clientInit() {
-		System.out.println("Registering pedestal model: " + Armory.MODID + ":" + unlocalizedName);
 		for (int i = 0; i < 6; i++) {
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 			.register(Item.getItemFromBlock(block), i, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north"));
@@ -278,8 +277,6 @@ public class Pedestal extends BlockContainer {
      */
     public IBlockState getStateFromMeta(int meta)
     {
-    	System.out.println("get state: " + meta);
-
         EnumFacing enumfacing = EnumFacing.getFront(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
