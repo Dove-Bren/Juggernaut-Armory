@@ -37,6 +37,7 @@ public abstract class Armor extends ItemArmor {
 		
 		this.setUnlocalizedName(unlocalizedName);
 		this.registryName = unlocalizedName;
+		this.setCreativeTab(Armory.creativeTab);
 //		protectionMap = new EnumMap<DamageType, Float>(DamageType.class);
 //		for (DamageType key : DamageType.values())
 //			protectionMap.put(key, 0.0f);

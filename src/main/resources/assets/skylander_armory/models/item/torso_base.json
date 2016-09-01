@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "items/beef_raw"
+        "layer0": "skylander_armory:items/empty_torso"
     },
     "display": {
         "thirdperson": {

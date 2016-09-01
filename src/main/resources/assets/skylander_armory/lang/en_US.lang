@@ -1,5 +1,14 @@
 item.skylander_armory_sword_base.name=Armory Sword Base
 
+item.torso_base.name=Chestplate Armor Piece
+
+item.armorpiece_breastplate.name=Breastplate
+item.armorpiece_vambrace_right.name=Right Vambrace
+item.armorpiece_vambrace_left.name=Left Vambrace
+item.armorpiece_pauldron_right.name=Right Pauldron
+item.armorpiece_pauldron_left.name=Left Pauldron
+item.armorpiece_cape.name=Cape
+
 tile.skylander_armory_whetstone_block.name=Whetstone Block
 tile.skylander_armory_pedestal.name=Pedestal
 
