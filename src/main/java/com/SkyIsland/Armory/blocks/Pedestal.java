@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.blocks;
 
+import java.util.Random;
+
 import org.lwjgl.opengl.GL11;
 
 import com.SkyIsland.Armory.Armory;
@@ -8,6 +10,9 @@ import com.SkyIsland.Armory.items.weapons.Weapon;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -25,11 +30,15 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Pedestal extends BlockContainer {
 	
@@ -48,7 +57,7 @@ public class Pedestal extends BlockContainer {
 				heldRig.writeToNBT(itemTag);
 				tag.setTag("held", itemTag);
 			}
-
+			
 			super.writeToNBT(tag);
 		}
 		
@@ -98,22 +107,32 @@ public class Pedestal extends BlockContainer {
 				if (te.heldRig == null)
 					return;
 				
+				boolean rotate = false;
+				if (te.getBlockMetadata() > 3) //3 and 4 are W and E facings
+					rotate = true;
+				
 				GlStateManager.pushMatrix();
 				
 
 				
 				//don't use GL11 stuff, use the manager
 				//GL11.glTranslated(x, y + 1.0f, z);
-				GlStateManager.translate(x + 0.5, y + 1.0, z + 0.5);
+				GlStateManager.translate(x + 0.5, y + 0.85, z + 0.5);
+				
+
+				
+				if (rotate) {
+				GlStateManager.rotate(90.0f, 0.0f, 1.0f, 0.0f);
+//				GlStateManager.rotate(
+//						ModConfig.config.getTestValue(Key.ROTATE_ANGLE),
+//						ModConfig.config.getTestValue(Key.ROTATE_X),
+//						ModConfig.config.getTestValue(Key.ROTATE_Y),
+//						ModConfig.config.getTestValue(Key.ROTATE_Z));
+				}
 
 //				if (te.heldRig.getItem() instanceof ItemSword
 //						|| te.heldRig.getItem() instanceof Weapon)
 				GlStateManager.rotate(225.0f, 0.0f, 0.0f, 1.0f);
-//					GlStateManager.rotate(
-//							ModConfig.config.getTestValue(Key.ROTATE_ANGLE),
-//							ModConfig.config.getTestValue(Key.ROTATE_X),
-//							ModConfig.config.getTestValue(Key.ROTATE_Y),
-//							ModConfig.config.getTestValue(Key.ROTATE_Z));
 					
 				
 				GlStateManager.enableRescaleNormal();
@@ -129,12 +148,22 @@ public class Pedestal extends BlockContainer {
 		}
 
 	}
+	
+	private static final float BLOCK_WIDTH = 0.5f;
+	
+	private static final float BLOCK_DEPTH = 0.26f;
+	
+	private static final float BLOCK_HEIGHT = 0.5f;
+	
+	private static final float BLOCK_HEIGHT_FULL = 1.3f;
 
 	public static Block block;
 	
 	public static Material material;
 	
 	public static final String unlocalizedName = "pedestal";
+	
+	protected static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	
 	public static void preInit() {
 	
@@ -145,15 +174,19 @@ public class Pedestal extends BlockContainer {
 	}
 	
 	public static void clientInit() {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-		.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
+		for (int i = 0; i < 6; i++) {
+			Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+			.register(Item.getItemFromBlock(block), i, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
+		}
 		ClientRegistry.bindTileEntitySpecialRenderer(PedestalTileEntity.class, new PedestalTileEntity.Renderer());
 	}
 	
 	public Pedestal() {
 		super(Material.ground);
-		this.blockHardness = 200;
 		this.blockResistance = 45;
+		
+		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		
 		this.setStepSound(Block.soundTypeStone);
         //this.setBlockName(unlocalizedName); 1.7 method gone >:(
 		this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
@@ -178,11 +211,92 @@ public class Pedestal extends BlockContainer {
 		return false; //might not fill up whole block		
 	}
 	
+	private void setFacing(World worldIn, BlockPos pos, IBlockState state) {
+		if (!worldIn.isRemote)
+        {
+            Block block = worldIn.getBlockState(pos.north()).getBlock();
+            Block block1 = worldIn.getBlockState(pos.south()).getBlock();
+            Block block2 = worldIn.getBlockState(pos.west()).getBlock();
+            Block block3 = worldIn.getBlockState(pos.east()).getBlock();
+            EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+
+            if (enumfacing == EnumFacing.NORTH && block.isFullBlock() && !block1.isFullBlock())
+            {
+                enumfacing = EnumFacing.SOUTH;
+            }
+            else if (enumfacing == EnumFacing.SOUTH && block1.isFullBlock() && !block.isFullBlock())
+            {
+                enumfacing = EnumFacing.NORTH;
+            }
+            else if (enumfacing == EnumFacing.WEST && block2.isFullBlock() && !block3.isFullBlock())
+            {
+                enumfacing = EnumFacing.EAST;
+            }
+            else if (enumfacing == EnumFacing.EAST && block3.isFullBlock() && !block2.isFullBlock())
+            {
+                enumfacing = EnumFacing.WEST;
+            }
+
+            worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
+        }
+	}
+	
+	@Override
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+		setFacing(worldIn, pos, state);
+	}
+	
+	
+	/**
+     * Get the Item that this Block should drop when harvested.
+     */
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
+        return Item.getItemFromBlock(block);
+    }
+
+    /**
+     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
+     * IBlockstate
+     */
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+    }
+	
     /**
      * Called by ItemBlocks after a block is set in the world, to allow post-place logic
      */
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-    	worldIn.setBlockState(pos, state, 3);
+    	worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+    }
+    
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
+        EnumFacing enumfacing = EnumFacing.getFront(meta);
+
+        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+        {
+            enumfacing = EnumFacing.NORTH;
+        }
+
+        return this.getDefaultState().withProperty(FACING, enumfacing);
+    }
+    
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((EnumFacing)state.getValue(FACING)).getIndex();
+    }
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {FACING});
     }
 	
     /**
@@ -259,5 +373,48 @@ public class Pedestal extends BlockContainer {
     		return (PedestalTileEntity) entity;
     	
     	return null;
+    }
+    
+    //bounding box stuff adapated from BlockDoor
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos) {
+        this.setBlockBoundsBasedOnState(worldIn, pos);
+        return super.getSelectedBoundingBox(worldIn, pos);
+    }
+
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
+        this.setBlockBoundsBasedOnState(worldIn, pos);
+        return super.getCollisionBoundingBox(worldIn, pos, state);
+    }
+
+    public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos) {
+        IBlockState state = worldIn.getBlockState(pos);
+        
+        if (state.getBlock() != this) {
+        	return;
+        }
+        
+        EnumFacing facing = state.getValue(FACING);
+        
+        boolean rotate = (facing == EnumFacing.WEST || facing == EnumFacing.EAST);
+        
+        float x = BLOCK_WIDTH;//ModConfig.config.getTestValue(Key.PEDESTAL_WIDTH);
+        float y = BLOCK_HEIGHT;//ModConfig.config.getTestValue(Key.PEDESTAL_HEIGHT);
+        float z = BLOCK_DEPTH;//ModConfig.config.getTestValue(Key.PEDESTAL_DEPTH);
+        
+        if (rotate) {
+        	float temp = x;
+        	x = z;
+        	z = temp;
+        }
+        
+        TileEntity e = worldIn.getTileEntity(pos);
+        if (e != null && e instanceof PedestalTileEntity) {
+        	if (((PedestalTileEntity) e).heldRig != null)
+        		y = BLOCK_HEIGHT_FULL;//ModConfig.config.getTestValue(Key.PEDESTAL_ADDED_HEIGHT);
+        }
+        
+        
+        this.setBlockBounds(.5f - x, 0.0f, .5f - z, .5f + x, y, .5f + z);
     }
 }
