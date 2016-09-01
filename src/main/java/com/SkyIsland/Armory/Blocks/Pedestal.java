@@ -174,9 +174,10 @@ public class Pedestal extends BlockContainer {
 	}
 	
 	public static void clientInit() {
+		System.out.println("Registering pedestal model: " + Armory.MODID + ":" + unlocalizedName);
 		for (int i = 0; i < 6; i++) {
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-			.register(Item.getItemFromBlock(block), i, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
+			.register(Item.getItemFromBlock(block), i, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north"));
 		}
 		ClientRegistry.bindTileEntitySpecialRenderer(PedestalTileEntity.class, new PedestalTileEntity.Renderer());
 	}
@@ -190,6 +191,7 @@ public class Pedestal extends BlockContainer {
 		this.setStepSound(Block.soundTypeStone);
         //this.setBlockName(unlocalizedName); 1.7 method gone >:(
 		this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
+		//this.setUnlocalizedName(unlocalizedName);
         this.setCreativeTab(Armory.creativeTab);
         //this.setBlockTextureName(Armory.MODID + ":" + unlocalizedName);
         // i think the registry name also doubles as the texture name??
@@ -276,6 +278,8 @@ public class Pedestal extends BlockContainer {
      */
     public IBlockState getStateFromMeta(int meta)
     {
+    	System.out.println("get state: " + meta);
+
         EnumFacing enumfacing = EnumFacing.getFront(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)

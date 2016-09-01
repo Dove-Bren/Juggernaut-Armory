@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "normal": { "model": "skylander_armory:pedestal" },
+        "facing=north": { "model": "skylander_armory:pedestal" },
+        "facing=south": { "model": "skylander_armory:pedestal", "y": 180 },
+        "facing=west":  { "model": "skylander_armory:pedestal", "y": 270 },
+        "facing=east":  { "model": "skylander_armory:pedestal", "y": 90 }
+    }
+}
