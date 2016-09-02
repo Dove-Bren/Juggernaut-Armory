@@ -104,6 +104,7 @@ public class ModelRegistry {
 //						new ModelResourceLocation(sprite.toString() + "_" + model.getKey())
 //						);
 				vars.add(new ModelResourceLocation(sprite.toString() + "_" + model.getKey(), "inventory"));
+				//vars.add(new ModelResourceLocation(sprite.toString() + "_" + model.getKey(), "body"));
 			}
 			
 			ModelBakery.registerItemVariants(model.getValue().getLeft(), 
@@ -128,6 +129,11 @@ public class ModelRegistry {
 			System.out.println("Registering: " + Armory.MODID + ":" + registered.getKey());
 			event.modelRegistry.putObject(new ModelResourceLocation(Armory.MODID + ":" + registered.getKey(), "inventory"),
 					registered.getValue().getRight());
+//			event.modelRegistry.putObject(new ModelResourceLocation(Armory.MODID + ":" + registered.getKey(), "body"),
+//					Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+//					
+//					
+//					);
 		}
 		
 //		for (ResourceLocation sprite : textureList)

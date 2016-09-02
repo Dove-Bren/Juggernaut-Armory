@@ -8,7 +8,9 @@ import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
@@ -18,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Custom created armor with defined protection values
@@ -32,8 +36,11 @@ public abstract class Armor extends ItemArmor {
 	
 	private String registryName;
 	
-	protected Armor(int armorType, String unlocalizedName) {
-		super(material, 0, armorType);
+	private ArmorSlot slot;
+	
+	protected Armor(ArmorSlot slot, String unlocalizedName) {
+		super(material, 0, slot.getSlot());
+		this.slot = slot;
 		
 		this.setUnlocalizedName(unlocalizedName);
 		this.registryName = unlocalizedName;
@@ -85,6 +92,18 @@ public abstract class Armor extends ItemArmor {
 	 */
 	public abstract Collection<ItemStack> getNestedArmorStacks(ItemStack stack);
 	
+	/**
+	 * Returns the name of the underlying armor texture
+	 * @return
+	 */
+	public abstract String getBaseArmorTexture();
+
+	/**
+	 * Returns a ModelBiped that will render the armor on a player
+	 * @return
+	 */
+	protected abstract ModelBiped getModelBiped();
+	
 	@Override
 	public void setDamage(ItemStack stack, int damage) {
 		//  Important!
@@ -130,6 +149,28 @@ public abstract class Armor extends ItemArmor {
 		NBTTagCompound tag = stack.getTagCompound();
 		if (!tag.hasKey(COMPONENT_LIST_KEY, NBT.TAG_COMPOUND))
 			tag.setTag(COMPONENT_LIST_KEY, new NBTTagCompound());
+	}
+	
+	@Override
+	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+		return false; //TODO use material item? Or special repair stuff?
+	}
+	
+	@Override
+	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
+        
+		return this.getBaseArmorTexture();
+		
+    }
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot, net.minecraft.client.model.ModelBiped _default) {
+        return this.getModelBiped();
+    }
+	
+	public ArmorSlot getSlot() {
+		return slot;
 	}
 	
 }

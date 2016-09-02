@@ -44,6 +44,12 @@ public class ArmorPiece extends Item {
 	protected float durabilityRate;
 	
 	protected ArmorPieceSmartModel model;
+	
+	protected float xOffset;
+	
+	protected float yOffset;
+	
+	protected float zOffset;
 
 	/**
 	 * Creates and <i><b>registers</b><i> a new armor piece. This is
@@ -79,6 +85,9 @@ public class ArmorPiece extends Item {
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
     	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + getModelSuffix(), "inventory"));
+
+//		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+//    	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + getModelSuffix(), "body"));
 		
 		this.model = new ArmorPieceSmartModel(this, 
 				Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
@@ -88,8 +97,45 @@ public class ArmorPiece extends Item {
 		ModelRegistry.instance.registerComponent(this, getModelSuffix(), model);
 	}
 	
+//	@Override
+//	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining) {
+//		return this.constructModelLocation(stack, "body");
+//	}
+	
 	public String getModelSuffix() {
 		return this.itemKey;
+	}
+	
+	public float getXOffset() {
+		return xOffset;
+	}
+	
+	public float getYOffset() {
+		return yOffset;
+	}
+	
+	public float getZOffset() {
+		return zOffset;
+	}
+	
+	public void setxOffset(float xOffset) {
+		this.xOffset = xOffset;
+	}
+
+	public void setyOffset(float yOffset) {
+		this.yOffset = yOffset;
+	}
+
+	public void setzOffset(float zOffset) {
+		this.zOffset = zOffset;
+	}
+
+	public ModelResourceLocation constructModelLocation(ItemStack stack, String variant) {
+		if (stack == null || !(stack.getItem() instanceof ArmorPiece))
+			return null;
+		
+		String texturePrefix = getUnderlyingMaterial(stack);
+		return new ModelResourceLocation(Armory.MODID + ":" + texturePrefix + "_" + getModelSuffix(), variant);
 	}
 	
 	public ItemStack constructPiece(ArmorMaterial material) {

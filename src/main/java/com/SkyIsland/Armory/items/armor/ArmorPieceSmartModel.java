@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.SkyIsland.Armory.Armory;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.ISmartItemModel;
@@ -22,7 +19,7 @@ public class ArmorPieceSmartModel implements ISmartItemModel {
 	
 	private ArmorPiece originPiece;
 	
-	private String texturePrefix;
+	//private String texturePrefix;
 	
 	private IBakedModel baseModel;
 	
@@ -35,17 +32,17 @@ public class ArmorPieceSmartModel implements ISmartItemModel {
 	
 	@Override
 	public IBakedModel handleItemState(ItemStack stack) {
-		texturePrefix = "";
-		if (stack != null && stack.getItem() instanceof ArmorPiece) {
-			texturePrefix = ((ArmorPiece) stack.getItem()).getUnderlyingMaterial(stack);
-		}
+//		texturePrefix = "";
+//		if (stack != null && stack.getItem() instanceof ArmorPiece) {
+//			texturePrefix = ((ArmorPiece) stack.getItem()).getUnderlyingMaterial(stack);
+//		}
 		//return this;
 		
 		ModelManager manager = Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.getModelManager();
 		
 		IBakedModel model = manager.getModel(
-						new ModelResourceLocation(Armory.MODID + ":" + texturePrefix + "_" + originPiece.getModelSuffix(), "inventory")
+						originPiece.constructModelLocation(stack, "inventory")
 						);
 		
 		//Minecraft.getMinecraft().getRenderItem().getItemModelMesher().

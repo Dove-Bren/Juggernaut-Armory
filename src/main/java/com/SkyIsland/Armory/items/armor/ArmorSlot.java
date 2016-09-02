@@ -1,19 +1,26 @@
 package com.SkyIsland.Armory.items.armor;
 
 public enum ArmorSlot {
-	HELMET(0),
-	TORSO(1),
-	LEGS(2),
-	FEET(3);
+	HELMET(0, 3),
+	TORSO(1, 2),
+	LEGS(2, 1),
+	FEET(3, 0);
 	
 	private int slot;
 	
-	private ArmorSlot(int slot) {
+	private int playerSlot;
+	
+	private ArmorSlot(int slot, int playerSlot) {
 		this.slot = slot;
+		this.playerSlot = playerSlot;
 	}
 	
 	public int getSlot() {
 		return slot;
+	}
+	
+	public int getPlayerSlot() {
+		return playerSlot;
 	}
 
 	/**

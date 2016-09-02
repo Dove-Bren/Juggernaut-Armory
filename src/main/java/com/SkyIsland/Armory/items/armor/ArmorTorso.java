@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.SkyIsland.Armory.mechanics.DamageType;
 
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -238,12 +239,16 @@ public class ArmorTorso extends Armor {
 	
 	protected Map<Slot, ArmorPiece> pieces;
 	
+	protected ArmorPlayerModel armorModel;
+	
 	public ArmorTorso(String unlocalizedName) {
-		super(1, unlocalizedName);
+		super(ArmorSlot.TORSO, unlocalizedName);
 		pieces = new EnumMap<Slot, ArmorPiece>(Slot.class);
+		armorModel = new ArmorPlayerModel(this);
 		
 		//initialize slot pieces
 		Map<DamageType, Float> pieceContribution;
+		ArmorPiece piece;
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.40f);
@@ -251,7 +256,11 @@ public class ArmorTorso extends Armor {
 			pieceContribution.put(DamageType.CRUSH, 0.50f);
 			pieceContribution.put(DamageType.MAGIC, 0.10f);
 			pieceContribution.put(DamageType.OTHER, 0.20f);
-		pieces.put(Slot.BREASTPLATE, new ArmorPiece("breastplate", ArmorSlot.TORSO, pieceContribution, 1.2f));
+		piece = new ArmorPiece("breastplate", ArmorSlot.TORSO, pieceContribution, 1.2f);
+//		piece.setxOffset(0.0f);
+		piece.setyOffset(.4f);
+//		piece.setzOffset(0.0f);
+		pieces.put(Slot.BREASTPLATE, piece);
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.20f);
@@ -259,7 +268,11 @@ public class ArmorTorso extends Armor {
 			pieceContribution.put(DamageType.CRUSH, 0.05f);
 			pieceContribution.put(DamageType.MAGIC, 0.40f);
 			pieceContribution.put(DamageType.OTHER, 0.20f);
-		pieces.put(Slot.VAMBRACE_LEFT, new ArmorPiece("vambrace_left", ArmorSlot.TORSO, pieceContribution, 0.8f));
+		piece = new ArmorPiece("vambrace_left", ArmorSlot.TORSO, pieceContribution, 0.8f);
+		//piece.setxOffset(0.5f);
+		piece.setyOffset(0.6f);
+		piece.setzOffset(0.5f);
+		pieces.put(Slot.VAMBRACE_LEFT, piece);
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.30f);
@@ -267,7 +280,11 @@ public class ArmorTorso extends Armor {
 			pieceContribution.put(DamageType.CRUSH, 0.05f);
 			pieceContribution.put(DamageType.MAGIC, 0.20f);
 			pieceContribution.put(DamageType.OTHER, 0.20f);
-		pieces.put(Slot.VAMBRACE_RIGHT, new ArmorPiece("vambrace_right", ArmorSlot.TORSO, pieceContribution, 0.8f));
+		piece = new ArmorPiece("vambrace_right", ArmorSlot.TORSO, pieceContribution, 0.8f);
+		piece.setxOffset(-0.5f);
+		piece.setyOffset(0.6f);
+//		piece.setzOffset(0.0f);
+		pieces.put(Slot.VAMBRACE_RIGHT, piece);
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.05f);
@@ -275,7 +292,11 @@ public class ArmorTorso extends Armor {
 			pieceContribution.put(DamageType.CRUSH, 0.20f);
 			pieceContribution.put(DamageType.MAGIC, 0.15f);
 			pieceContribution.put(DamageType.OTHER, 0.20f);
-		pieces.put(Slot.PAULDRON_LEFT, new ArmorPiece("pauldron_left", ArmorSlot.TORSO, pieceContribution, 0.7f));
+		piece = new ArmorPiece("pauldron_left", ArmorSlot.TORSO, pieceContribution, 0.7f);
+		piece.setxOffset(0.5f);
+//		piece.setyOffset(0.0f);
+//		piece.setzOffset(0.0f);
+		pieces.put(Slot.PAULDRON_LEFT, piece);
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.05f);
@@ -283,7 +304,11 @@ public class ArmorTorso extends Armor {
 			pieceContribution.put(DamageType.CRUSH, 0.20f);
 			pieceContribution.put(DamageType.MAGIC, 0.15f);
 			pieceContribution.put(DamageType.OTHER, 0.20f);
-		pieces.put(Slot.PAULDRON_RIGHT, new ArmorPiece("pauldron_right", ArmorSlot.TORSO, pieceContribution, 0.7f));
+		piece = new ArmorPiece("pauldron_right", ArmorSlot.TORSO, pieceContribution, 0.7f);
+		piece.setxOffset(-0.5f);
+//		piece.setyOffset(0.0f);
+//		piece.setzOffset(0.0f);
+		pieces.put(Slot.PAULDRON_RIGHT, piece);
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.0f);
@@ -291,7 +316,11 @@ public class ArmorTorso extends Armor {
 			pieceContribution.put(DamageType.CRUSH, 0.0f);
 			pieceContribution.put(DamageType.MAGIC, 0.0f);
 			pieceContribution.put(DamageType.OTHER, 0.0f);
-		pieces.put(Slot.CAPE, new ArmorPiece("cape", ArmorSlot.TORSO, pieceContribution, 1.0f));
+		piece = new ArmorPiece("cape", ArmorSlot.TORSO, pieceContribution, 1.0f);
+		piece.setxOffset(0.0f);
+		piece.setyOffset(0.0f);
+		piece.setzOffset(0.0f);
+		pieces.put(Slot.CAPE, piece);
 	}
 	
 	public ArmorPiece getComponentItem(Slot slot) {
@@ -377,6 +406,17 @@ public class ArmorTorso extends Armor {
 	@Override
 	protected ISmartItemModel getSmartModel() {
 		return new ArmorSmartModel(this, null);
+	}
+
+	@Override
+	public String getBaseArmorTexture() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ModelBiped getModelBiped() {
+		return armorModel;
 	}
 
 }

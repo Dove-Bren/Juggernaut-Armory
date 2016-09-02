@@ -1,5 +1,6 @@
 {
     "variants": {
-        "inventory": { "model": "skylander_armory:item/apieces/void_pauldron_left" }
+        "inventory": { "model": "skylander_armory:item/apieces/void_pauldron_left" },
+        "body": { "model": "skylander_armory:item/beef" }
     }
 }
