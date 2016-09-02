@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.SkyIsland.Armory.items.tools.ArmorerHammer;
 import com.SkyIsland.Armory.items.tools.ArmorerStand;
+import com.SkyIsland.Armory.items.tools.Tongs;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -12,7 +13,8 @@ public final class ToolItems {
 
 	public static enum Tools {
 		ARMORER_HAMMER,
-		ARMORER_STAND;
+		ARMORER_STAND,
+		TONGS;
 	}
 	
 	private static Map<Tools, ItemBase> itemMap;
@@ -28,6 +30,10 @@ public final class ToolItems {
 		itemMap.put(Tools.ARMORER_STAND, new ArmorerStand("armorer_stand"));
 		GameRegistry.registerItem(itemMap.get(Tools.ARMORER_STAND), "armorer_stand");
 		itemMap.get(Tools.ARMORER_STAND).init();
+		
+		itemMap.put(Tools.TONGS, new Tongs("tongs"));
+		GameRegistry.registerItem(itemMap.get(Tools.TONGS), "tongs");
+		itemMap.get(Tools.TONGS).init();
 	}
 	
 	public static ItemBase getItem(Tools type) {
