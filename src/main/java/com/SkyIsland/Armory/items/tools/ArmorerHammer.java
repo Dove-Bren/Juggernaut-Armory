@@ -54,7 +54,6 @@ public class ArmorerHammer extends ItemBase {
      */
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target) {
     	if (target instanceof EntityArmorerStand) {
-        	System.out.println("armor stand!");
         	
         	//is armor stand wearing any customizable armor pieces?
         	EntityArmorStand armorStand = (EntityArmorStand) target;
