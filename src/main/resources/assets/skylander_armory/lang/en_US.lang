@@ -11,5 +11,7 @@ item.armorpiece_cape.name=Cape
 
 tile.skylander_armory_whetstone_block.name=Whetstone Block
 tile.skylander_armory_pedestal.name=Pedestal
+tile.skylander_armory_brazier_block.name=Brazier
+tile.skylander_armory_forge_block.name=Forge
 
 itemGroup.skylander_armory=Skylander Armory
