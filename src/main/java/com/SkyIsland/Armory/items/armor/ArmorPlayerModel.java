@@ -1,18 +1,13 @@
 package com.SkyIsland.Armory.items.armor;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.SkyIsland.Armory.Armory;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
@@ -20,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+@SuppressWarnings("deprecation")
 public class ArmorPlayerModel extends ModelBiped {
 
 	//private Collection<IBakedModel> models;
@@ -101,28 +97,28 @@ public class ArmorPlayerModel extends ModelBiped {
         GlStateManager.popMatrix();
 	}
 	
-	private void renderQuads(WorldRenderer renderer, List<BakedQuad> quads, int color, ItemStack stack) {
-        boolean flag = color == -1 && stack != null;
-        int i = 0;
-
-        for (int j = quads.size(); i < j; ++i)
-        {
-            BakedQuad bakedquad = (BakedQuad)quads.get(i);
-            int k = color;
-
-            if (flag && bakedquad.hasTintIndex())
-            {
-                k = stack.getItem().getColorFromItemStack(stack, bakedquad.getTintIndex());
-
-                if (EntityRenderer.anaglyphEnable)
-                {
-                    k = TextureUtil.anaglyphColor(k);
-                }
-
-                k = k | -16777216;
-            }
-
-            net.minecraftforge.client.model.pipeline.LightUtil.renderQuadColor(renderer, bakedquad, k);
-        }
-    }
+//	private void renderQuads(WorldRenderer renderer, List<BakedQuad> quads, int color, ItemStack stack) {
+//        boolean flag = color == -1 && stack != null;
+//        int i = 0;
+//
+//        for (int j = quads.size(); i < j; ++i)
+//        {
+//            BakedQuad bakedquad = (BakedQuad)quads.get(i);
+//            int k = color;
+//
+//            if (flag && bakedquad.hasTintIndex())
+//            {
+//                k = stack.getItem().getColorFromItemStack(stack, bakedquad.getTintIndex());
+//
+//                if (EntityRenderer.anaglyphEnable)
+//                {
+//                    k = TextureUtil.anaglyphColor(k);
+//                }
+//
+//                k = k | -16777216;
+//            }
+//
+//            net.minecraftforge.client.model.pipeline.LightUtil.renderQuadColor(renderer, bakedquad, k);
+//        }
+//    }
 }

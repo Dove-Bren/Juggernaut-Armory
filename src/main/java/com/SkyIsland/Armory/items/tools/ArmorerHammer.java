@@ -5,10 +5,13 @@ import com.SkyIsland.Armory.entity.EntityArmorerStand;
 import com.SkyIsland.Armory.items.ItemBase;
 import com.SkyIsland.Armory.items.armor.Armor;
 import com.SkyIsland.Armory.items.armor.ArmorSlot;
+import com.google.common.collect.Multimap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -17,6 +20,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ArmorerHammer extends ItemBase {
 
+	private static final double DAMAGE = 4.0f;
+	
 	private String registryName;
 	
 	public ArmorerHammer(String unlocalizedName) {
@@ -129,6 +134,13 @@ public class ArmorerHammer extends ItemBase {
     	System.out.println("torso: " + (torso != null));
     	System.out.println("legs: " + (legs != null));
     	System.out.println("feet: " + (feet != null));
+    }
+    
+    public Multimap<String, AttributeModifier> getItemAttributeModifiers() {
+        @SuppressWarnings("deprecation")
+		Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers();
+        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Tool modifier", DAMAGE, 0));
+        return multimap;
     }
 	
 }

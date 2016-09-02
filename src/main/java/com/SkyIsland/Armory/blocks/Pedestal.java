@@ -40,6 +40,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SuppressWarnings("deprecation")
 public class Pedestal extends BlockContainer {
 	
 	public static class PedestalTileEntity extends TileEntity {
@@ -99,7 +100,6 @@ public class Pedestal extends BlockContainer {
 		
 		public static class Renderer extends TileEntitySpecialRenderer<PedestalTileEntity> {
 
-			@SuppressWarnings("deprecation")
 			@Override
 			public void renderTileEntityAt(PedestalTileEntity te, double x, double y, double z, float partialTicks,
 					int destroyStage) {
