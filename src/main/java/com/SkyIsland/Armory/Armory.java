@@ -10,9 +10,11 @@ import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.entity.EntityArmorerStand;
 import com.SkyIsland.Armory.forge.ForgeBlocks;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ModelRegistry;
+import com.SkyIsland.Armory.items.ToolItems;
 import com.SkyIsland.Armory.items.WeaponItems;
 import com.SkyIsland.Armory.items.armor.ExtendedArmorMaterial;
 import com.SkyIsland.Armory.listeners.ItemListener;
@@ -53,6 +55,12 @@ public class Armory {
     public static ItemListener itemLister;
 
 	public static ExtendedArmorMaterial material;
+	
+	private static int modID = 1;
+	
+	public static int genModID() {
+		return modID++;
+	}
  
     @EventHandler
     public void init(FMLInitializationEvent event)
@@ -62,7 +70,9 @@ public class Armory {
 	    
 	    WeaponItems.initItems();
 	    ArmorItems.initItems();
+	    ToolItems.initItems();
 	    ForgeBlocks.initBlocks();
+	    EntityArmorerStand.init();
 	    proxy.init();
 	    
 	    ArmorModificationManager.init();
