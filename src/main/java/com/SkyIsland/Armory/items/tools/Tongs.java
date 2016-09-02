@@ -1,9 +1,12 @@
 package com.SkyIsland.Armory.items.tools;
 
+import java.util.Map;
+
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.forge.Brazier;
 import com.SkyIsland.Armory.items.ItemBase;
-import com.google.common.collect.Multimap;
+import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
@@ -11,8 +14,6 @@ import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -25,7 +26,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Tongs extends ItemBase {
 
-	private static final double DAMAGE = 1.0f;
+	private static final float DAMAGE = 1.0f;
 	
 	private static final String NBT_HELD = "held";
 	
@@ -39,6 +40,12 @@ public class Tongs extends ItemBase {
 		this.setMaxStackSize(1);
 		this.setUnlocalizedName(unlocalizedName);
 		this.setCreativeTab(Armory.creativeTab);
+		
+		Map<DamageType, Float> map = DamageType.freshMap();
+		map.put(DamageType.PIERCE, DAMAGE);
+		WeaponManager.instance().registerWeapon(this, 
+				map
+				);
 	}
 	
 	@Override
@@ -163,11 +170,11 @@ public class Tongs extends ItemBase {
     	return false;
     }
     
-    public Multimap<String, AttributeModifier> getItemAttributeModifiers() {
-        @SuppressWarnings("deprecation")
-		Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers();
-        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Tool modifier", DAMAGE, 0));
-        return multimap;
-    }
+//    public Multimap<String, AttributeModifier> getItemAttributeModifiers() {
+//        @SuppressWarnings("deprecation")
+//		Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers();
+//        multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Tool modifier", DAMAGE, 0));
+//        return multimap;
+//    }
 	
 }
