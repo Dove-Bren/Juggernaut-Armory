@@ -12,6 +12,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -20,6 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Rotations;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ArmorerStand extends ItemBase {
 
@@ -38,6 +40,11 @@ public class ArmorerStand extends ItemBase {
 	@Override
 	public boolean isDamageable() {
 		return false;
+	}
+	
+	@Override
+	public void init() {
+		GameRegistry.addShapedRecipe(new ItemStack(this), new Object[]{" # ", "#T#", '#', Items.iron_ingot, 'T', Items.armor_stand});
 	}
 	
 	public void clientInit() {
@@ -81,14 +88,12 @@ public class ArmorerStand extends ItemBase {
     
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-        System.out.println("|");
     	if (side == EnumFacing.DOWN)
         {
             return false;
         }
         else
         {
-        	System.out.println("|");
             boolean flag = worldIn.getBlockState(pos).getBlock().isReplaceable(worldIn, pos);
             BlockPos blockpos = flag ? pos : pos.offset(side);
 
@@ -98,7 +103,6 @@ public class ArmorerStand extends ItemBase {
             }
             else
             {
-            	System.out.println("|");
                 BlockPos blockpos1 = blockpos.up();
                 boolean flag1 = !worldIn.isAirBlock(blockpos) && !worldIn.getBlockState(blockpos).getBlock().isReplaceable(worldIn, blockpos);
                 flag1 = flag1 | (!worldIn.isAirBlock(blockpos1) && !worldIn.getBlockState(blockpos1).getBlock().isReplaceable(worldIn, blockpos1));
@@ -109,7 +113,6 @@ public class ArmorerStand extends ItemBase {
                 }
                 else
                 {
-                	System.out.println("|");
                     double d0 = (double)blockpos.getX();
                     double d1 = (double)blockpos.getY();
                     double d2 = (double)blockpos.getZ();
@@ -123,7 +126,6 @@ public class ArmorerStand extends ItemBase {
                     {
                         if (!worldIn.isRemote)
                         {
-                        	System.out.println("|");
                             worldIn.setBlockToAir(blockpos);
                             worldIn.setBlockToAir(blockpos1);
                             EntityArmorerStand entityarmorstand = new EntityArmorerStand(worldIn, d0 + 0.5D, d1, d2 + 0.5D);

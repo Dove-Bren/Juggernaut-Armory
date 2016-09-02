@@ -30,7 +30,6 @@ public class EntityArmorerStand extends EntityArmorStand {
 		if (player.getHeldItem() == null)
 			return false;
 		
-		System.out.println("interact caught with item: " + player.getHeldItem());
 		return player.getHeldItem().interactWithEntity(player, this);
 		
     }

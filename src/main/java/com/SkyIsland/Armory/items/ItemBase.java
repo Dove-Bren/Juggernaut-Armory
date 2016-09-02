@@ -6,4 +6,6 @@ import net.minecraft.item.Item;
 
 public abstract class ItemBase extends Item implements ClientInitializable {
 
+	public abstract void init();
+	
 }

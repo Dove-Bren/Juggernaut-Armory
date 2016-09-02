@@ -11,7 +11,9 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ArmorerHammer extends ItemBase {
 
@@ -30,6 +32,11 @@ public class ArmorerHammer extends ItemBase {
 	@Override
 	public boolean isDamageable() {
 		return false;
+	}
+	
+	@Override
+	public void init() {
+		GameRegistry.addShapedRecipe(new ItemStack(this), new Object[]{"##T", " S ", " S ", '#', Items.iron_ingot, 'T', Items.flint, 'S', Items.stick});
 	}
 	
 	public void clientInit() {

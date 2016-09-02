@@ -23,9 +23,11 @@ public final class ToolItems {
 		
 		itemMap.put(Tools.ARMORER_HAMMER, new ArmorerHammer("armorer_hammer"));
 		GameRegistry.registerItem(itemMap.get(Tools.ARMORER_HAMMER), "armorer_hammer");
+		itemMap.get(Tools.ARMORER_HAMMER).init();
 		
 		itemMap.put(Tools.ARMORER_STAND, new ArmorerStand("armorer_stand"));
 		GameRegistry.registerItem(itemMap.get(Tools.ARMORER_STAND), "armorer_stand");
+		itemMap.get(Tools.ARMORER_STAND).init();
 	}
 	
 	public static ItemBase getItem(Tools type) {
