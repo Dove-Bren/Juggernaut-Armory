@@ -13,6 +13,7 @@ import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.entity.EntityArmorerStand;
 import com.SkyIsland.Armory.forge.ForgeBlocks;
 import com.SkyIsland.Armory.items.ArmorItems;
+import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.items.ToolItems;
 import com.SkyIsland.Armory.items.WeaponItems;
@@ -74,6 +75,7 @@ public class Armory {
 	    WeaponItems.initItems();
 	    ArmorItems.initItems();
 	    ToolItems.initItems();
+	    MiscItems.initItems();
 	    ForgeBlocks.initBlocks();
 	    EntityArmorerStand.init();
 	    proxy.init();

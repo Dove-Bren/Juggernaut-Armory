@@ -27,6 +27,7 @@ public class ModConfig {
 		ENABLE_MECHANICS(Category.SERVER, "enabled", true, true, "Is this mod enabled? When turned off, all mechanics use regular MC mechanics and no events are caught."),
 		ARMOR_RATE(Category.SERVER, "armor_rate", new Float(0.045f), true, "Damage reduction per 1.0 armor points. Default is 0.45, which means 20 armor points (max) reduces damage by (20 * 0.45 = 0.90 = 90%)"),
 		DEFAULT_RATIO(Category.SERVER, "default_rate", new Float(0.70f), true, "How many armor points to preserve on armor pieces that aren't defined. For example, vanilla diamond helmets (3.0 defense) receive (3.0 * default_rate) protection in all base areas. Default is 0.7"),
+		METAL_MIN_HEAT(Category.SERVER, "min_heat", new Integer(400), true, "Minimum heat a metal mixture can have before it solidifies"),
 		SHOW_ZEROS(Category.DISPLAY, "show_zeros", false, "When displaying damage or protection properties, should 0's be displayed? Default is false"),
 		PEDESTAL_WIDTH(Category.TEST, "width", new Float(1.0f), false, "pedestal width (x)"),
 		PEDESTAL_DEPTH(Category.TEST, "depth", new Float(1.0f), false, "pedestal depth (z)"),
@@ -348,6 +349,10 @@ public class ModConfig {
 	
 	public float getDefaultRatio() {
 		return getFloatValue(Key.DEFAULT_RATIO, false);
+	}
+	
+	public int getMinimumHeat() {
+		return getIntValue(Key.METAL_MIN_HEAT, false);
 	}
 	
 	public float getTestValue(Key key) {
