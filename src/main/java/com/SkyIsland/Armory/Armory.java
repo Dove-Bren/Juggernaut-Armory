@@ -64,6 +64,12 @@ public class Armory {
 	
 	private static int modID = 1;
 	
+	public enum Gui_Type {
+		BRAZIER,
+		FORGE,
+		ANVIL
+	}
+	
 	public static int genModID() {
 		return modID++;
 	}

@@ -1,11 +1,15 @@
 package com.SkyIsland.Armory.proxy;
 
+import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.config.network.ServerConfigMessage;
+import com.SkyIsland.Armory.forge.Brazier;
+import com.SkyIsland.Armory.gui.GuiHandler;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.armor.ExtendedArmorMaterial;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy  {
@@ -19,7 +23,7 @@ public class CommonProxy  {
 	  }
 	  
 	  public void init() {
-		  
+		  NetworkRegistry.INSTANCE.registerGuiHandler(Armory.instance, new GuiHandler());
 	  }
 
 	  /**
@@ -28,7 +32,7 @@ public class CommonProxy  {
 	   */
 	  public void load()
 	  {
-
+		  	
 	  }
 
 	  /**
