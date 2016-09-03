@@ -172,6 +172,9 @@ public class HeldMetal extends ItemBase {
 	
 	protected ItemStack getRandomMetal(ItemStack metal) {
 		Collection<ItemStack> metals = getMetals(metal);
+		if (metals == null || metals.isEmpty())
+			return null;
+		
 		Iterator<ItemStack> it = metals.iterator();
 		int index = Armory.random.nextInt(metals.size());
 		int i = 0;

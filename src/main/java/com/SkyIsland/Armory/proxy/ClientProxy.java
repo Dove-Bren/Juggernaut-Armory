@@ -6,6 +6,8 @@ import com.SkyIsland.Armory.forge.ForgeBlocks;
 import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ArmorItems.Armors;
+import com.SkyIsland.Armory.items.MiscItems;
+import com.SkyIsland.Armory.items.MiscItems.Items;
 import com.SkyIsland.Armory.items.ToolItems;
 import com.SkyIsland.Armory.items.ToolItems.Tools;
 import com.SkyIsland.Armory.items.WeaponItems;
@@ -38,6 +40,9 @@ public class ClientProxy extends CommonProxy {
 		
 		for (Tools key : Tools.values())
 			ToolItems.getItem(key).clientInit();
+		
+		for (Items key : Items.values())
+			MiscItems.getItem(key).clientInit();
 
 		for (ArmoryBlocks key : ArmoryBlocks.values())
 			ForgeBlocks.getBlock(key).clientInit();
