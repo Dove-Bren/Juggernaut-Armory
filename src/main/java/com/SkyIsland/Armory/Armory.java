@@ -67,7 +67,10 @@ public class Armory {
     {
         // some example code
         //System.out.println("DIRT BLOCK >> "+Blocks.dirt.getUnlocalizedName());
-	    
+
+	    ArmorManager.init();
+	    WeaponManager.init();
+    	
 	    WeaponItems.initItems();
 	    ArmorItems.initItems();
 	    ToolItems.initItems();
@@ -76,8 +79,6 @@ public class Armory {
 	    proxy.init();
 	    
 	    ArmorModificationManager.init();
-	    ArmorManager.init();
-	    WeaponManager.init();
 	    
 	    Armory.itemLister = new ItemListener();
 	    

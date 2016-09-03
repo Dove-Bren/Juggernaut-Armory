@@ -18,10 +18,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Tongs extends ItemBase {
@@ -46,6 +47,9 @@ public class Tongs extends ItemBase {
 		WeaponManager.instance().registerWeapon(this, 
 				map
 				);
+
+		
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	@Override
@@ -98,7 +102,6 @@ public class Tongs extends ItemBase {
 			nbt.removeTag(NBT_HELD);
 		else
 			nbt.setTag(NBT_HELD, stack.writeToNBT(subtag));
-		
 	}
 
 	@Override
@@ -116,28 +119,57 @@ public class Tongs extends ItemBase {
     	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"));
 	}
 	
-	@Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (stack == null || !(stack.getItem() instanceof Tongs))
-			return false;
+//	@Override
+//    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+//		if (stack == null || !(stack.getItem() instanceof Tongs))
+//			return false;
+//		
+//		IBlockState state = worldIn.getBlockState(pos);
+//		Block block = state.getBlock();
+//		
+//		if (block instanceof Brazier)
+//			return onBrazier(playerIn, stack, state);
+//		if (block instanceof BlockAnvil)
+//			return onAnvil(playerIn, stack, state);
+//		if (block instanceof BlockCauldron)
+//			return onCauldron(playerIn, stack, state);
+////		if (block instanceof Trough)
+////			return onCauldron(playerIn, stack, state);
+////		if (block instanceof CuttingMachine)
+////			return onCauldron(playerIn, stack, state);
+////		if (block instanceof ConstructPedestal)
+////			return onCauldron(playerIn, stack, state);
+//		
+//		return false;
+//	}
+	
+	@SubscribeEvent
+	public void onBlockClick(PlayerInteractEvent event) {
+		if (event.action != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
+			return;
 		
-		IBlockState state = worldIn.getBlockState(pos);
+		if (event.entityPlayer.getHeldItem() == null
+				|| !(event.entityPlayer.getHeldItem().getItem() instanceof Tongs)) {
+			return;
+		}
+		
+		IBlockState state = event.world.getBlockState(event.pos);
 		Block block = state.getBlock();
+		EntityPlayer playerIn = event.entityPlayer;
+		ItemStack stack = event.entityPlayer.getHeldItem();
 		
 		if (block instanceof Brazier)
-			return onBrazier(playerIn, stack, state);
+			onBrazier(playerIn, stack, state);
 		if (block instanceof BlockAnvil)
-			return onAnvil(playerIn, stack, state);
+			onAnvil(playerIn, stack, state);
 		if (block instanceof BlockCauldron)
-			return onCauldron(playerIn, stack, state);
+			onCauldron(playerIn, stack, state);
 //		if (block instanceof Trough)
 //			return onCauldron(playerIn, stack, state);
 //		if (block instanceof CuttingMachine)
 //			return onCauldron(playerIn, stack, state);
 //		if (block instanceof ConstructPedestal)
 //			return onCauldron(playerIn, stack, state);
-		
-		return false;
 	}
     
     private boolean onBrazier(EntityPlayer player, ItemStack tongs, IBlockState brazierBlock) {
