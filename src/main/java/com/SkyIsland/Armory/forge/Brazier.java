@@ -51,7 +51,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "standalone=true"));
+		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north,standalone=true"));
 		
 		ModelBakery.registerItemVariants(Item.getItemFromBlock(this), 
 				new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north,standalone=true"),
