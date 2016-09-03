@@ -20,8 +20,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
@@ -88,6 +95,11 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	}
 	
 	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 		TileEntity te = worldIn.getTileEntity(pos);
@@ -95,10 +107,15 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			if (this == offBlock &&
 					((BrazierTileEntity) te).burnTime > 0) {
 				//change to on block
-				worldIn.setBlockState(pos, onBlock.getDefaultState());
+				worldIn.setBlockState(pos, onBlock.getDefaultState()
+							.withProperty(FACING, state.getValue(FACING))
+							.withProperty(STANDALONE, state.getValue(STANDALONE)));
 			} else if (this == onBlock &&
 					((BrazierTileEntity) te).burnTime <= 0) {
-				worldIn.setBlockState(pos, offBlock.getDefaultState());
+				System.out.println("random tick set");
+				worldIn.setBlockState(pos, offBlock.getDefaultState()
+						.withProperty(FACING, state.getValue(FACING))
+						.withProperty(STANDALONE, state.getValue(STANDALONE)));
 			}
 		}
 	}
@@ -182,6 +199,28 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		} else if (!entity.isStandalone) {
 			entity.breakFromForge();
 		}
+		
+		randomDisplayTick(worldIn, pos, state, new Random());
+    }
+    
+    public void setFuel(World world, BlockPos pos, IBlockState state, ItemStack fuel) {
+    	System.out.println("setfuel");
+    	BrazierTileEntity entity = (BrazierTileEntity) world.getTileEntity(pos);
+        if (entity == null)
+        	return;
+        
+        System.out.println("fuel being set!");
+        entity.fuel = fuel;
+    }
+    
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
+    	BrazierTileEntity entity = (BrazierTileEntity) worldIn.getTileEntity(pos);
+    	System.out.println("click");
+        if (entity == null)
+        	return false;
+        
+        setFuel(worldIn, pos, worldIn.getBlockState(pos), new ItemStack(Items.coal));
+        return true;
     }
 	
 	public static class BrazierTileEntity extends TileEntity implements ITickable {
@@ -301,9 +340,10 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	    }
 		
 		@Override
-		public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+		public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
 		{
-		    return (oldState.getBlock() != newSate.getBlock());
+		    //return (oldState.getBlock() != newSate.getBlock());
+			return !(newState.getBlock() instanceof Brazier);
 			//return true;
 		}
 
@@ -335,6 +375,10 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			//either not already standalone, or facing a different direction now
 			this.isStandalone = false;
 			this.face = direction;
+			
+			//hook into Forge entity
+			//TODO
+			
 			updateContainer();
 		}
 		
@@ -357,6 +401,9 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		private void updateContainer() {
 			if (pos == null || getWorld().getBlockState(pos) == null)
 				return;
+			if (!(getWorld().getBlockState(pos).getBlock() instanceof Brazier))
+				return;
+			
 			getWorld().setBlockState(pos, 
 					getWorld().getBlockState(pos).withProperty(STANDALONE, isStandalone)
 					                             .withProperty(FACING, face));
@@ -382,9 +429,22 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			if (burnTime <= 0) {
 				//check for fuel
 				if (fuel != null) {
-					if (isStandalone && GameRegistry.getFuelValue(fuel) > 0) {
-						fuel.splitStack(1);
-						burnTime = GameRegistry.getFuelValue(fuel);
+					if (isStandalone) {
+						if (getVanillaFuel(fuel) > 0) {
+							burnTime = getVanillaFuel(fuel);
+							fuel.stackSize--;
+						} else if (GameRegistry.getFuelValue(fuel) > 0) {
+							burnTime = GameRegistry.getFuelValue(fuel);
+							fuel.stackSize--;
+						} else if (ForgeManager.instance().getFuelRecord(fuel.getItem()) != null) {
+							burnTime = ForgeManager.instance().getFuelRecord(fuel.getItem()).getBurnTicks();
+							fuel.stackSize--;
+						}
+						
+						if (fuel.stackSize <= 0)
+							fuel = null;
+						
+						System.out.println("cook time: " + burnTime);
 					} else if (!isStandalone && ForgeManager.instance().getFuelRecord(fuel.getItem()) != null) {
 						
 						FuelRecord record = ForgeManager.instance().getFuelRecord(fuel.getItem());
@@ -394,6 +454,41 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 					}
 				}
 			}
+		}
+
+		private int getVanillaFuel(ItemStack fuel2) {
+			Item item = fuel2.getItem();
+
+            if (item instanceof ItemBlock && Block.getBlockFromItem(item) != Blocks.air)
+            {
+                Block block = Block.getBlockFromItem(item);
+
+                if (block == Blocks.wooden_slab)
+                {
+                    return 150;
+                }
+
+                if (block.getMaterial() == Material.wood)
+                {
+                    return 300;
+                }
+
+                if (block == Blocks.coal_block)
+                {
+                    return 16000;
+                }
+            }
+
+            if (item instanceof ItemTool && ((ItemTool)item).getToolMaterialName().equals("WOOD")) return 200;
+            if (item instanceof ItemSword && ((ItemSword)item).getToolMaterialName().equals("WOOD")) return 200;
+            if (item instanceof ItemHoe && ((ItemHoe)item).getMaterialName().equals("WOOD")) return 200;
+            if (item == Items.stick) return 100;
+            if (item == Items.coal) return 1600;
+            if (item == Items.lava_bucket) return 20000;
+            if (item == Item.getItemFromBlock(Blocks.sapling)) return 100;
+            if (item == Items.blaze_rod) return 2400;
+            
+            return 0;
 		}
 		
 	}

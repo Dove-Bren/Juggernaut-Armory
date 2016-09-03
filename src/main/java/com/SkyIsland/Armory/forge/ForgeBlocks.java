@@ -11,7 +11,8 @@ public class ForgeBlocks {
 
 	public static enum ArmoryBlocks {
 		FORGE,
-		BRAZIER;
+		BRAZIER,
+		BRAZIER_LIT;
 	}
 	
 	private static Map<ArmoryBlocks, BlockBase> blockMap;
@@ -21,8 +22,10 @@ public class ForgeBlocks {
 		
 		blockMap.put(ArmoryBlocks.FORGE, new Forge());
 		blockMap.put(ArmoryBlocks.BRAZIER, new Brazier(false));
+		blockMap.put(ArmoryBlocks.BRAZIER_LIT, new Brazier(true));
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.FORGE), "forge_block");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.BRAZIER), "brazier_block");
+		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.BRAZIER_LIT), "brazier_block_lit");
 	}
 	
 	public static BlockBase getBlock(ArmoryBlocks baseType) {
