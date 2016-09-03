@@ -52,6 +52,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	
 	private static Brazier offBlock;
 	
+	protected boolean keepInventory = false;
+	
 	protected static final PropertyBool STANDALONE = PropertyBool.create("standalone");
 	
 	protected static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
@@ -104,6 +106,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
 		TileEntity te = worldIn.getTileEntity(pos);
 		if (te instanceof BrazierTileEntity) {
+			keepInventory = true;
 			if (this == offBlock &&
 					((BrazierTileEntity) te).burnTime > 0) {
 				//change to on block
@@ -117,7 +120,9 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 						.withProperty(FACING, state.getValue(FACING))
 						.withProperty(STANDALONE, state.getValue(STANDALONE)));
 			}
+			keepInventory = false;
 		}
+		
 	}
 	
 	@Override
@@ -144,7 +149,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
         return (state.getValue(STANDALONE) ? 0 : 4)
         		| (state.getValue(FACING).getHorizontalIndex());
     }
-	
+    
+    @Override
 	protected BlockState createBlockState() {
         return new BlockState(this, new IProperty[] {FACING, STANDALONE});
     }
@@ -157,20 +163,23 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
-    	BrazierTileEntity entity = (BrazierTileEntity) worldIn.getTileEntity(pos);
-        if (entity != null) {
-        	if (!entity.isStandalone)
-        		entity.breakFromForge();
-        	
-        	if (entity.fuel != null) {
-        		EntityItem item = new EntityItem(
-        				worldIn, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(),
-        				ItemStack.copyItemStack(entity.fuel));
-        		worldIn.spawnEntityInWorld(item);
-        		entity.fuel = null;
-        	}
-        	
-        }
+    	
+    	if (!keepInventory) {
+	    	BrazierTileEntity entity = (BrazierTileEntity) worldIn.getTileEntity(pos);
+	        if (entity != null) {
+	        	if (!entity.isStandalone)
+	        		entity.breakFromForge();
+	        	
+	        	if (entity.fuel != null) {
+	        		EntityItem item = new EntityItem(
+	        				worldIn, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(),
+	        				ItemStack.copyItemStack(entity.fuel));
+	        		worldIn.spawnEntityInWorld(item);
+	        		entity.fuel = null;
+	        	}
+	        	
+	        }
+    	}
 
         super.breakBlock(worldIn, pos, state);
     }
@@ -200,7 +209,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			entity.breakFromForge();
 		}
 		
-		randomDisplayTick(worldIn, pos, state, new Random());
+		//randomDisplayTick(worldIn, pos, state, new Random());
     }
     
     public void setFuel(World world, BlockPos pos, IBlockState state, ItemStack fuel) {
@@ -254,6 +263,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			currentHeatRate = 0;
 			heatMax = 0;
 			face = EnumFacing.NORTH;
+			System.out.println("constructor");
 		}
 		
 		
@@ -343,6 +353,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
 		{
 		    //return (oldState.getBlock() != newSate.getBlock());
+			System.out.println("refresh [" + newState.getBlock() + "]? -> " + !(newState.getBlock() instanceof Brazier));
 			return !(newState.getBlock() instanceof Brazier);
 			//return true;
 		}
@@ -369,7 +380,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		}
 		
 		protected void joinForge(EnumFacing direction) {
-			if (!isStandalone && face == direction)
+			if (!isStandalone || face == direction)
 				return;
 			
 			//either not already standalone, or facing a different direction now
@@ -383,6 +394,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		}
 		
 		protected void breakFromForge() {
+			if (isStandalone)
+				return;
 			this.isStandalone = true;
 			this.heat = 0;
 			this.heatMax = 0;
@@ -404,9 +417,18 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			if (!(getWorld().getBlockState(pos).getBlock() instanceof Brazier))
 				return;
 			
+			((Brazier) getWorld().getBlockState(pos).getBlock())
+				.keepInventory = true;
+			
 			getWorld().setBlockState(pos, 
 					getWorld().getBlockState(pos).withProperty(STANDALONE, isStandalone)
 					                             .withProperty(FACING, face));
+			
+			((Brazier) getWorld().getBlockState(pos).getBlock())
+			.keepInventory = false;
+			
+			getWorld().setTileEntity(pos, this);
+			
 		}
 
 		@Override
