@@ -3,7 +3,10 @@ package com.SkyIsland.Armory.forge;
 import java.util.Random;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.api.ForgeManager;
+import com.SkyIsland.Armory.api.ForgeManager.FuelRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
+import com.SkyIsland.Armory.config.ModConfig;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -131,6 +134,9 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
     {
     	BrazierTileEntity entity = (BrazierTileEntity) worldIn.getTileEntity(pos);
         if (entity != null) {
+        	if (!entity.isStandalone)
+        		entity.breakFromForge();
+        	
         	if (entity.fuel != null) {
         		EntityItem item = new EntityItem(
         				worldIn, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(),
@@ -143,6 +149,32 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 
         super.breakBlock(worldIn, pos, state);
     }
+    
+    @Override
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
+    	BrazierTileEntity entity = (BrazierTileEntity) worldIn.getTileEntity(pos);
+        if (entity == null)
+        	return;
+    	EnumFacing direction = null;
+		if (worldIn.getBlockState(pos.north()).getBlock()
+				instanceof Forge)
+			direction = EnumFacing.NORTH;
+		else if (worldIn.getBlockState(pos.south()).getBlock()
+				instanceof Forge)
+			direction = EnumFacing.SOUTH;
+		else if (worldIn.getBlockState(pos.east()).getBlock()
+				instanceof Forge)
+			direction = EnumFacing.EAST;
+		else if (worldIn.getBlockState(pos.west()).getBlock()
+				instanceof Forge)
+			direction = EnumFacing.WEST;
+		
+		if (entity.isStandalone && direction != null) {
+			entity.joinForge(direction);
+		} else if (!entity.isStandalone && direction == null) {
+			entity.breakFromForge();
+		}
+    }
 	
 	public static class BrazierTileEntity extends TileEntity implements ITickable {
 		
@@ -154,11 +186,24 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		
 		private boolean hasTicked;
 		
+		//forge variables \/
+		private int heat;
+		
+		private ItemStack heatingElement;
+		
+		private int currentHeatRate;
+		
+		private int heatMax;
+		
 		public BrazierTileEntity() {
 			this.fuel = null;
 			burnTime = 0;
 			isStandalone = true;
 			hasTicked = false;
+			heat = 0;
+			heatingElement = null;
+			currentHeatRate = 0;
+			heatMax = 0;
 		}
 		
 		
@@ -174,6 +219,17 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			}
 			
 			tag.setBoolean("standalone", isStandalone);
+			
+			if (!isStandalone) {
+				tag.setInteger("heat", heat);
+				tag.setInteger("heatRate", currentHeatRate);
+				tag.setInteger("heatMax", heatMax);
+				if (heatingElement != null) {
+					NBTTagCompound itemTag = new NBTTagCompound();
+					heatingElement.writeToNBT(itemTag);
+					tag.setTag("element", itemTag);
+				}
+			}
 			
 			super.writeToNBT(tag);
 		}
@@ -198,7 +254,17 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			if (tag.hasKey("standalone"))
 				isStandalone = tag.getBoolean("standalone");
 			else
-				isStandalone = false;
+				isStandalone = true;
+			
+			if (!isStandalone) {
+				heat = tag.getInteger("heat");
+				currentHeatRate = tag.getInteger("heatRate");
+				heatMax = tag.getInteger("heatMax");
+				
+				if (tag.hasKey("element", NBT.TAG_COMPOUND)) {
+					heatingElement = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("element"));
+				}
+			}
 			
 			//updateContainer();
 			
@@ -249,8 +315,24 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			}
 		}
 		
-		private void joinForge(EnumFacing direction) {
+		protected void joinForge(EnumFacing direction) {
 			this.isStandalone = false;
+			updateContainer();
+		}
+		
+		protected void breakFromForge() {
+			this.isStandalone = true;
+			this.heat = 0;
+			this.heatMax = 0;
+			this.currentHeatRate = 0;
+			
+			if (heatingElement != null) {
+				EntityItem item = new EntityItem(
+	    				getWorld(), (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(),
+	    				ItemStack.copyItemStack(heatingElement));
+	    		getWorld().spawnEntityInWorld(item);
+			}
+			
 			updateContainer();
 		}
 		
@@ -269,14 +351,28 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			}
 			if (burnTime > 0) {
 				burnTime--;
+				
+				if (!isStandalone) {
+					//add heat
+					heat = Math.min(heatMax, heat + currentHeatRate);
+				}
+			} else if (!isStandalone && heat > 0) {
+				heat = Math.max(0, heat - ModConfig.config.getHeatLoss());
 			}
 			
 			if (burnTime <= 0) {
 				//check for fuel
-				if (fuel != null &&
-						GameRegistry.getFuelValue(fuel) > 0) {
-					fuel.splitStack(1);
-					burnTime = GameRegistry.getFuelValue(fuel);
+				if (fuel != null) {
+					if (isStandalone && GameRegistry.getFuelValue(fuel) > 0) {
+						fuel.splitStack(1);
+						burnTime = GameRegistry.getFuelValue(fuel);
+					} else if (!isStandalone && ForgeManager.instance().getFuelRecord(fuel.getItem()) != null) {
+						
+						FuelRecord record = ForgeManager.instance().getFuelRecord(fuel.getItem());
+						burnTime = record.getBurnTicks();
+						currentHeatRate = record.getHeatRate();
+						
+					}
 				}
 			}
 		}

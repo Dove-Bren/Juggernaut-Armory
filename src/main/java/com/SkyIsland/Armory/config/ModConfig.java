@@ -28,6 +28,7 @@ public class ModConfig {
 		ARMOR_RATE(Category.SERVER, "armor_rate", new Float(0.045f), true, "Damage reduction per 1.0 armor points. Default is 0.45, which means 20 armor points (max) reduces damage by (20 * 0.45 = 0.90 = 90%)"),
 		DEFAULT_RATIO(Category.SERVER, "default_rate", new Float(0.70f), true, "How many armor points to preserve on armor pieces that aren't defined. For example, vanilla diamond helmets (3.0 defense) receive (3.0 * default_rate) protection in all base areas. Default is 0.7"),
 		METAL_MIN_HEAT(Category.SERVER, "min_heat", new Integer(400), true, "Minimum heat a metal mixture can have before it solidifies"),
+		HEAT_LOSS(Category.SERVER, "heat_loss", new Integer(1), true, "Heat lost per tick when a forge's brazier is not lit"),
 		SHOW_ZEROS(Category.DISPLAY, "show_zeros", false, "When displaying damage or protection properties, should 0's be displayed? Default is false"),
 		SHOW_COMPONENTS(Category.DISPLAY, "show_components", false, "Show weapon components by default (without pressing shift)");
 		
@@ -354,6 +355,10 @@ public class ModConfig {
 	
 	public int getMinimumHeat() {
 		return getIntValue(Key.METAL_MIN_HEAT, false);
+	}
+	
+	public int getHeatLoss() {
+		return getIntValue(Key.HEAT_LOSS, false);
 	}
 	
 	public float getTestValue(Key key) {
