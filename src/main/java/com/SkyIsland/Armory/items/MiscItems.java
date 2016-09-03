@@ -8,7 +8,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public final class MiscItems {
 
 	public static enum Items {
-		SCRAP;
+		SCRAP,
+		HELD_METAL;
 	}
 	
 	private static Map<Items, ItemBase> itemMap;
@@ -20,6 +21,10 @@ public final class MiscItems {
 		itemMap.put(Items.SCRAP, new ScrapMetal("scrap_metal"));
 		GameRegistry.registerItem(itemMap.get(Items.SCRAP), "scrap_metal");
 		itemMap.get(Items.SCRAP).init();
+		
+		itemMap.put(Items.HELD_METAL, new HeldMetal("held_metal"));
+		GameRegistry.registerItem(itemMap.get(Items.HELD_METAL), "held_metal");
+		itemMap.get(Items.HELD_METAL).init();
 	}
 	
 	public static ItemBase getItem(Items type) {

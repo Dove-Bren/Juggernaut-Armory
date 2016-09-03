@@ -1,12 +1,21 @@
 package com.SkyIsland.Armory.items;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.items.MiscItems.Items;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 
 /**
@@ -54,6 +63,16 @@ public class HeldMetal extends ItemBase {
 		return 0;
 	}
 	
+	@Override
+	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+		int heat = getHeat(stack);
+		
+		//cool item down
+		setHeat(stack, (heat == -1 ? 0 : heat - 1));
+		updateHeat(entityIn, stack);
+	}
+	
 	///////////////NBT//////////////
 	
 	/**
@@ -75,6 +94,13 @@ public class HeldMetal extends ItemBase {
 		return -1;
 	}
 	
+	/**
+	 * Sets the heat in the given piece of held metal.
+	 * This method doesn't call an update, so metal will cool (if heat is
+	 * low enough) on next tick
+	 * @param metal
+	 * @param heat
+	 */
 	public void setHeat(ItemStack metal, int heat) {
 		if (metal == null || !(metal.getItem() instanceof HeldMetal))
 			return;
@@ -85,13 +111,74 @@ public class HeldMetal extends ItemBase {
 		
 		nbt.setInteger(NBT_HEAT, heat);
 		
-		updateHeat(metal);
+		//updateHeat(metal);
 	}
 	
-	protected void updateHeat(ItemStack metal) {
-		if (getHeat(metal) < ModConfig.config.getMinimumHeat()) {
+	public Collection<ItemStack> getMetals(ItemStack metal) {
+		if (metal == null || !(metal.getItem() instanceof HeldMetal))
+			return null;
+		
+		if (!metal.hasTagCompound())
+			metal.setTagCompound(new NBTTagCompound());
+		NBTTagCompound nbt = metal.getTagCompound();
+		
+		if (nbt.hasKey(NBT_METALS, NBT.TAG_LIST)) {
+			List<ItemStack> metals = new LinkedList<ItemStack>();
 			
+			NBTTagList list = nbt.getTagList(NBT_METALS, NBT.TAG_LIST);
+			NBTTagCompound sub;
+			while (!list.hasNoTags()) {
+				sub = (NBTTagCompound) list.removeTag(0);
+				metals.add(ItemStack.loadItemStackFromNBT(sub));
+			}
+			
+			return metals;
 		}
+			
+		return null;
+	}
+	
+	public void setMetals(ItemStack metal, Collection<ItemStack> metals) {
+		if (metal == null || !(metal.getItem() instanceof HeldMetal))
+			return;
+		
+		if (!metal.hasTagCompound())
+			metal.setTagCompound(new NBTTagCompound());
+		NBTTagCompound nbt = metal.getTagCompound();
+		
+		NBTTagList list = new NBTTagList();
+		NBTTagCompound sub;
+		for (ItemStack addedMetal : metals) {
+			sub = new NBTTagCompound();
+			addedMetal.writeToNBT(sub);
+			
+			list.appendTag(sub);
+		}
+		
+		nbt.setTag(NBT_METALS, list);
+		
+		//updateHeat(metal);
+	}
+	
+	protected void updateHeat(Entity owner, ItemStack metal) {
+		if (getHeat(metal) < ModConfig.config.getMinimumHeat()) {
+			metal.setItem(MiscItems.getItem(Items.SCRAP));
+			((ScrapMetal) metal.getItem()).setReturn(metal, 
+					getRandomMetal(metal)
+					);
+			owner.playSound(Armory.MODID + ":item.metal.cool", 1.0f, 1.0f);
+		}
+	}
+	
+	protected ItemStack getRandomMetal(ItemStack metal) {
+		Collection<ItemStack> metals = getMetals(metal);
+		Iterator<ItemStack> it = metals.iterator();
+		int index = Armory.random.nextInt(metals.size());
+		int i = 0;
+		while (i < index)
+			it.next();
+		
+		return it.next();
 	}
 	
 }
