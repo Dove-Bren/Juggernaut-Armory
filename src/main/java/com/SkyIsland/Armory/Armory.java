@@ -12,6 +12,7 @@ import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.entity.EntityArmorerStand;
+import com.SkyIsland.Armory.forge.Brazier;
 import com.SkyIsland.Armory.forge.ForgeBlocks;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.MiscItems;
@@ -106,6 +107,7 @@ public class Armory {
 	    //init blocks
 	    WhetstoneBlock.preInit();
 	    Pedestal.preInit();
+	    Brazier.preInit();
 	  	
 	    proxy.preInit();
 	    

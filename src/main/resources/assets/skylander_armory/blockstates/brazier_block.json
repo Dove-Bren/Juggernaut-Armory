@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "inventory": { "model": "skylander_armory:whetstone_block" },
+        "normal": { "model": "skylander_armory:whetstone_block" },
+        "standalone=false": { "model": "skylander_armory:pedestal" },
+        "standalone=true": { "model": "skylander_armory:pedestal", "y": 90 }
+    }
+}

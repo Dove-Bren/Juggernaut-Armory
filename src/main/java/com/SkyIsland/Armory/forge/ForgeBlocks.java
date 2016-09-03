@@ -20,7 +20,7 @@ public class ForgeBlocks {
 		blockMap = new EnumMap<ArmoryBlocks, BlockBase>(ArmoryBlocks.class);
 		
 		blockMap.put(ArmoryBlocks.FORGE, new Forge());
-		blockMap.put(ArmoryBlocks.BRAZIER, new Brazier());
+		blockMap.put(ArmoryBlocks.BRAZIER, new Brazier(false));
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.FORGE), "forge_block");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.BRAZIER), "brazier_block");
 	}
