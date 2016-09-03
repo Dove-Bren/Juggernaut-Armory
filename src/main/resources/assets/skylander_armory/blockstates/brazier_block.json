@@ -2,7 +2,14 @@
     "variants": {
         "inventory": { "model": "skylander_armory:whetstone_block" },
         "normal": { "model": "skylander_armory:whetstone_block" },
-        "standalone=false": { "model": "skylander_armory:pedestal" },
-        "standalone=true": { "model": "skylander_armory:pedestal", "y": 90 }
+        "facing=north,standalone=false": { "model": "skylander_armory:pedestal" },
+        "facing=east,standalone=false": { "model": "skylander_armory:pedestal", "y": 90 },
+        "facing=south,standalone=false": { "model": "skylander_armory:pedestal", "y": 180 },
+        "facing=west,standalone=false": { "model": "skylander_armory:pedestal", "y": 270 },
+        
+        "facing=north,standalone=true": { "model": "skylander_armory:whetstone_block" },
+        "facing=east,standalone=true": { "model": "skylander_armory:whetstone_block" },
+        "facing=south,standalone=true": { "model": "skylander_armory:whetstone_block" },
+        "facing=west,standalone=true": { "model": "skylander_armory:whetstone_block" }
     }
 }

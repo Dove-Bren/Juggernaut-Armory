@@ -13,6 +13,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -46,13 +47,15 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	
 	protected static final PropertyBool STANDALONE = PropertyBool.create("standalone");
 	
+	protected static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+	
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "standalone=true"));
 		
 		ModelBakery.registerItemVariants(Item.getItemFromBlock(this), 
-				new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "standalone=true"),
-				new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "standalone=false"));
+				new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north,standalone=true"),
+				new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north,standalone=false"));
 
 //		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 //		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName + "_attached", "normal"));
@@ -74,7 +77,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
         this.setCreativeTab(Armory.creativeTab);
         this.isBlockContainer = true;
         
-        this.setDefaultState(this.blockState.getBaseState().withProperty(STANDALONE, true));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(STANDALONE, true)
+        		.withProperty(FACING, EnumFacing.NORTH));
         
         if (on) {
         	this.setLightLevel(0.8f);
@@ -101,7 +105,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		worldIn.setBlockState(pos, state.withProperty(STANDALONE, true), 2);
+		worldIn.setBlockState(pos, state.withProperty(STANDALONE, true).withProperty(FACING, EnumFacing.NORTH), 2);
 	}
 	
 	/**
@@ -109,7 +113,10 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
      */
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(STANDALONE, meta == 0);
+    	//bottom 3 bits are important. bottom 2 are facing (0-3), and 3rd is
+    	//boolean: !standalone
+        return this.getDefaultState().withProperty(STANDALONE, (meta & 4) == 0)
+        		.withProperty(FACING, EnumFacing.getHorizontal(meta & 3));
     }
     
     /**
@@ -117,11 +124,12 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
      */
     public int getMetaFromState(IBlockState state)
     {
-        return (state.getValue(STANDALONE) ? 0 : 1);
+        return (state.getValue(STANDALONE) ? 0 : 4)
+        		| (state.getValue(FACING).getHorizontalIndex());
     }
 	
 	protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] {STANDALONE});
+        return new BlockState(this, new IProperty[] {FACING, STANDALONE});
     }
 
 	@Override
@@ -169,9 +177,9 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 				instanceof Forge)
 			direction = EnumFacing.WEST;
 		
-		if (entity.isStandalone && direction != null) {
+		if (direction != null) {
 			entity.joinForge(direction);
-		} else if (!entity.isStandalone && direction == null) {
+		} else if (!entity.isStandalone) {
 			entity.breakFromForge();
 		}
     }
@@ -195,6 +203,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		
 		private int heatMax;
 		
+		private EnumFacing face;
+		
 		public BrazierTileEntity() {
 			this.fuel = null;
 			burnTime = 0;
@@ -204,6 +214,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			heatingElement = null;
 			currentHeatRate = 0;
 			heatMax = 0;
+			face = EnumFacing.NORTH;
 		}
 		
 		
@@ -229,6 +240,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 					heatingElement.writeToNBT(itemTag);
 					tag.setTag("element", itemTag);
 				}
+				tag.setByte("facing", (byte) face.getHorizontalIndex());
 			}
 			
 			super.writeToNBT(tag);
@@ -260,6 +272,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 				heat = tag.getInteger("heat");
 				currentHeatRate = tag.getInteger("heatRate");
 				heatMax = tag.getInteger("heatMax");
+				face = EnumFacing.getHorizontal(tag.getByte("facing"));
 				
 				if (tag.hasKey("element", NBT.TAG_COMPOUND)) {
 					heatingElement = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("element"));
@@ -316,7 +329,12 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		}
 		
 		protected void joinForge(EnumFacing direction) {
+			if (!isStandalone && face == direction)
+				return;
+			
+			//either not already standalone, or facing a different direction now
 			this.isStandalone = false;
+			this.face = direction;
 			updateContainer();
 		}
 		
@@ -340,7 +358,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			if (pos == null || getWorld().getBlockState(pos) == null)
 				return;
 			getWorld().setBlockState(pos, 
-					getWorld().getBlockState(pos).withProperty(STANDALONE, isStandalone));
+					getWorld().getBlockState(pos).withProperty(STANDALONE, isStandalone)
+					                             .withProperty(FACING, face));
 		}
 
 		@Override
