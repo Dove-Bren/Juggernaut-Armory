@@ -3,6 +3,7 @@ item.armorer_hammer.name=Armorer's Hammer
 item.armorer_stand.name=Armorer's Stand
 item.tongs.name=Tongs
 item.scrap_metal.name=Scrap Metal
+item.held_metal.name=Molten Metal
 
 item.torso_base.name=Chestplate Armor Piece
 

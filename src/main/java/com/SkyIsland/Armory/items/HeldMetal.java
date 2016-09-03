@@ -115,7 +115,7 @@ public class HeldMetal extends ItemBase {
 	}
 	
 	public Collection<ItemStack> getMetals(ItemStack metal) {
-		if (metal == null || !(metal.getItem() instanceof HeldMetal))
+		if (metal == null)
 			return null;
 		
 		if (!metal.hasTagCompound())
@@ -125,7 +125,7 @@ public class HeldMetal extends ItemBase {
 		if (nbt.hasKey(NBT_METALS, NBT.TAG_LIST)) {
 			List<ItemStack> metals = new LinkedList<ItemStack>();
 			
-			NBTTagList list = nbt.getTagList(NBT_METALS, NBT.TAG_LIST);
+			NBTTagList list = nbt.getTagList(NBT_METALS, NBT.TAG_COMPOUND);
 			NBTTagCompound sub;
 			while (!list.hasNoTags()) {
 				sub = (NBTTagCompound) list.removeTag(0);
@@ -178,8 +178,10 @@ public class HeldMetal extends ItemBase {
 		Iterator<ItemStack> it = metals.iterator();
 		int index = Armory.random.nextInt(metals.size());
 		int i = 0;
-		while (i < index)
+		while (i < index) {
 			it.next();
+			i++;
+		}
 		
 		return it.next();
 	}

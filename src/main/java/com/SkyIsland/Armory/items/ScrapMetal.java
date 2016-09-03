@@ -70,8 +70,8 @@ public class ScrapMetal extends ItemBase {
 		if (ret == null)
 			return;
 		
-		tooltip.add(ChatFormat.COMPONENTS.wrap(
-				"Contains: " + ret.getDisplayName()
+		tooltip.add(ChatFormat.COMPONENTS + "Contains: " + 
+				ChatFormat.LUSTER.wrap(ret.getDisplayName()
 				));
     }
 	
