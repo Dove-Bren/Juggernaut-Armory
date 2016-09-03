@@ -10,6 +10,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.SkyIsland.Armory.chat.ChatFormat;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.items.armor.Armor;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 import com.SkyIsland.Armory.mechanics.ArmorUtils;
@@ -51,6 +52,19 @@ public class ItemListener {
 					else
 						hiddenList.add(formatProtection(type, protectionMap.get(type)));
 				}
+				
+				if (stack.getItem() instanceof Armor) {
+					List<String> tmp = hiddenList;
+					if (ModConfig.config.getShowComponents()) {
+						tmp = event.toolTip;
+					}
+					
+					tmp.add(ChatFormat.COMPONENTS.wrap("Components:"));
+					for (ItemStack sub : ((Armor) stack.getItem()).getNestedArmorStacks(stack)) {
+						tmp.add(ChatFormat.COMPONENTS.wrap(" - " + sub.getDisplayName()));
+					}
+				}
+				
 	
 				if (!hiddenList.isEmpty()) {
 					if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {

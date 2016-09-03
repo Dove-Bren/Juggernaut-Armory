@@ -29,10 +29,7 @@ public class ModConfig {
 		DEFAULT_RATIO(Category.SERVER, "default_rate", new Float(0.70f), true, "How many armor points to preserve on armor pieces that aren't defined. For example, vanilla diamond helmets (3.0 defense) receive (3.0 * default_rate) protection in all base areas. Default is 0.7"),
 		METAL_MIN_HEAT(Category.SERVER, "min_heat", new Integer(400), true, "Minimum heat a metal mixture can have before it solidifies"),
 		SHOW_ZEROS(Category.DISPLAY, "show_zeros", false, "When displaying damage or protection properties, should 0's be displayed? Default is false"),
-		PEDESTAL_WIDTH(Category.TEST, "width", new Float(1.0f), false, "pedestal width (x)"),
-		PEDESTAL_DEPTH(Category.TEST, "depth", new Float(1.0f), false, "pedestal depth (z)"),
-		PEDESTAL_HEIGHT(Category.TEST, "height", new Float(1.0f), false, "pedestal height (y)"),
-		PEDESTAL_ADDED_HEIGHT(Category.TEST, "sword height", new Float(1.0f), false, "pedestal height with sword (y)");
+		SHOW_COMPONENTS(Category.DISPLAY, "show_components", false, "Show weapon components by default (without pressing shift)");
 		
 		
 //		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
@@ -341,6 +338,10 @@ public class ModConfig {
 	
 	public boolean getShowZeros() {
 		return getBooleanValue(Key.SHOW_ZEROS, false);
+	}
+	
+	public boolean getShowComponents() {
+		return getBooleanValue(Key.SHOW_COMPONENTS, false);
 	}
 	
 	public float getArmorRate() {

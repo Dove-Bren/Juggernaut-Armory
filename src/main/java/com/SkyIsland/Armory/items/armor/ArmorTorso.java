@@ -2,9 +2,9 @@ package com.SkyIsland.Armory.items.armor;
 
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.SkyIsland.Armory.mechanics.DamageType;
 
@@ -386,7 +386,7 @@ public class ArmorTorso extends Armor {
 	@Override
 	public Collection<ItemStack> getNestedArmorStacks(ItemStack stack) {
 		TorsoComponents components = new TorsoComponents(stack);
-		Set<ItemStack> parts = new HashSet<ItemStack>();
+		List<ItemStack> parts = new LinkedList<ItemStack>();
 		
 		for (Slot slot : Slot.values()) {
 			ItemStack item = components.getStackInSlot(slot.getInventoryPosition());
