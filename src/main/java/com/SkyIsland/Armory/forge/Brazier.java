@@ -17,12 +17,17 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemHoe;
@@ -34,9 +39,11 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -222,17 +229,30 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
         entity.fuel = fuel;
     }
     
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(
+    								World worldIn, BlockPos pos,
+    								IBlockState state,
+    								EntityPlayer playerIn,
+    								EnumFacing side,
+    								float hitX,
+    								float hitY,
+    								float hitZ) {
     	BrazierTileEntity entity = (BrazierTileEntity) worldIn.getTileEntity(pos);
 //    	System.out.println("click");
         if (entity == null)
         	return false;
         
         setFuel(worldIn, pos, worldIn.getBlockState(pos), new ItemStack(Items.coal));
+        
+        // Open GUI!
+        if (!worldIn.isRemote) {
+        	System.out.println("Opening gui...");
+        	playerIn.openGui(Armory.instance, Armory.Gui_Type.BRAZIER.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+        }
         return true;
     }
 	
-	public static class BrazierTileEntity extends TileEntity implements ITickable {
+	public static class BrazierTileEntity extends TileEntityLockable implements ITickable {
 		
 		protected ItemStack fuel;
 		
@@ -512,6 +532,183 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
             
             return 0;
 		}
+
+		//TileEntityLockable Methods
+		//TODO Sort Through and see what we need to change
+		
+		/**
+		 * Indicates that container texture should be drawn
+		 * @param parIInventory
+		 * @return
+		 */
+		@SideOnly(Side.CLIENT)
+		public static boolean func_174903_a(IInventory parIInventory) {
+			return true;
+		}
+		
+		@Override
+		public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+		@Override
+		public String getGuiID() {
+			return "armory:brazier";
+		}
+
+
+		@Override
+		public String getName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+		@Override
+		public boolean hasCustomName() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+
+		@Override
+		public int getSizeInventory() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+
+		@Override
+		public ItemStack getStackInSlot(int index) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+		@Override
+		public ItemStack decrStackSize(int index, int count) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+		@Override
+		public ItemStack removeStackFromSlot(int index) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+		@Override
+		public void setInventorySlotContents(int index, ItemStack stack) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public int getInventoryStackLimit() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+
+		@Override
+		public boolean isUseableByPlayer(EntityPlayer player) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+
+		@Override
+		public void openInventory(EntityPlayer player) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public void closeInventory(EntityPlayer player) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public boolean isItemValidForSlot(int index, ItemStack stack) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+
+		@Override
+		public int getField(int id) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+
+		@Override
+		public void setField(int id, int value) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public int getFieldCount() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+
+		@Override
+		public void clear() {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	/**
+	 * This is a Container for the Brazier
+	 * Who knows what this actually does.
+	 * @author William Fong
+	 *
+	 */
+	public static class BrazierContainer extends Container {
+
+		@Override
+		public boolean canInteractWith(EntityPlayer playerIn) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static class BrazierGui extends GuiContainer {
+
+		private static final ResourceLocation GuiImageLocation =
+				new ResourceLocation(Armory.MODID + ":textures/gui/container/brazier.png");
+		
+		public BrazierGui(Container inventorySlotsIn) {
+			super(inventorySlotsIn);
+			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+			// TODO Draw Gui
+			GlStateManager.color(1.0F,  1.0F, 1.0F, 1.0F);
+			mc.getTextureManager().bindTexture(GuiImageLocation);
+			int horizontalMargin = (width - xSize) / 2;
+			int verticalMargin = (height - ySize) / 2;
+			drawTexturedModalRect(horizontalMargin, verticalMargin, 0,0, xSize, ySize);
+		}
+		
 		
 	}
 }
