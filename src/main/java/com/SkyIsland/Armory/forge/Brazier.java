@@ -115,7 +115,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 							.withProperty(STANDALONE, state.getValue(STANDALONE)));
 			} else if (this == onBlock &&
 					((BrazierTileEntity) te).burnTime <= 0) {
-				System.out.println("random tick set");
+//				System.out.println("random tick set");
 				worldIn.setBlockState(pos, offBlock.getDefaultState()
 						.withProperty(FACING, state.getValue(FACING))
 						.withProperty(STANDALONE, state.getValue(STANDALONE)));
@@ -213,18 +213,18 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
     }
     
     public void setFuel(World world, BlockPos pos, IBlockState state, ItemStack fuel) {
-    	System.out.println("setfuel");
+//    	System.out.println("setfuel");
     	BrazierTileEntity entity = (BrazierTileEntity) world.getTileEntity(pos);
         if (entity == null)
         	return;
         
-        System.out.println("fuel being set!");
+//        System.out.println("fuel being set!");
         entity.fuel = fuel;
     }
     
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
     	BrazierTileEntity entity = (BrazierTileEntity) worldIn.getTileEntity(pos);
-    	System.out.println("click");
+//    	System.out.println("click");
         if (entity == null)
         	return false;
         
@@ -353,7 +353,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
 		{
 		    //return (oldState.getBlock() != newSate.getBlock());
-			System.out.println("refresh [" + newState.getBlock() + "]? -> " + !(newState.getBlock() instanceof Brazier));
+//			System.out.println("refresh [" + newState.getBlock() + "]? -> " + !(newState.getBlock() instanceof Brazier));
 			return !(newState.getBlock() instanceof Brazier);
 			//return true;
 		}
@@ -466,7 +466,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 						if (fuel.stackSize <= 0)
 							fuel = null;
 						
-						System.out.println("cook time: " + burnTime);
+//						System.out.println("cook time: " + burnTime);
 					} else if (!isStandalone && ForgeManager.instance().getFuelRecord(fuel.getItem()) != null) {
 						
 						FuelRecord record = ForgeManager.instance().getFuelRecord(fuel.getItem());
