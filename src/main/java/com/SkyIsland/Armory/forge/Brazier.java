@@ -21,6 +21,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -28,6 +29,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemHoe;
@@ -603,22 +605,23 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 
 		@Override
 		public void setInventorySlotContents(int index, ItemStack stack) {
-			// TODO Auto-generated method stub
-			
+			if (index == 0) {
+				this.fuel = stack;
+			}
 		}
 
 
 		@Override
 		public int getInventoryStackLimit() {
 			// TODO Auto-generated method stub
-			return 0;
+			return 64;
 		}
 
 
 		@Override
 		public boolean isUseableByPlayer(EntityPlayer player) {
 			// TODO Auto-generated method stub
-			return false;
+			return true;
 		}
 
 
@@ -639,7 +642,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		@Override
 		public boolean isItemValidForSlot(int index, ItemStack stack) {
 			// TODO Auto-generated method stub
-			return false;
+			return true;
 		}
 
 
@@ -679,11 +682,57 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	 *
 	 */
 	public static class BrazierContainer extends Container {
-
+		
+		private BrazierTileEntity brazier;
+		
+		public BrazierContainer(IInventory playerInv, BrazierTileEntity brazier) {
+			this.brazier = brazier;
+			
+			// Construct slots for player to interact with
+			// Brazier only needs '1' inventory slot to interact with
+			// Uses slot ID 0
+			this.addSlotToContainer(new Slot(brazier, 0, 17, 30));
+			
+			// Construct player inventory
+			for (int y = 0; y < 3; y++) {
+				for (int x = 0; x < 9; x++) {
+					this.addSlotToContainer(new Slot(playerInv, x + (y * 9) + 9, 8 + (x * 18), 84 + (y * 18)));
+				}
+			}
+			// Construct player hotbar
+			for (int x = 0; x < 9; x++) {
+				this.addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 142));
+			}
+		}
+		
+		@Override
+		public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot) {
+			ItemStack prev = null;	
+			Slot slot = (Slot) this.inventorySlots.get(fromSlot);
+			
+			if (slot != null && slot.getHasStack()) {
+				ItemStack cur = slot.getStack();
+				prev = cur.copy();
+				/** If we want additional behavior put it here **/
+				if (cur.stackSize == 0) {
+					slot.putStack((ItemStack) null);
+				} else {
+					slot.onSlotChanged();
+				}
+				
+				if (cur.stackSize == prev.stackSize) {
+					return null;
+				}
+				slot.onPickupFromSlot(playerIn, cur);
+			}
+			
+			return prev;
+		}
+		
 		@Override
 		public boolean canInteractWith(EntityPlayer playerIn) {
 			// TODO Auto-generated method stub
-			return false;
+			return true;
 		}
 
 	}
@@ -694,9 +743,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		private static final ResourceLocation GuiImageLocation =
 				new ResourceLocation(Armory.MODID + ":textures/gui/container/brazier.png");
 		
-		public BrazierGui(Container inventorySlotsIn) {
-			super(inventorySlotsIn);
-			// TODO Auto-generated constructor stub
+		public BrazierGui(Brazier.BrazierContainer brazier) {
+			super(brazier);
 		}
 		
 		@Override

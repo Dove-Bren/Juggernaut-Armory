@@ -47,7 +47,7 @@ public class ClientProxy extends CommonProxy {
 
 		for (ArmoryBlocks key : ArmoryBlocks.values())
 			ForgeBlocks.getBlock(key).clientInit();
-		
+		super.init();
 	}
 
 	/**
