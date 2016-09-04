@@ -160,6 +160,14 @@ public class HeldMetal extends ItemBase {
 		//updateHeat(metal);
 	}
 	
+	public ItemStack createStack(Collection<ItemStack> containedMetals, int heat) {
+		ItemStack stack = new ItemStack(this);
+		setHeat(stack, heat);
+		setMetals(stack, containedMetals);
+		
+		return stack;
+	}
+	
 	protected void updateHeat(Entity owner, ItemStack metal) {
 		if (getHeat(metal) < ModConfig.config.getMinimumHeat()) {
 			metal.setItem(MiscItems.getItem(Items.SCRAP));

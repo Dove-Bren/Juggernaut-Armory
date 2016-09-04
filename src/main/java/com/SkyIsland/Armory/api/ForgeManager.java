@@ -1,9 +1,14 @@
 package com.SkyIsland.Armory.api;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class ForgeManager {
 
@@ -34,6 +39,146 @@ public class ForgeManager {
 		}
 	}
 	
+	public static class MetalRecord {
+		
+		protected int burnTime;
+		
+		protected int requiredHeat;
+		
+		private Item metal;
+		
+		private int meta;
+		
+		public MetalRecord(Item metal, int burnTime, int requiredHeat) {
+			this(metal, burnTime, requiredHeat, -1);
+		}
+		
+		public MetalRecord(Item metal, int burnTime, int requiredHeat, int requiredMeta) {
+			this.metal = metal;
+			this.burnTime = burnTime;
+			this.requiredHeat = requiredHeat;
+			this.meta = requiredMeta;
+		}
+		
+		protected boolean accepts(ItemStack stack) {
+			return (stack != null && stack.getItem() == metal
+					&& (meta == -1 || meta == stack.getItemDamage()));
+			//return whether the stack is the same item and (requiredMeta is -1 or the same)
+		}
+
+		public int getBurnTime() {
+			return burnTime;
+		}
+
+		public int getRequiredHeat() {
+			return requiredHeat;
+		}
+
+		public Item getMetal() {
+			return metal;
+		}
+
+		public int getMeta() {
+			return meta;
+		}
+	}
+	
+	public static class AlloyRecipe {
+		
+		protected Item result;
+		
+		private List<ItemStack> inputs;
+		
+		private int resultAmount;
+		
+		public AlloyRecipe(Item result, Collection<ItemStack> inputs, int amount) {
+			this.result = result;
+			this.inputs = new ArrayList<ItemStack>(inputs);
+			this.resultAmount = amount;
+		}
+		
+		/**
+		 * Create an itemstack result for this alloy
+		 * @return
+		 */
+		protected ItemStack getResult() {
+			ItemStack ret = new ItemStack(result);
+			ret.stackSize = resultAmount;
+			return ret;
+		}
+		
+		protected boolean matches(Collection<ItemStack> ingredients) {
+			if (ingredients == null || ingredients.isEmpty())
+				return false;
+			
+//			//make lists we can ruin
+//			List<ItemStack> ins = new LinkedList<ItemStack>(ingredients);
+//			List<ItemStack> reqs = new LinkedList<ItemStack>(inputs);
+//			
+//			Iterator<ItemStack> it;
+//			ItemStack inspect;
+//			boolean found;
+//			for (ItemStack input : ins) {
+//				//for every input, go through requirements and 'mark off' what we have
+//				if (reqs.isEmpty()) {
+//					//already exhausted requirements. Doesn't match.
+//					return false;
+//				}
+//				found = false;
+//				it = reqs.listIterator(0);
+//				while (it.hasNext()) {
+//					//look through reqs for a match
+//					inspect = it.next();
+//					if (inspect.getIsItemStackEqual(input)) {
+//						it.remove();
+//						break;
+//					}
+//				}
+//				
+//				if (!found) {
+//					//didn't find match. not a match
+//					return false;
+//				}
+//				
+//				//else we found it and marked it off. success, continue to next input
+//			}
+//			
+//			//finished inputs. If it is a match, reqs should be empty, too
+//			return reqs.isEmpty();
+			
+			//use summary maps instead
+			Map<Item, Integer> inputMap = new HashMap<Item, Integer>();
+			Map<Item, Integer> reqMap = new HashMap<Item, Integer>();
+			
+			if (ingredients != null && !ingredients.isEmpty())
+			for (ItemStack stack : ingredients) {
+				if (!inputMap.containsKey(stack.getItem()))
+					inputMap.put(stack.getItem(), new Integer(0));
+				inputMap.put(stack.getItem(), inputMap.get(stack.getItem()) + 1);
+			}
+			
+			if (inputs != null && !inputs.isEmpty())
+			for (ItemStack stack : inputs) {
+				if (!reqMap.containsKey(stack.getItem()))
+					reqMap.put(stack.getItem(), new Integer(0));
+				reqMap.put(stack.getItem(), reqMap.get(stack.getItem()) + 1);
+			}
+			
+			if (reqMap.keySet().size() != inputMap.keySet().size())
+				return false; //size of items in doesn't match; invalid match
+			
+			for (Item key : reqMap.keySet()) {
+				if (!inputMap.containsKey(key))
+					return false;
+			}
+			
+			//since size was the same and we didn't find an item that didn't match
+			//we accept
+			
+			return true;
+		}
+	}
+	
 	private static ForgeManager instance;
 	
 	public static void init() {
@@ -46,8 +191,14 @@ public class ForgeManager {
 	
 	private Map<Item, FuelRecord> fuels;
 	
+	private List<MetalRecord> metals;
+	
+	private List<AlloyRecipe> recipes;
+	
 	private ForgeManager() {
 		fuels = new HashMap<Item, FuelRecord>();
+		metals = new LinkedList<MetalRecord>();
+		recipes = new LinkedList<AlloyRecipe>();
 	}
 	
 	public void registerFuel(Item item, FuelRecord record) {
@@ -58,4 +209,49 @@ public class ForgeManager {
 		return fuels.get(item);
 	}
 	
+	public void registerInputMetal(MetalRecord record) {
+		this.metals.add(record);
+	}
+	
+	public void registerAlloyRecipe(AlloyRecipe recipe) {
+		recipes.add(recipe);
+	}
+	
+	/**
+	 * Attempts a lookup for the given itemstack. Returns the first
+	 * record (in order of registration) that accepts the given itemstack, or
+	 * null if no such record is found.
+	 * @param metal
+	 * @return The first record that accepted the stack, or null if none were found
+	 * @see {@link MetalRecord}
+	 * @see {@link MetalRecord#accepts(ItemStack)}
+	 */
+	public MetalRecord getMetalRecord(ItemStack metal) {
+		if (metals.isEmpty())
+			return null;
+		
+		for (MetalRecord record : metals) {
+			if (record.accepts(metal))
+				return record;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Returns the first registered alloy that accepts on the given inputs.
+	 * @param inputMetals
+	 * @return The resultant alloy, or null if none were found
+	 */
+	public ItemStack getAlloy(Collection<ItemStack> inputMetals) {
+		if (recipes.isEmpty())
+			return null;
+		
+		for (AlloyRecipe recipe : recipes) {
+			if (recipe.matches(inputMetals))
+				return recipe.getResult();
+		}
+		
+		return null;
+	}
 }

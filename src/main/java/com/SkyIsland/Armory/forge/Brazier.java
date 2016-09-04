@@ -7,6 +7,7 @@ import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.FuelRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -283,9 +284,11 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			currentHeatRate = 0;
 			heatMax = 0;
 			face = EnumFacing.NORTH;
-			System.out.println("constructor");
 		}
 		
+		protected int getHeat() {
+			return heat;
+		}
 		
 		@Override
 		public void writeToNBT(NBTTagCompound tag) {
@@ -407,8 +410,10 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			this.isStandalone = false;
 			this.face = direction;
 			
-			//hook into Forge entity
-			//TODO
+			//hook into Forge entity, update it's brazier to us
+			Forge forge = (Forge) ForgeBlocks.getBlock(ArmoryBlocks.FORGE);
+			forge.setBrazier(getWorld(), getPos().offset(direction),
+					direction.getOpposite());
 			
 			updateContainer();
 		}
