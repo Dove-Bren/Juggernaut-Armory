@@ -3,7 +3,6 @@ package com.SkyIsland.Armory.proxy;
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.config.network.ServerConfigMessage;
-import com.SkyIsland.Armory.forge.Brazier;
 import com.SkyIsland.Armory.gui.GuiHandler;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.armor.ExtendedArmorMaterial;

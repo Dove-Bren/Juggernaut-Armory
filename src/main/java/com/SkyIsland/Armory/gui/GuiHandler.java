@@ -45,7 +45,7 @@ public class GuiHandler implements IGuiHandler {
 			// Check for GUI Type
 			if (ID == Armory.Gui_Type.BRAZIER.ordinal()) {
 				System.out.println("Opening Brazier GUI.");
-				return new Brazier.BrazierGui(player.inventoryContainer);
+				return new Brazier.BrazierGui(player.inventoryContainer); //TODO shouldn't be players. should be player + tile entity
 			}
 		}
 		return null;

@@ -15,7 +15,6 @@ import com.SkyIsland.Armory.items.WeaponItems.Weapons;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.armor.ExtendedArmorMaterial;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ClientProxy extends CommonProxy {
