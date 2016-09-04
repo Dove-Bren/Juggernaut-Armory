@@ -492,6 +492,11 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 						burnTime = record.getBurnTicks();
 						currentHeatRate = record.getHeatRate();
 						
+						fuel.stackSize--;
+						
+						if (fuel.stackSize <= 0)
+							fuel = null;
+						
 					}
 				}
 			}
