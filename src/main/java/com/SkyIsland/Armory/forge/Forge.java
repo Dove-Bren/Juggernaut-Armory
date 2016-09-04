@@ -302,17 +302,33 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			if (meltedItems.isEmpty())
 				return null;
 			
-			ItemStack stack = ((HeldMetal) MiscItems.getItem(Items.HELD_METAL))
-					.createStack(meltedItems, getHeat());
+			boolean same = true;
+			Item itemType = null;
+			for (ItemStack item : meltedItems) {
+				if (itemType == null) {
+					itemType = item.getItem();
+					continue;
+				}
+				
+				if (itemType != item.getItem()) {
+					same = false;
+					break;
+				}
+			}
 			
-			/**
-			 * TODO
-			 * make certain that the melted items are all of one item type (and
-			 * that there is a material for that item type for shaping) OR
-			 * it's an alloy. If not, produce scrap
-			 */
+			if (same) {
+				//all the same item type
+				return ((HeldMetal) MiscItems.getItem(Items.HELD_METAL))
+						.createStack(meltedItems, getHeat());
+			}
 			
-			return stack;
+			//else check if valid alloy
+			ItemStack alloy = ForgeManager.instance().getAlloy(meltedItems);
+			
+			meltedItems.clear();
+			
+			return alloy; //if not an alloy, will return null. else will return the alloy
+			
 		}
 		
 	}
