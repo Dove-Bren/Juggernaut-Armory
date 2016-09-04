@@ -198,37 +198,10 @@ public class ForgeManager {
 		instance.registerFuel(Item.getItemFromBlock(Blocks.coal_block), new FuelRecord(16000, 1700, 1));
 		instance.registerFuel(Items.lava_bucket, new FuelRecord(20000, 3000, 4));
 		
-		
-		/**
-		 * if (item instanceof ItemBlock && Block.getBlockFromItem(item) != Blocks.air)
-            {
-                Block block = Block.getBlockFromItem(item);
-
-                if (block == Blocks.wooden_slab)
-                {
-                    return 150;
-                }
-
-                if (block.getMaterial() == Material.wood)
-                {
-                    return 300;
-                }
-
-                if (block == Blocks.coal_block)
-                {
-                    return 16000;
-                }
-            }
-
-            if (item instanceof ItemTool && ((ItemTool)item).getToolMaterialName().equals("WOOD")) return 200;
-            if (item instanceof ItemSword && ((ItemSword)item).getToolMaterialName().equals("WOOD")) return 200;
-            if (item instanceof ItemHoe && ((ItemHoe)item).getMaterialName().equals("WOOD")) return 200;
-            if (item == Items.stick) return 100;
-            if (item == Items.coal) return 1600;
-            if (item == Items.lava_bucket) return 20000;
-            if (item == Item.getItemFromBlock(Blocks.sapling)) return 100;
-            if (item == Items.blaze_rod) return 2400;
-		 */
+		instance.registerFuel(Item.getItemFromBlock(Blocks.log), new FuelRecord(600, 1200, 1));
+		instance.registerFuel(Item.getItemFromBlock(Blocks.log2), new FuelRecord(600, 1200, 1));
+		instance.registerFuel(Item.getItemFromBlock(Blocks.planks), new FuelRecord(300, 1000, 2));
+		instance.registerFuel(Items.blaze_powder, new FuelRecord(4000, 2500, 5));
 	}
 	
 	public static ForgeManager instance() {
