@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -172,6 +174,11 @@ public class ForgeManager {
 					return false;
 			}
 			
+			/**
+			 * TODO
+			 * check for multiples
+			 */
+			
 			//since size was the same and we didn't find an item that didn't match
 			//we accept
 			
@@ -183,6 +190,45 @@ public class ForgeManager {
 	
 	public static void init() {
 		instance = new ForgeManager();
+		setupVanilla();
+	}
+	
+	private static void setupVanilla() {
+		instance.registerFuel(Items.coal, new FuelRecord(1600, 1700, 1));
+		instance.registerFuel(Item.getItemFromBlock(Blocks.coal_block), new FuelRecord(16000, 1700, 1));
+		instance.registerFuel(Items.lava_bucket, new FuelRecord(20000, 3000, 4));
+		
+		
+		/**
+		 * if (item instanceof ItemBlock && Block.getBlockFromItem(item) != Blocks.air)
+            {
+                Block block = Block.getBlockFromItem(item);
+
+                if (block == Blocks.wooden_slab)
+                {
+                    return 150;
+                }
+
+                if (block.getMaterial() == Material.wood)
+                {
+                    return 300;
+                }
+
+                if (block == Blocks.coal_block)
+                {
+                    return 16000;
+                }
+            }
+
+            if (item instanceof ItemTool && ((ItemTool)item).getToolMaterialName().equals("WOOD")) return 200;
+            if (item instanceof ItemSword && ((ItemSword)item).getToolMaterialName().equals("WOOD")) return 200;
+            if (item instanceof ItemHoe && ((ItemHoe)item).getMaterialName().equals("WOOD")) return 200;
+            if (item == Items.stick) return 100;
+            if (item == Items.coal) return 1600;
+            if (item == Items.lava_bucket) return 20000;
+            if (item == Item.getItemFromBlock(Blocks.sapling)) return 100;
+            if (item == Items.blaze_rod) return 2400;
+		 */
 	}
 	
 	public static ForgeManager instance() {

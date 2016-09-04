@@ -315,6 +315,13 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			ItemStack stack = ((HeldMetal) MiscItems.getItem(Items.HELD_METAL))
 					.createStack(meltedItems, getHeat());
 			
+			/**
+			 * TODO
+			 * make certain that the melted items are all of one item type (and
+			 * that there is a material for that item type for shaping) OR
+			 * it's an alloy. If not, produce scrap
+			 */
+			
 			return stack;
 		}
 		
