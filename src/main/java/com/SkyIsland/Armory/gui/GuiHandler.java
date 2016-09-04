@@ -18,34 +18,27 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
  */
 public class GuiHandler implements IGuiHandler {
 
-	/* (non-Javadoc)
-	 * @see net.minecraftforge.fml.common.network.IGuiHandler#getServerGuiElement(int, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World, int, int, int)
-	 */
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		System.out.println("Server GUI");
 		TileEntity activatedEntity = world.getTileEntity(new BlockPos(x,y,z));
 		if (activatedEntity != null) {
 			// Check for the GUI type
 			if (ID == Armory.Gui_Type.BRAZIER.ordinal()) {
-				return new Brazier.BrazierContainer();
+				return new Brazier.BrazierContainer(player.inventory, (Brazier.BrazierTileEntity) world.getTileEntity(new BlockPos(x,y,z)));
 			}
 		}
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.minecraftforge.fml.common.network.IGuiHandler#getClientGuiElement(int, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World, int, int, int)
-	 */
+	
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		System.out.println("Opening GUI fam");
 		TileEntity activatedEntity = world.getTileEntity(new BlockPos(x,y,z));
 		if (activatedEntity != null) {
 			// Check for GUI Type
 			if (ID == Armory.Gui_Type.BRAZIER.ordinal()) {
 				System.out.println("Opening Brazier GUI.");
-				return new Brazier.BrazierGui(player.inventoryContainer); //TODO shouldn't be players. should be player + tile entity
+				return new Brazier.BrazierGui(new Brazier.BrazierContainer(player.inventory, (Brazier.BrazierTileEntity) world.getTileEntity(new BlockPos(x,y,z))));
 			}
 		}
 		return null;

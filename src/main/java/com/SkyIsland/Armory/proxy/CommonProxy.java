@@ -22,6 +22,7 @@ public class CommonProxy  {
 	  }
 	  
 	  public void init() {
+		  System.out.println("Network Proxy initializing.");
 		  NetworkRegistry.INSTANCE.registerGuiHandler(Armory.instance, new GuiHandler());
 	  }
 
