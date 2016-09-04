@@ -71,10 +71,8 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 	 * @param relativeDirection direction <strong> from the forge</strong> to the brazier
 	 */
 	public void setBrazier(World world, BlockPos pos, EnumFacing relativeDirection) {
-		System.out.println("set offer with direction: " + relativeDirection);
 		TileEntity entity = world.getTileEntity(pos);
 		if (entity != null && entity instanceof ForgeTileEntity) {
-			System.out.println("Forge entity at given position!");
 			ForgeTileEntity et = (ForgeTileEntity) entity;
 			
 			TileEntity other = world.getTileEntity(pos.offset(relativeDirection));
@@ -82,7 +80,6 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 				//if this is a valid forge location and the given direction points
 				//to a valid brazier tile entity
 				et.brazierLocation = relativeDirection;
-				System.out.println("setting location");
 			}
 			
 		}
@@ -236,13 +233,6 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 					currentMeltingItem = null;
 				}
 			}
-			
-			///////////TEST
-			
-			if (brazierLocation != null)
-				System.out.print(".");
-			
-			//////////////////////
 			
 			if (currentMeltingItem == null && input != null) {
 				//ready to accept item, if it has enough heat
