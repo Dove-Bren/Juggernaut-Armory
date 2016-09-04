@@ -11,6 +11,7 @@ import com.SkyIsland.Armory.forge.Brazier.BrazierTileEntity;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.MiscItems.Items;
+import com.SkyIsland.Armory.items.ScrapMetal;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -318,6 +319,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			
 			if (same) {
 				//all the same item type
+				meltedItems.clear();
 				return ((HeldMetal) MiscItems.getItem(Items.HELD_METAL))
 						.createStack(meltedItems, getHeat());
 			}
@@ -325,8 +327,14 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			//else check if valid alloy
 			ItemStack alloy = ForgeManager.instance().getAlloy(meltedItems);
 			
-			meltedItems.clear();
+			if (alloy == null) {
+				//just a bunch of junk. produce scrap.
+				//select random item to return
+				int index = Armory.random.nextInt(meltedItems.size());
+				alloy = ScrapMetal.produceScrap(meltedItems.get(index));
+			}
 			
+			meltedItems.clear();
 			return alloy; //if not an alloy, will return null. else will return the alloy
 			
 		}
