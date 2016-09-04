@@ -139,10 +139,10 @@ public class ArmorPiece extends Item {
 	}
 	
 	public ItemStack constructPiece(ArmorMaterial material) {
-		return constructPiece(ExtendedArmorMaterial.wrap(material));
+		return constructPiece(ExtendedMaterial.wrap(material));
 	}
 	
-	public ItemStack constructPiece(ExtendedArmorMaterial material) {
+	public ItemStack constructPiece(ExtendedMaterial material) {
 		Map<DamageType, Float> materialValues = material.getDamageReductionAmount(parentSlot);
 		
 		ItemStack stack = new ItemStack(this);
@@ -316,12 +316,12 @@ public class ArmorPiece extends Item {
 		return "";
 	}
 	
-	public ExtendedArmorMaterial fetchMaterial(ItemStack stack) {
+	public ExtendedMaterial fetchMaterial(ItemStack stack) {
 		String materialName = getUnderlyingMaterial(stack);
 		if (materialName == null || materialName.isEmpty())
 			return null;
 		
-		return ExtendedArmorMaterial.lookupMaterial(materialName);
+		return ExtendedMaterial.lookupMaterial(materialName);
 	}
 	
 	/**

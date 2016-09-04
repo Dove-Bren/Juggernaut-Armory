@@ -3,6 +3,7 @@ package com.SkyIsland.Armory.items.weapons;
 import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.block.Block;
@@ -46,6 +47,8 @@ public abstract class Weapon extends Item {
 	 */
 	protected float blockReduction;
 	
+	protected Map<DamageType, Float> weaponModifierMap;
+	
     protected Weapon(String unlocalizedName) {
     	this(unlocalizedName, null, 1.0f, false, 0.0f);
     }
@@ -60,6 +63,10 @@ public abstract class Weapon extends Item {
         this.canBlock = canBlock;
         this.blockReduction = blockReduction;
         this.setUnlocalizedName(unlocalizedName);
+        this.weaponModifierMap = DamageType.freshMap();
+        if (damageMap != null)
+        for (DamageType key : damageMap.keySet())
+        	weaponModifierMap.put(key, damageMap.get(key));
     }
     
     public void clientInit() {
@@ -336,7 +343,7 @@ public abstract class Weapon extends Item {
 		return blockReduction;
 	}
 	
-	public static ItemStack constructWeapon(Weapon base, String name, Map<DamageType, Float> damageMap) {
+	public static ItemStack constructWeaponFrom(Weapon base, String name, Map<DamageType, Float> damageMap) {
 		ItemStack stack = new ItemStack(base);
 		
 		stack.setStackDisplayName(name);
@@ -354,6 +361,38 @@ public abstract class Weapon extends Item {
 		}
 		
 		return stack;
+	}
+	
+	public static ItemStack constructWeapon(Weapon base, String name, ExtendedMaterial material) {
+		ItemStack stack = new ItemStack(base);
+		
+		stack.setStackDisplayName(name);
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		if (!stack.getTagCompound().hasKey(DAMAGE_KEY, NBT.TAG_COMPOUND))
+			stack.getTagCompound().setTag(DAMAGE_KEY, new NBTTagCompound());
+		
+		NBTTagCompound nbt = stack.getTagCompound().getCompoundTag(DAMAGE_KEY);
+		
+		Map<DamageType, Float> damageMap = DamageType.freshMap(),
+				cache = base.getDamageModifierMap();
+		for (DamageType key : material.getDamageMap().keySet()) {
+			damageMap.put(key, 
+					material.getDamageMap().get(key) * cache.get(key) 
+					);
+		}
+		
+		for (DamageType type : DamageType.values())
+		if (damageMap.containsKey(type)) {
+			nbt.setFloat(type.name(), damageMap.get(type));
+		}
+		
+		return stack;
+	}
+	
+	public Map<DamageType, Float> getDamageModifierMap() {
+		return this.weaponModifierMap;
 	}
 
 	@Override

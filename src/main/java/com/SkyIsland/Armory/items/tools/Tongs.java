@@ -5,6 +5,7 @@ import java.util.Map;
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.forge.Brazier;
+import com.SkyIsland.Armory.forge.Forge;
 import com.SkyIsland.Armory.items.ItemBase;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
@@ -160,20 +161,27 @@ public class Tongs extends ItemBase {
 		
 		if (block instanceof Brazier)
 			onBrazier(playerIn, stack, state);
-		if (block instanceof BlockAnvil)
+		else if (block instanceof Forge)
+			onForge(playerIn, stack, state);
+		else if (block instanceof BlockAnvil)
 			onAnvil(playerIn, stack, state);
-		if (block instanceof BlockCauldron)
+		else if (block instanceof BlockCauldron)
 			onCauldron(playerIn, stack, state);
-//		if (block instanceof Trough)
+//		else if (block instanceof Trough)
 //			return onCauldron(playerIn, stack, state);
-//		if (block instanceof CuttingMachine)
+//		else if (block instanceof CuttingMachine)
 //			return onCauldron(playerIn, stack, state);
-//		if (block instanceof ConstructPedestal)
+//		else if (block instanceof ConstructPedestal)
 //			return onCauldron(playerIn, stack, state);
 	}
     
     private boolean onBrazier(EntityPlayer player, ItemStack tongs, IBlockState brazierBlock) {
     	System.out.println("Unimplemented method: Tongs#onBrazier()!!!!!");
+    	return false;
+    }
+    
+    private boolean onForge(EntityPlayer player, ItemStack tongs, IBlockState forgeBlock) {
+    	System.out.println("Unimplemented method: Tongs#onForge()!!!!!!!");
     	return false;
     }
     

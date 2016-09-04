@@ -13,7 +13,7 @@ import com.SkyIsland.Armory.items.ToolItems.Tools;
 import com.SkyIsland.Armory.items.WeaponItems;
 import com.SkyIsland.Armory.items.WeaponItems.Weapons;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
-import com.SkyIsland.Armory.items.armor.ExtendedArmorMaterial;
+import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -76,7 +76,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void registerMaterial(ExtendedArmorMaterial extendedArmorMaterial) {
+	public void registerMaterial(ExtendedMaterial extendedArmorMaterial) {
 //		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 //		.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
 	}

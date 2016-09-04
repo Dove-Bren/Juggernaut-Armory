@@ -21,7 +21,7 @@ import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.items.ToolItems;
 import com.SkyIsland.Armory.items.WeaponItems;
-import com.SkyIsland.Armory.items.armor.ExtendedArmorMaterial;
+import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 import com.SkyIsland.Armory.listeners.ItemListener;
 import com.SkyIsland.Armory.mechanics.ArmorModificationManager;
 import com.SkyIsland.Armory.mechanics.DamageType;
@@ -59,7 +59,7 @@ public class Armory {
     
     public static ItemListener itemLister;
 
-	public static ExtendedArmorMaterial material;
+	public static ExtendedMaterial material;
 	
 	public static final Random random = new Random();
 	
@@ -130,23 +130,31 @@ public class Armory {
 		map.put(DamageType.CRUSH, 10.0f);
 		map.put(DamageType.MAGIC, 0.0f);
 		map.put(DamageType.OTHER, 0.0f);
+		Map<DamageType, Float> damageMap = DamageType.freshMap();
+		map.put(DamageType.SLASH, 5.0f);
+		map.put(DamageType.PIERCE, 2.0f);
+		map.put(DamageType.CRUSH, 2.0f);
+		map.put(DamageType.MAGIC, 0.0f);
+		map.put(DamageType.OTHER, 0.0f);
 	    
-		material = new ExtendedArmorMaterial(
+		material = new ExtendedMaterial(
 				"iron",
 				"iron",
 				100,
 				new float[]{.15f, .4f, .3f, .15f},
 				map,
+				damageMap,
 				25,
 				Items.iron_ingot
 				);
 		
-	    material = new ExtendedArmorMaterial(
+	    material = new ExtendedMaterial(
 				"void",
 				"void",
 				100,
 				new float[]{.15f, .4f, .3f, .15f},
 				map,
+				damageMap,
 				25,
 				Items.iron_ingot
 				);

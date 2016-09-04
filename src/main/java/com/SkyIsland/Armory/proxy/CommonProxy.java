@@ -5,7 +5,7 @@ import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.config.network.ServerConfigMessage;
 import com.SkyIsland.Armory.gui.GuiHandler;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
-import com.SkyIsland.Armory.items.armor.ExtendedArmorMaterial;
+import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -51,7 +51,7 @@ public class CommonProxy  {
 		GameRegistry.registerItem(armorPiece, armorPiece.getModelSuffix());//armorPiece.getUnlocalizedName());
 	}
 
-	public void registerMaterial(ExtendedArmorMaterial extendedArmorMaterial) {
+	public void registerMaterial(ExtendedMaterial extendedArmorMaterial) {
 		; //nothing really to do
 	}
 }

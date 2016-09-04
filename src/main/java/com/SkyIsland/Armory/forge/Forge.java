@@ -335,7 +335,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			}
 			
 			meltedItems.clear();
-			return alloy; //if not an alloy, will return null. else will return the alloy
+			return alloy; //if not an alloy, will return scrap. else will return the alloy
 			
 		}
 		
