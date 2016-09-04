@@ -5,6 +5,7 @@ package com.SkyIsland.Armory.gui;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.forge.Brazier;
+import com.SkyIsland.Armory.forge.Forge;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -25,6 +26,8 @@ public class GuiHandler implements IGuiHandler {
 			// Check for the GUI type
 			if (ID == Armory.Gui_Type.BRAZIER.ordinal()) {
 				return new Brazier.BrazierContainer(player.inventory, (Brazier.BrazierTileEntity) world.getTileEntity(new BlockPos(x,y,z)));
+			} else if (ID == Armory.Gui_Type.FORGE.ordinal()) {
+				return new Forge.ForgeContainer(player.inventory, (Forge.ForgeTileEntity) world.getTileEntity(new BlockPos(x,y,z)));
 			}
 		}
 		return null;
@@ -39,6 +42,8 @@ public class GuiHandler implements IGuiHandler {
 			if (ID == Armory.Gui_Type.BRAZIER.ordinal()) {
 				System.out.println("Opening Brazier GUI.");
 				return new Brazier.BrazierGui(new Brazier.BrazierContainer(player.inventory, (Brazier.BrazierTileEntity) world.getTileEntity(new BlockPos(x,y,z))));
+			} else if (ID == Armory.Gui_Type.FORGE.ordinal()) {
+				return new Forge.ForgeGui(new Forge.ForgeContainer(player.inventory, (Forge.ForgeTileEntity) world.getTileEntity(new BlockPos(x,y,z))));
 			}
 		}
 		return null;

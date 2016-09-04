@@ -18,7 +18,14 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,12 +34,16 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Forge extends BlockBase implements ITileEntityProvider {
 	
@@ -63,6 +74,23 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		return new ForgeTileEntity();
 	}
 	
+	@Override
+	public boolean onBlockActivated(
+			World worldIn, BlockPos pos,
+			IBlockState state,
+			EntityPlayer playerIn,
+			EnumFacing side,
+			float hitX,
+			float hitY,
+			float hitZ) {
+		
+			// Open GUI!
+			if (!worldIn.isRemote) {
+			playerIn.openGui(Armory.instance, Armory.Gui_Type.FORGE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+			}
+			return true;
+		}
+	
 	/**
 	 * Sets the forge in the given location to consider the brazier in the given
 	 * direction as it's heat source. If <i>relativeDirection</i> is null,
@@ -86,7 +114,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		}
 	}
 	
-	public static class ForgeTileEntity extends TileEntity implements ITickable {
+	public static class ForgeTileEntity extends TileEntityLockable implements ITickable {
 		
 		protected ItemStack input;
 		
@@ -338,6 +366,228 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			return alloy; //if not an alloy, will return scrap. else will return the alloy
 			
 		}
+
+
+		@Override
+		public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+		@Override
+		public String getGuiID() {
+			return "armory:forge";
+		}
+
+
+		@Override
+		public String getName() {
+			return "Forge";
+		}
+
+
+		@Override
+		public boolean hasCustomName() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+
+		@Override
+		public int getSizeInventory() {
+			return 1;
+		}
+
+
+		@Override
+		public ItemStack getStackInSlot(int index) {
+			if (index == 0) {
+				return input;
+			}
+			return null;
+		}
+
+
+		@Override
+		public ItemStack decrStackSize(int index, int count) {
+			if (index == 0) {
+				return input.splitStack(count);
+			}
+			return null;
+		}
+
+
+		@Override
+		public ItemStack removeStackFromSlot(int index) {
+			if (index == 0) {
+				ItemStack tmp = input;
+				input = null;
+				return tmp;
+			}
+			return null;
+		}
+
+
+		@Override
+		public void setInventorySlotContents(int index, ItemStack stack) {
+			if (index == 0)
+				input = stack;
+		}
+
+
+		@Override
+		public int getInventoryStackLimit() {
+			return 64;
+		}
+
+
+		@Override
+		public boolean isUseableByPlayer(EntityPlayer player) {
+			return true;
+		}
+
+
+		@Override
+		public void openInventory(EntityPlayer player) {
+			; //nothing special to do
+		}
+
+
+		@Override
+		public void closeInventory(EntityPlayer player) {
+			; //nothing spcial to do
+		}
+
+
+		@Override
+		public boolean isItemValidForSlot(int index, ItemStack stack) {
+			if (index == 0)
+				return canAccept(stack);
+			
+			return false;
+		}
+
+
+		@Override
+		public int getField(int id) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+
+		@Override
+		public void setField(int id, int value) {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public int getFieldCount() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+
+		@Override
+		public void clear() {
+			input = null;
+		}
+		
+	}
+	
+	public static class ForgeContainer extends Container {
+		
+		private ForgeTileEntity forge;
+		
+		public ForgeContainer(IInventory playerInv, ForgeTileEntity forge) {
+			this.forge = forge;
+			short slotID = 0;
+			
+			// Construct slots for player to interact with
+			// Brazier only needs '1' inventory slot to interact with
+			// Uses slot ID 0
+			this.addSlotToContainer(new Slot(forge, 0, 17, 30));
+			slotID = 1;
+			// Construct player inventory
+			for (int y = 0; y < 3; y++) {
+				for (int x = 0; x < 9; x++) {
+					this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + (x * 18), 84 + (y * 18)));
+					slotID++;
+				}
+			}
+			// Construct player hotbar
+			for (int x = 0; x < 9; x++) {
+				this.addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 142));
+				slotID++;
+			}
+		}
+		
+		@Override
+		public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot) {
+			ItemStack prev = null;	
+			Slot slot = (Slot) this.inventorySlots.get(fromSlot);
+			
+			if (slot != null && slot.getHasStack()) {
+				ItemStack cur = slot.getStack();
+				prev = cur.copy();
+				
+				
+				/** If we want additional behavior put it here **/
+				/**if (fromSlot == 0) {
+					// This is going FROM Brazier to player
+					if (!this.mergeItemStack(cur, 9, 45, true))
+						return null;
+					else
+						// From Player TO Brazier
+						if (!this.mergeItemStack(cur, 0, 0, false)) {
+							return null;
+						}
+				}**/
+				
+				if (cur.stackSize == 0) {
+					slot.putStack((ItemStack) null);
+				} else {
+					slot.onSlotChanged();
+				}
+				
+				if (cur.stackSize == prev.stackSize) {
+					return null;
+				}
+				slot.onPickupFromSlot(playerIn, cur);
+			}
+			
+			return prev;
+		}
+		
+		@Override
+		public boolean canInteractWith(EntityPlayer playerIn) {
+			return true;
+		}
+
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static class ForgeGui extends GuiContainer {
+
+		private static final ResourceLocation GuiImageLocation =
+				new ResourceLocation(Armory.MODID + ":textures/gui/container/forge.png");
+		
+		public ForgeGui(ForgeContainer forge) {
+			super(forge);
+		}
+		
+		@Override
+		protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+			// TODO Draw Gui
+			GlStateManager.color(1.0F,  1.0F, 1.0F, 1.0F);
+			mc.getTextureManager().bindTexture(GuiImageLocation);
+			int horizontalMargin = (width - xSize) / 2;
+			int verticalMargin = (height - ySize) / 2;
+			drawTexturedModalRect(horizontalMargin, verticalMargin, 0,0, xSize, ySize);
+		}
+		
 		
 	}
 }
