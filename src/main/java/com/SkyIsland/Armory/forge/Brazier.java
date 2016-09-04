@@ -239,13 +239,6 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
     								float hitX,
     								float hitY,
     								float hitZ) {
-    	BrazierTileEntity entity = (BrazierTileEntity) worldIn.getTileEntity(pos);
-//    	System.out.println("click");
-        if (entity == null)
-        	return false;
-        
-        setFuel(worldIn, pos, worldIn.getBlockState(pos), new ItemStack(Items.coal));
-        
         // Open GUI!
         if (!worldIn.isRemote) {
         	System.out.println("Opening gui...");
@@ -578,27 +571,38 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		@Override
 		public int getSizeInventory() {
 			// TODO Auto-generated method stub
-			return 0;
+			return 1;
 		}
 
 
 		@Override
 		public ItemStack getStackInSlot(int index) {
-			// TODO Auto-generated method stub
+			if (index == 0) {
+				return this.fuel;
+			}
 			return null;
 		}
 
 
 		@Override
 		public ItemStack decrStackSize(int index, int count) {
-			// TODO Auto-generated method stub
+			if (index == 0) {
+				ItemStack ItemReturn = this.fuel.splitStack(count);
+				return ItemReturn;
+			}
 			return null;
 		}
 
 
 		@Override
 		public ItemStack removeStackFromSlot(int index) {
-			// TODO Auto-generated method stub
+			System.out.println("Attempting to remove at " + index);
+			if (index == 0) {
+				ItemStack ItemReturn = this.fuel;
+				this.fuel = (ItemStack) null;
+				System.out.println("Removing itemstack");
+				return ItemReturn;
+			}
 			return null;
 		}
 
@@ -687,21 +691,24 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		
 		public BrazierContainer(IInventory playerInv, BrazierTileEntity brazier) {
 			this.brazier = brazier;
+			short slotID = 0;
 			
 			// Construct slots for player to interact with
 			// Brazier only needs '1' inventory slot to interact with
 			// Uses slot ID 0
 			this.addSlotToContainer(new Slot(brazier, 0, 17, 30));
-			
+			slotID = 1;
 			// Construct player inventory
 			for (int y = 0; y < 3; y++) {
 				for (int x = 0; x < 9; x++) {
-					this.addSlotToContainer(new Slot(playerInv, x + (y * 9) + 9, 8 + (x * 18), 84 + (y * 18)));
+					this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + (x * 18), 84 + (y * 18)));
+					slotID++;
 				}
 			}
 			// Construct player hotbar
 			for (int x = 0; x < 9; x++) {
 				this.addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 142));
+				slotID++;
 			}
 		}
 		
@@ -713,7 +720,20 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			if (slot != null && slot.getHasStack()) {
 				ItemStack cur = slot.getStack();
 				prev = cur.copy();
+				
+				
 				/** If we want additional behavior put it here **/
+				/**if (fromSlot == 0) {
+					// This is going FROM Brazier to player
+					if (!this.mergeItemStack(cur, 9, 45, true))
+						return null;
+					else
+						// From Player TO Brazier
+						if (!this.mergeItemStack(cur, 0, 0, false)) {
+							return null;
+						}
+				}**/
+				
 				if (cur.stackSize == 0) {
 					slot.putStack((ItemStack) null);
 				} else {
