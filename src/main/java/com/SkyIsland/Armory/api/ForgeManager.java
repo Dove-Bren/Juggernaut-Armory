@@ -104,14 +104,40 @@ public class ForgeManager {
 		 * @return
 		 */
 		protected ItemStack getResult() {
+			return this.getResult(1);
+		}
+		
+		/**
+		 * Create an itemstack result for this alloy, with the quantity multiplied
+		 * by the multiplier.
+		 * @param multiplier
+		 * @return
+		 */
+		protected ItemStack getResult(int multiplier) {
+			if (multiplier < 1)
+				return null;
+			
 			ItemStack ret = new ItemStack(result);
 			ret.stackSize = resultAmount;
 			return ret;
 		}
 		
-		protected boolean matches(Collection<ItemStack> ingredients) {
+		/**
+		 * Checks whether the alloy matches the given ingredients, and returns
+		 * the multiplier. For example, if bronze was 1 copper 1 tin and the input
+		 * was 2 tin and 2 copper, should return '2'. 
+		 * If the inputs don't match this alloy, return -1.
+		 * <p>
+		 * Since we receive integer coefficients, this method is expected to round
+		 * down to the nearest number. For example, if steel is 2 coal and 1 iron,
+		 * and the input is 3 coal, 1 iron, the result is still just 1.
+		 * </p>
+		 * @param ingredients
+		 * @return
+		 */
+		protected int matches(Collection<ItemStack> ingredients) {
 			if (ingredients == null || ingredients.isEmpty())
-				return false;
+				return -1;
 			
 //			//make lists we can ruin
 //			List<ItemStack> ins = new LinkedList<ItemStack>(ingredients);
@@ -167,22 +193,29 @@ public class ForgeManager {
 			}
 			
 			if (reqMap.keySet().size() != inputMap.keySet().size())
-				return false; //size of items in doesn't match; invalid match
+				return -1; //size of items in doesn't match; invalid match
 			
 			for (Item key : reqMap.keySet()) {
 				if (!inputMap.containsKey(key))
-					return false;
+					return -1;
 			}
 			
-			/**
-			 * TODO
-			 * check for multiples
-			 */
-			
 			//since size was the same and we didn't find an item that didn't match
-			//we accept
+			//we accept.
 			
-			return true;
+			//now figure out multiplier
+			int mult = 9999999;
+			for (Item key : inputMap.keySet()) {
+				if (inputMap.get(key) / reqMap.get(reqMap) < mult)
+					mult = inputMap.get(key) / reqMap.get(reqMap);
+				
+				if (mult < 0)
+					return -1;
+				if (mult == 0)
+					return 0;
+			}
+			
+			return mult;
 		}
 	}
 	
@@ -266,9 +299,10 @@ public class ForgeManager {
 		if (recipes.isEmpty())
 			return null;
 		
+		int mult;
 		for (AlloyRecipe recipe : recipes) {
-			if (recipe.matches(inputMetals))
-				return recipe.getResult();
+			if ((mult = recipe.matches(inputMetals)) != -1)
+				return recipe.getResult(mult);
 		}
 		
 		return null;
