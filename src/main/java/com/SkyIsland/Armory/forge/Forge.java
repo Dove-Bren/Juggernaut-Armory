@@ -105,7 +105,6 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		if (entity != null && entity instanceof ForgeTileEntity) {
 			ForgeTileEntity et = (ForgeTileEntity) entity;
 			if (relativeDirection == null) {
-				System.out.println("setting to null");
 				et.brazierLocation = null;
 				return;
 			}
@@ -282,6 +281,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			if (currentMeltingItem == null && input != null) {
 				//ready to accept item, if it has enough heat
 				if (brazierLocation != null) {
+					//System.out.println("Forge update with no melting item");
 					float heat = getHeat();
 					if (heat > -1) {
 						//lookup metal record for input
@@ -289,9 +289,10 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 						if (record == null)
 							return; //don't accept, since it doens't appear to be
 								    //valid input
-						
+						//System.out.println("got metal record [" + record.getRequiredHeat() + "]");
 						if (record.getRequiredHeat() <= heat) {
 							//process the input
+							//System.out.println("on to consume");
 							consumeInput(record.getBurnTime());
 						}
 						
@@ -326,11 +327,9 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		 */
 		private void consumeInput(int burnTime) {
 			currentMeltingItem = input.splitStack(1);
-			System.out.println("melting item: " + currentMeltingItem);
 			
 			if (input.stackSize <= 0) {
 				input = null;
-				System.out.println("set to null cause 0");
 			}
 			
 			meltingTime = burnTime;
@@ -457,8 +456,9 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 
 		@Override
 		public void setInventorySlotContents(int index, ItemStack stack) {
-			if (index == 0)
+			if (index == 0) {
 				input = stack;
+			}
 		}
 
 

@@ -7,6 +7,8 @@ import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.FuelRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.items.HeldMetal;
+import com.SkyIsland.Armory.items.MiscItems;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -65,6 +67,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	protected static final PropertyBool STANDALONE = PropertyBool.create("standalone");
 	
 	protected static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+	
+	private static int id = 0;
 	
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
@@ -267,7 +271,10 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		
 		private EnumFacing face;
 		
+		private int id;
+		
 		public BrazierTileEntity() {
+			this.id = Brazier.id++;
 			this.fuel = null;
 			burnTime = 0;
 			isStandalone = true;
@@ -448,7 +455,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			((Brazier) getWorld().getBlockState(pos).getBlock())
 			.keepInventory = false;
 			
-			getWorld().setTileEntity(pos, this);
+			//getWorld().setTileEntity(pos, this);
 			
 		}
 
@@ -467,6 +474,21 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 				}
 			} else if (!isStandalone && heat > 0) {
 				heat = Math.max(0f, heat - ModConfig.config.getHeatLoss());
+				
+				/**
+				 * Update heating element (metal piece) if heat is greater
+				 */
+				if (heatingElement != null) {
+					//have something we're heating. What's it's heat?
+					float itemHeat = ((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL))
+					.getHeat(heatingElement);
+					
+					if (heat > itemHeat) {
+						//add some of our heat to the item heat
+						((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL))
+						.setHeat(heatingElement, itemHeat + 0.2f);
+					}
+				}
 			}
 			
 			if (burnTime <= 0) {
@@ -488,7 +510,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 							fuel = null;
 						
 //						System.out.println("cook time: " + burnTime);
-					} else if (!isStandalone && ForgeManager.instance().getFuelRecord(fuel.getItem()) != null) {
+					} else if (/*!isStandalone && */ ForgeManager.instance().getFuelRecord(fuel.getItem()) != null) {
 						
 						FuelRecord record = ForgeManager.instance().getFuelRecord(fuel.getItem());
 						burnTime = record.getBurnTicks();
@@ -538,6 +560,32 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
             if (item == Items.blaze_rod) return 2400;
             
             return 0;
+		}
+		
+		/**
+		 * Sets the item this forge is heating.
+		 * This method performs a check to make certain the item is some held metal.
+		 * @param stack
+		 * @return whether the item was accepted
+		 */
+		public boolean offerHeatingElement(ItemStack stack) {
+			if (heatingElement != null)
+				return false;
+			
+			if (stack == null || !(stack.getItem() instanceof HeldMetal))
+				return false;
+			
+			this.heatingElement = stack;
+			return true;
+		}
+		
+		public ItemStack collectHeatingElement() {
+			if (heatingElement == null)
+				return null;
+			
+			ItemStack ret = this.heatingElement;
+			this.heatingElement = null;
+			return ret;
 		}
 
 		//TileEntityLockable Methods
@@ -608,7 +656,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 
 		@Override
 		public ItemStack removeStackFromSlot(int index) {
-			System.out.println("Attempting to remove at " + index);
+			//System.out.println("Attempting to remove at " + index);
 			if (index == 0) {
 				ItemStack ItemReturn = this.fuel;
 				this.fuel = (ItemStack) null;

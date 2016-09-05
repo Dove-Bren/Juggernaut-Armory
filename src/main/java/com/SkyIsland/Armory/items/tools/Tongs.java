@@ -5,6 +5,7 @@ import java.util.Map;
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.forge.Brazier;
+import com.SkyIsland.Armory.forge.Brazier.BrazierTileEntity;
 import com.SkyIsland.Armory.forge.Forge;
 import com.SkyIsland.Armory.forge.Forge.ForgeTileEntity;
 import com.SkyIsland.Armory.items.HeldMetal;
@@ -175,14 +176,19 @@ public class Tongs extends ItemBase {
 		EntityPlayer playerIn = event.entityPlayer;
 		ItemStack stack = event.entityPlayer.getHeldItem();
 		
-		if (block instanceof Brazier)
-			onBrazier(playerIn, stack, state, event.pos);
-		else if (block instanceof Forge)
-			onForge(playerIn, stack, state, event.pos);
-		else if (block instanceof BlockAnvil)
-			onAnvil(playerIn, stack, state);
-		else if (block instanceof BlockCauldron)
-			onCauldron(playerIn, stack, state);
+		if (block instanceof Brazier) {
+			if (onBrazier(playerIn, stack, state, event.pos))
+				event.setCanceled(true);
+		} else if (block instanceof Forge) {
+			if (onForge(playerIn, stack, state, event.pos))
+				event.setCanceled(true);
+		} else if (block instanceof BlockAnvil) {
+			if (onAnvil(playerIn, stack, state))
+				event.setCanceled(true);
+		} else if (block instanceof BlockCauldron) {
+			if (onCauldron(playerIn, stack, state))
+				event.setCanceled(true);
+		}
 //		else if (block instanceof Trough)
 //			return onCauldron(playerIn, stack, state);
 //		else if (block instanceof CuttingMachine)
@@ -192,7 +198,28 @@ public class Tongs extends ItemBase {
 	}
     
     private boolean onBrazier(EntityPlayer player, ItemStack tongs, IBlockState brazierBlock, BlockPos pos) {
-    	System.out.println("Unimplemented method: Tongs#onBrazier()!!!!!");
+    	TileEntity te = player.getEntityWorld().getTileEntity(pos);
+    	if (te == null || !(te instanceof BrazierTileEntity)) {
+    		return false;
+    	}
+    	
+    	BrazierTileEntity ent = (BrazierTileEntity) te;
+    	ItemStack held = getHeldItem(tongs);
+    	if (held == null) {
+    		//try to collect from the brazier
+    		held = ent.collectHeatingElement();
+    		if (held != null) {
+    			setHeldItem(tongs, held);
+    			return true;
+    		}
+    	} else {
+    		//try to put our element in the brazier
+    		if (ent.offerHeatingElement(held)) {
+    			setHeldItem(tongs, null);
+    			return true;
+    		}
+    	}
+    	
     	return false;
     }
     
