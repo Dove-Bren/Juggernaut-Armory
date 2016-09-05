@@ -99,10 +99,16 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 	 * @param pos
 	 * @param relativeDirection direction <strong> from the forge</strong> to the brazier
 	 */
-	public void setBrazier(World world, BlockPos pos, EnumFacing relativeDirection) {
+	public static void setBrazier(World world, BlockPos pos, EnumFacing relativeDirection) {
 		TileEntity entity = world.getTileEntity(pos);
 		if (entity != null && entity instanceof ForgeTileEntity) {
 			ForgeTileEntity et = (ForgeTileEntity) entity;
+			if (relativeDirection == null) {
+				System.out.println("setting to null");
+				et.brazierLocation = null;
+				return;
+			}
+			
 			
 			TileEntity other = world.getTileEntity(pos.offset(relativeDirection));
 			if (other != null && other instanceof BrazierTileEntity) {
@@ -132,11 +138,18 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		 */
 		protected int meltingTime;
 		
+		/**
+		 * Updated to attain accurate done-ratio.
+		 * Only for displaying stuff, not a mechanical component
+		 */
+		protected int maxMeltingTime;
+		
 		public ForgeTileEntity() {
 			this.input = null;
 			this.brazierLocation = null;
 			meltedItems = new LinkedList<ItemStack>();
 			currentMeltingItem = null;
+			maxMeltingTime = 0;
 		}
 		
 		
@@ -168,6 +181,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 				tag.setByte("facing", (byte) brazierLocation.getHorizontalIndex());
 			
 			tag.setInteger("meltingTime", meltingTime);
+			tag.setInteger("maxTime", maxMeltingTime);
 			
 			super.writeToNBT(tag);
 		}
@@ -205,6 +219,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 				this.brazierLocation = null;
 			
 			meltingTime = tag.getInteger("meltingTime");
+			maxMeltingTime = tag.getInteger("maxTime");
 			
 			super.readFromNBT(tag);
 		}
@@ -268,7 +283,6 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 				if (brazierLocation != null) {
 					int heat = getHeat();
 					if (heat > -1) {
-						
 						//lookup metal record for input
 						MetalRecord record = ForgeManager.instance().getMetalRecord(input);
 						if (record == null)
@@ -316,6 +330,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 				input = null;
 			
 			meltingTime = burnTime;
+			maxMeltingTime = burnTime;
 		}
 		
 		protected void addToMelted(ItemStack melted) {
@@ -499,7 +514,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 	
 	public static class ForgeContainer extends Container {
 		
-		private ForgeTileEntity forge;
+		protected ForgeTileEntity forge;
 		
 		public ForgeContainer(IInventory playerInv, ForgeTileEntity forge) {
 			this.forge = forge;
@@ -508,7 +523,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			// Construct slots for player to interact with
 			// Brazier only needs '1' inventory slot to interact with
 			// Uses slot ID 0
-			this.addSlotToContainer(new Slot(forge, 0, 17, 30));
+			this.addSlotToContainer(new Slot(forge, 0, 124, 34));
 			slotID = 1;
 			// Construct player inventory
 			for (int y = 0; y < 3; y++) {
@@ -574,18 +589,63 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		private static final ResourceLocation GuiImageLocation =
 				new ResourceLocation(Armory.MODID + ":textures/gui/container/forge.png");
 		
+		private ForgeContainer forgeContainer;
+		
 		public ForgeGui(ForgeContainer forge) {
 			super(forge);
+			this.forgeContainer = forge;
+			
 		}
 		
 		@Override
 		protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-			// TODO Draw Gui
-			GlStateManager.color(1.0F,  1.0F, 1.0F, 1.0F);
-			mc.getTextureManager().bindTexture(GuiImageLocation);
+			//draw progress bar
+			if (forgeContainer.forge.meltingTime > 0) {
+				float ratio = forgeContainer.forge.meltingTime / forgeContainer.forge.maxMeltingTime;
+				ratio = 1 - ratio; //flip it. 10% done is 90% left
+				
+				if (ratio > .01) {
+					int left_x = 84, right_x = 91;
+					int y = 62, height = (y - 25);
+					int y2 = y - Math.round((float) height * ratio);
+					GuiContainer.drawRect(left_x, y2, right_x, y, 0xFF2000);
+				}
+			}
+			
 			int horizontalMargin = (width - xSize) / 2;
 			int verticalMargin = (height - ySize) / 2;
-			drawTexturedModalRect(horizontalMargin, verticalMargin, 0,0, xSize, ySize);
+			
+			GlStateManager.color(1.0F,  1.0F, 1.0F, 1.0F);
+			mc.getTextureManager().bindTexture(GuiImageLocation);
+			int textWidth = 176, textHeight = 166;
+			drawTexturedModalRect(horizontalMargin, verticalMargin, 0,0, textWidth, textHeight);
+			
+
+			if (forgeContainer.forge.brazierLocation != null) {
+				//get brazier
+				ForgeTileEntity forge = forgeContainer.forge;
+				TileEntity brent = forge.getWorld().getTileEntity(
+						forge.getPos().offset(forge.brazierLocation));
+				if (brent != null && brent instanceof BrazierTileEntity) {
+					int offset = 10;
+					int color = 0xFF9728;
+					BrazierTileEntity te = (BrazierTileEntity) brent;
+					
+					if (forge.input != null && forge.canAccept(forge.input)) {
+						//check if hot enough
+						MetalRecord record = ForgeManager.instance().getMetalRecord(forge.input);
+						if (te.getHeat() < record.getRequiredHeat())
+							color = 0xFF0000;
+						else {
+							color = 0x00FF00;
+						}
+					}
+					
+					this.fontRendererObj.drawString("Heat:", horizontalMargin + offset, verticalMargin + 20, 0x000000);
+					this.fontRendererObj.drawString(te.getHeat() + "", horizontalMargin + offset + this.fontRendererObj.getStringWidth("Heat: "), verticalMargin + 20, color);
+				}
+			}
+			
 		}
 		
 		

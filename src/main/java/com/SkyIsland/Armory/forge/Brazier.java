@@ -7,7 +7,6 @@ import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.FuelRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
 import com.SkyIsland.Armory.config.ModConfig;
-import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -377,6 +376,14 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 
 		public void onFirstTick() {
 			//check to see whether this should be standalone or not
+			BlockPos pos = new BlockPos(100, 100, 100);
+			System.out.println("pos: " + pos);
+			pos.north();
+			System.out.println("pos: " + pos);
+			pos.west();
+			System.out.println("pos: " + pos);
+			
+			
 			EnumFacing direction = null;
 			if (this.getWorld().getBlockState(pos.north()).getBlock()
 					instanceof Forge)
@@ -397,16 +404,17 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		}
 		
 		protected void joinForge(EnumFacing direction) {
-			if (!isStandalone || face == direction)
+			if (!isStandalone) //took out facing == direction
 				return;
 			
+			System.out.println("join");
 			//either not already standalone, or facing a different direction now
 			this.isStandalone = false;
 			this.face = direction;
 			
 			//hook into Forge entity, update it's brazier to us
-			Forge forge = (Forge) ForgeBlocks.getBlock(ArmoryBlocks.FORGE);
-			forge.setBrazier(getWorld(), getPos().offset(direction),
+			//Forge forge = (Forge) ForgeBlocks.getBlock(ArmoryBlocks.FORGE);
+			Forge.setBrazier(getWorld(), getPos().offset(direction),
 					direction.getOpposite());
 			
 			updateContainer();
@@ -426,6 +434,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	    				ItemStack.copyItemStack(heatingElement));
 	    		getWorld().spawnEntityInWorld(item);
 			}
+			
+			Forge.setBrazier(getWorld(), getPos().offset(face), null);
 			
 			updateContainer();
 		}
@@ -491,6 +501,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 						FuelRecord record = ForgeManager.instance().getFuelRecord(fuel.getItem());
 						burnTime = record.getBurnTicks();
 						currentHeatRate = record.getHeatRate();
+						this.heatMax = record.getMaxHeat();
 						
 						fuel.stackSize--;
 						
