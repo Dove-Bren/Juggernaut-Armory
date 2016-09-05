@@ -7,7 +7,9 @@ import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig.Key;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
@@ -28,11 +30,23 @@ public class ModConfigGui extends GuiConfig {
 //		}
 		
 		for (Key.Category category : ModConfig.Key.Category.values()) {
-			
-			elementList.add(new ConfigElement(ModConfig.config.base.getCategory(category.getName())));
+			ConfigCategory cat = ModConfig.config.base.getCategory(category.getName());
+			prepCategory(category);
+			elementList.add(new ConfigElement(cat));
 		}
 		
 		return elementList;
+	}
+	
+	private static ConfigCategory prepCategory(Key.Category category) {
+		ConfigCategory result = ModConfig.config.base.getCategory(category.getName());
+		
+		for (ModConfig.Key key : ModConfig.Key.getCategoryKeys(category)) {
+			Property prop = result.get(key.getKey());
+			prop.setShowInGui(key.isRuntime() && !key.isServerBound());
+		}
+		
+		return result;
 	}
 	
 }
