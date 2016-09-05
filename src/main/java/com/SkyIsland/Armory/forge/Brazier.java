@@ -68,8 +68,6 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	
 	protected static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	
-	private static int id = 0;
-	
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north,standalone=true"));
@@ -271,10 +269,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		
 		private EnumFacing face;
 		
-		private int id;
 		
 		public BrazierTileEntity() {
-			this.id = Brazier.id++;
 			this.fuel = null;
 			burnTime = 0;
 			isStandalone = true;
