@@ -1,5 +1,6 @@
 package com.SkyIsland.Armory.forge;
 
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -209,7 +210,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 					meltedItems.add(ItemStack.loadItemStackFromNBT(sub));
 				}
 			} else {
-				meltedItems = null;
+				meltedItems = new LinkedList<ItemStack>();
 			}
 
 			if (tag.hasKey("facing", NBT.TAG_BYTE)) {
@@ -325,9 +326,12 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		 */
 		private void consumeInput(int burnTime) {
 			currentMeltingItem = input.splitStack(1);
+			System.out.println("melting item: " + currentMeltingItem);
 			
-			if (input.stackSize <= 0)
+			if (input.stackSize <= 0) {
 				input = null;
+				System.out.println("set to null cause 0");
+			}
 			
 			meltingTime = burnTime;
 			maxMeltingTime = burnTime;
@@ -599,18 +603,6 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		
 		@Override
 		protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-			//draw progress bar
-			if (forgeContainer.forge.meltingTime > 0) {
-				float ratio = forgeContainer.forge.meltingTime / forgeContainer.forge.maxMeltingTime;
-				ratio = 1 - ratio; //flip it. 10% done is 90% left
-				
-				if (ratio > .01) {
-					int left_x = 84, right_x = 91;
-					int y = 62, height = (y - 25);
-					int y2 = y - Math.round((float) height * ratio);
-					GuiContainer.drawRect(left_x, y2, right_x, y, 0xFF2000);
-				}
-			}
 			
 			int horizontalMargin = (width - xSize) / 2;
 			int verticalMargin = (height - ySize) / 2;
@@ -620,6 +612,20 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			int textWidth = 176, textHeight = 166;
 			drawTexturedModalRect(horizontalMargin, verticalMargin, 0,0, textWidth, textHeight);
 			
+			//draw progress bar
+			int left_x = 85 + horizontalMargin, right_x = 92 + horizontalMargin;
+			int y = 63 + verticalMargin, height = (63 - 25);
+			
+			GuiContainer.drawRect(left_x, y - height, right_x, y, (new Color(0, 0, 0, 255)).getRGB());
+			if (forgeContainer.forge.meltingTime > 0) {
+				float ratio = ((float) forgeContainer.forge.meltingTime / (float) forgeContainer.forge.maxMeltingTime);
+				ratio = 1f - ratio; //flip it. 10% done is 90% left
+				if (ratio > .01) {
+					int y2 = y - Math.round((float) height * ratio);
+					//System.out.print("[y: " + y + ", y2: " + y2 + ", ratio: " + ratio);
+					GuiContainer.drawRect(left_x, y2, right_x, y, (new Color(0x60, 0, 0, 255)).getRGB());
+				}
+			}
 
 			if (forgeContainer.forge.brazierLocation != null) {
 				//get brazier
@@ -646,7 +652,6 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 					this.fontRendererObj.drawString(heat + "", horizontalMargin + offset + this.fontRendererObj.getStringWidth("Heat: "), verticalMargin + 20, color);
 				}
 			}
-			
 		}
 		
 		

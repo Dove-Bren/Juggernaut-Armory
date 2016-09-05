@@ -235,6 +235,11 @@ public class ForgeManager {
 		instance.registerFuel(Item.getItemFromBlock(Blocks.log2), new FuelRecord(600, 1200, 0.2f));
 		instance.registerFuel(Item.getItemFromBlock(Blocks.planks), new FuelRecord(300, 1000, 0.4f));
 		instance.registerFuel(Items.blaze_powder, new FuelRecord(4000, 2500, 1f));
+		
+		//register metals
+		instance.registerInputMetal(new MetalRecord(Items.iron_ingot, 200, 1500));
+		instance.registerInputMetal(new MetalRecord(Items.gold_ingot, 160, 900));
+		instance.registerInputMetal(new MetalRecord(Items.coal, 400, 1800));
 	}
 	
 	public static ForgeManager instance() {
