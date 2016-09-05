@@ -88,7 +88,7 @@ public class HeldMetal extends ItemBase {
 			metal.setTagCompound(new NBTTagCompound());
 		NBTTagCompound nbt = metal.getTagCompound();
 		
-		if (nbt.hasKey(NBT_HEAT, NBT.TAG_INT))
+		if (nbt.hasKey(NBT_HEAT, NBT.TAG_FLOAT))
 			return nbt.getFloat(NBT_HEAT);
 		
 		return -1;
@@ -139,8 +139,9 @@ public class HeldMetal extends ItemBase {
 	}
 	
 	public void setMetals(ItemStack metal, Collection<ItemStack> metals) {
-		if (metal == null || !(metal.getItem() instanceof HeldMetal))
+		if (metal == null || !(metal.getItem() instanceof HeldMetal)) {
 			return;
+		}
 		
 		if (!metal.hasTagCompound())
 			metal.setTagCompound(new NBTTagCompound());
@@ -168,6 +169,13 @@ public class HeldMetal extends ItemBase {
 		return stack;
 	}
 	
+	/**
+	 * Checks the heat of the held metal and updates accordingly.
+	 * Does not check if an item is being held or not. That's p to you.
+	 * @param owner
+	 * @param metal
+	 * @return true if the metal <strong>just cooled</strong>
+	 */
 	protected void updateHeat(Entity owner, ItemStack metal) {
 		if (getHeat(metal) < ModConfig.config.getMinimumHeat()) {
 			metal.setItem(MiscItems.getItem(Items.SCRAP));
@@ -175,7 +183,10 @@ public class HeldMetal extends ItemBase {
 					getRandomMetal(metal)
 					);
 			owner.playSound(Armory.MODID + ":item.metal.cool", 1.0f, 1.0f);
+			return;
 		}
+		
+		return;
 	}
 	
 	protected ItemStack getRandomMetal(ItemStack metal) {

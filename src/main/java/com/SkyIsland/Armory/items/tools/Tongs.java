@@ -16,6 +16,7 @@ import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -105,10 +106,13 @@ public class Tongs extends ItemBase {
 		NBTTagCompound nbt = tongs.getTagCompound(),
 				subtag = new NBTTagCompound();
 		
-		if (stack == null)
+		if (stack == null) {
 			nbt.removeTag(NBT_HELD);
-		else
+			tongs.setItemDamage(0);
+		} else {
 			nbt.setTag(NBT_HELD, stack.writeToNBT(subtag));
+			tongs.setItemDamage(1);
+		}
 	}
 
 	@Override
@@ -122,8 +126,14 @@ public class Tongs extends ItemBase {
 	}
 	
 	public void clientInit() {
+		ModelBakery.registerItemVariants(this, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"),
+				new ModelResourceLocation(Armory.MODID + ":" + this.registryName + "_full" , "inventory"));
+		
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
     	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"));
+		
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+    	.register(this, 1, new ModelResourceLocation(Armory.MODID + ":" + this.registryName + "_full" , "inventory"));
 	}
 	
 //	@Override
@@ -252,6 +262,7 @@ public class Tongs extends ItemBase {
     				worldIn.spawnEntityInWorld(new EntityItem(worldIn, entityIn.posX, entityIn.posY, entityIn.posZ, held));
     			}
     			
+    			stack.setItemDamage(0);
     			held = null;
     		}
     		setHeldItem(stack, held);
