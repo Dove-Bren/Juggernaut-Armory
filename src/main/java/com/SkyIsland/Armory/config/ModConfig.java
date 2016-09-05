@@ -64,9 +64,12 @@ public class ModConfig {
 			}
 			
 			protected static void deployCategories(Configuration config) {
-				for (Category cat : values())
+				for (Category cat : values()) {
 					config.setCategoryComment(cat.categoryName, cat.comment);
+					config.setCategoryRequiresWorldRestart(cat.categoryName, cat == SERVER);
+				}
 			}
+			
 		}
 		
 		private Category category;

@@ -28,6 +28,7 @@ public class ModConfigGui extends GuiConfig {
 //		}
 		
 		for (Key.Category category : ModConfig.Key.Category.values()) {
+			
 			elementList.add(new ConfigElement(ModConfig.config.base.getCategory(category.getName())));
 		}
 		
