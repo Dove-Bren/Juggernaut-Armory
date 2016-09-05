@@ -6,6 +6,8 @@ import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.forge.Brazier;
 import com.SkyIsland.Armory.forge.Forge;
+import com.SkyIsland.Armory.forge.Forge.ForgeTileEntity;
+import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.ItemBase;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
@@ -15,10 +17,14 @@ import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -160,9 +166,9 @@ public class Tongs extends ItemBase {
 		ItemStack stack = event.entityPlayer.getHeldItem();
 		
 		if (block instanceof Brazier)
-			onBrazier(playerIn, stack, state);
+			onBrazier(playerIn, stack, state, event.pos);
 		else if (block instanceof Forge)
-			onForge(playerIn, stack, state);
+			onForge(playerIn, stack, state, event.pos);
 		else if (block instanceof BlockAnvil)
 			onAnvil(playerIn, stack, state);
 		else if (block instanceof BlockCauldron)
@@ -175,14 +181,35 @@ public class Tongs extends ItemBase {
 //			return onCauldron(playerIn, stack, state);
 	}
     
-    private boolean onBrazier(EntityPlayer player, ItemStack tongs, IBlockState brazierBlock) {
+    private boolean onBrazier(EntityPlayer player, ItemStack tongs, IBlockState brazierBlock, BlockPos pos) {
     	System.out.println("Unimplemented method: Tongs#onBrazier()!!!!!");
     	return false;
     }
     
-    private boolean onForge(EntityPlayer player, ItemStack tongs, IBlockState forgeBlock) {
-    	System.out.println("Unimplemented method: Tongs#onForge()!!!!!!!");
-    	return false;
+    private boolean onForge(EntityPlayer player, ItemStack tongs, IBlockState forgeBlock, BlockPos pos) {
+    	if (getHeldItem(tongs) != null) {
+    		//already has something in tongs, so do nothing
+    		return false;
+    	}
+    	
+    	//nothing in tongs. Try to get something out of the furnace
+    	TileEntity te = player.getEntityWorld().getTileEntity(pos);
+    	if (te == null || !(te instanceof ForgeTileEntity)) {
+    		return false;
+    	}
+    	
+    	ForgeTileEntity ent = (ForgeTileEntity) te;
+    	ItemStack item = ent.gatherMetals();
+    	
+    	if (item == null) {
+    		return false;
+    	}
+    	
+    	//got return item. What is it??
+		setHeldItem(tongs, item);
+    	
+    	
+    	return true;
     }
     
     private boolean onAnvil(EntityPlayer player, ItemStack tongs, IBlockState anvilBlock) {
@@ -208,6 +235,27 @@ public class Tongs extends ItemBase {
     private boolean onPedestal(EntityPlayer player, ItemStack tongs, IBlockState pedestalBlock) {
     	System.out.println("Unimplemented method: Tongs#onPedestal()!!!!!");
     	return false;
+    }
+    
+    @Override
+    public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    	
+    	ItemStack held = getHeldItem(stack);
+    	if (held != null) {
+    		held.getItem().onUpdate(held, worldIn, entityIn, itemSlot, isSelected);
+    		
+    		if (!(held.getItem() instanceof HeldMetal)) {
+    			
+    			if (entityIn instanceof EntityPlayer) {
+    				((EntityPlayer) entityIn).inventory.addItemStackToInventory(held);
+    			} else {
+    				worldIn.spawnEntityInWorld(new EntityItem(worldIn, entityIn.posX, entityIn.posY, entityIn.posZ, held));
+    			}
+    			
+    			held = null;
+    		}
+    		setHeldItem(stack, held);
+    	}
     }
     
 //    public Multimap<String, AttributeModifier> getItemAttributeModifiers() {

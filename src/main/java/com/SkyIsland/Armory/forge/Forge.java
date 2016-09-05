@@ -345,7 +345,13 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			meltedItems.clear();
 		}
 		
-		protected ItemStack gatherMetals() {
+		/**
+		 * Collects all currently melted materials and returns them either as
+		 * a piece of hot metal, or as a piece of scrap. Clears the list
+		 * of melted metals
+		 * @return
+		 */
+		public ItemStack gatherMetals() {
 			//get all melted items and put into held metal
 			if (meltedItems.isEmpty())
 				return null;
@@ -366,9 +372,10 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			
 			if (same) {
 				//all the same item type
-				meltedItems.clear();
-				return ((HeldMetal) MiscItems.getItem(Items.HELD_METAL))
+				ItemStack stack = ((HeldMetal) MiscItems.getItem(Items.HELD_METAL))
 						.createStack(meltedItems, getHeat());
+				meltedItems.clear();
+				return stack;
 			}
 			
 			//else check if valid alloy
