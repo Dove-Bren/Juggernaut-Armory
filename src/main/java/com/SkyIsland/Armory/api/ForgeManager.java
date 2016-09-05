@@ -18,11 +18,11 @@ public class ForgeManager {
 		
 		private int burnTicks;
 		
-		private int maxHeat;
+		private float maxHeat;
 		
-		private int heatRate;
+		private float heatRate;
 		
-		public FuelRecord(int burnTicks, int maxHeat, int heatRate) {
+		public FuelRecord(int burnTicks, float maxHeat, float heatRate) {
 			this.burnTicks = burnTicks;
 			this.maxHeat = maxHeat;
 			this.heatRate = heatRate;
@@ -32,11 +32,11 @@ public class ForgeManager {
 			return burnTicks;
 		}
 
-		public int getMaxHeat() {
+		public float getMaxHeat() {
 			return maxHeat;
 		}
 
-		public int getHeatRate() {
+		public float getHeatRate() {
 			return heatRate;
 		}
 	}
@@ -45,17 +45,17 @@ public class ForgeManager {
 		
 		protected int burnTime;
 		
-		protected int requiredHeat;
+		protected float requiredHeat;
 		
 		private Item metal;
 		
 		private int meta;
 		
-		public MetalRecord(Item metal, int burnTime, int requiredHeat) {
+		public MetalRecord(Item metal, int burnTime, float requiredHeat) {
 			this(metal, burnTime, requiredHeat, -1);
 		}
 		
-		public MetalRecord(Item metal, int burnTime, int requiredHeat, int requiredMeta) {
+		public MetalRecord(Item metal, int burnTime, float requiredHeat, int requiredMeta) {
 			this.metal = metal;
 			this.burnTime = burnTime;
 			this.requiredHeat = requiredHeat;
@@ -72,7 +72,7 @@ public class ForgeManager {
 			return burnTime;
 		}
 
-		public int getRequiredHeat() {
+		public float getRequiredHeat() {
 			return requiredHeat;
 		}
 
@@ -227,14 +227,14 @@ public class ForgeManager {
 	}
 	
 	private static void setupVanilla() {
-		instance.registerFuel(Items.coal, new FuelRecord(1600, 1700, 1));
-		instance.registerFuel(Item.getItemFromBlock(Blocks.coal_block), new FuelRecord(16000, 1700, 1));
-		instance.registerFuel(Items.lava_bucket, new FuelRecord(20000, 3000, 4));
+		instance.registerFuel(Items.coal, new FuelRecord(1600, 1700, 0.2f));
+		instance.registerFuel(Item.getItemFromBlock(Blocks.coal_block), new FuelRecord(16000, 1700, 0.2f));
+		instance.registerFuel(Items.lava_bucket, new FuelRecord(20000, 3000, 0.8f));
 		
-		instance.registerFuel(Item.getItemFromBlock(Blocks.log), new FuelRecord(600, 1200, 1));
-		instance.registerFuel(Item.getItemFromBlock(Blocks.log2), new FuelRecord(600, 1200, 1));
-		instance.registerFuel(Item.getItemFromBlock(Blocks.planks), new FuelRecord(300, 1000, 2));
-		instance.registerFuel(Items.blaze_powder, new FuelRecord(4000, 2500, 5));
+		instance.registerFuel(Item.getItemFromBlock(Blocks.log), new FuelRecord(600, 1200, 0.2f));
+		instance.registerFuel(Item.getItemFromBlock(Blocks.log2), new FuelRecord(600, 1200, 0.2f));
+		instance.registerFuel(Item.getItemFromBlock(Blocks.planks), new FuelRecord(300, 1000, 0.4f));
+		instance.registerFuel(Items.blaze_powder, new FuelRecord(4000, 2500, 1f));
 	}
 	
 	public static ForgeManager instance() {

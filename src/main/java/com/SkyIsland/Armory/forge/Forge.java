@@ -281,7 +281,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			if (currentMeltingItem == null && input != null) {
 				//ready to accept item, if it has enough heat
 				if (brazierLocation != null) {
-					int heat = getHeat();
+					float heat = getHeat();
 					if (heat > -1) {
 						//lookup metal record for input
 						MetalRecord record = ForgeManager.instance().getMetalRecord(input);
@@ -305,7 +305,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		 * Gets heat of current setup. Returns -1 if no heat info is available.
 		 * @return
 		 */
-		private int getHeat() {
+		private float getHeat() {
 			if (brazierLocation == null)
 				return -1;
 			
@@ -641,8 +641,9 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 						}
 					}
 					
+					String heat = String.format("%.1f", te.getHeat());
 					this.fontRendererObj.drawString("Heat:", horizontalMargin + offset, verticalMargin + 20, 0x000000);
-					this.fontRendererObj.drawString(te.getHeat() + "", horizontalMargin + offset + this.fontRendererObj.getStringWidth("Heat: "), verticalMargin + 20, color);
+					this.fontRendererObj.drawString(heat + "", horizontalMargin + offset + this.fontRendererObj.getStringWidth("Heat: "), verticalMargin + 20, color);
 				}
 			}
 			

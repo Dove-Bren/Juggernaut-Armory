@@ -66,7 +66,7 @@ public class HeldMetal extends ItemBase {
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
-		int heat = getHeat(stack);
+		float heat = getHeat(stack);
 		
 		//cool item down
 		setHeat(stack, (heat == -1 ? 0 : heat - 1));
@@ -80,7 +80,7 @@ public class HeldMetal extends ItemBase {
 	 * @param metal
 	 * @return the heat, or -1 if the itemstack is invalid or there is no set heat
 	 */
-	public int getHeat(ItemStack metal) {
+	public float getHeat(ItemStack metal) {
 		if (metal == null || !(metal.getItem() instanceof HeldMetal))
 			return -1;
 		
@@ -89,7 +89,7 @@ public class HeldMetal extends ItemBase {
 		NBTTagCompound nbt = metal.getTagCompound();
 		
 		if (nbt.hasKey(NBT_HEAT, NBT.TAG_INT))
-			return nbt.getInteger(NBT_HEAT);
+			return nbt.getFloat(NBT_HEAT);
 		
 		return -1;
 	}
@@ -101,7 +101,7 @@ public class HeldMetal extends ItemBase {
 	 * @param metal
 	 * @param heat
 	 */
-	public void setHeat(ItemStack metal, int heat) {
+	public void setHeat(ItemStack metal, float heat) {
 		if (metal == null || !(metal.getItem() instanceof HeldMetal))
 			return;
 		
@@ -109,7 +109,7 @@ public class HeldMetal extends ItemBase {
 			metal.setTagCompound(new NBTTagCompound());
 		NBTTagCompound nbt = metal.getTagCompound();
 		
-		nbt.setInteger(NBT_HEAT, heat);
+		nbt.setFloat(NBT_HEAT, heat);
 		
 		//updateHeat(metal);
 	}
@@ -160,7 +160,7 @@ public class HeldMetal extends ItemBase {
 		//updateHeat(metal);
 	}
 	
-	public ItemStack createStack(Collection<ItemStack> containedMetals, int heat) {
+	public ItemStack createStack(Collection<ItemStack> containedMetals, float heat) {
 		ItemStack stack = new ItemStack(this);
 		setHeat(stack, heat);
 		setMetals(stack, containedMetals);

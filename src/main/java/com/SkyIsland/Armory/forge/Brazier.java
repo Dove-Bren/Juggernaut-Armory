@@ -257,13 +257,13 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		private boolean hasTicked;
 		
 		//forge variables \/
-		private int heat;
+		private float heat;
 		
 		private ItemStack heatingElement;
 		
-		private int currentHeatRate;
+		private float currentHeatRate;
 		
-		private int heatMax;
+		private float heatMax;
 		
 		private EnumFacing face;
 		
@@ -272,14 +272,14 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			burnTime = 0;
 			isStandalone = true;
 			hasTicked = false;
-			heat = 0;
+			heat = 0f;
 			heatingElement = null;
 			currentHeatRate = 0;
 			heatMax = 0;
 			face = EnumFacing.NORTH;
 		}
 		
-		protected int getHeat() {
+		protected float getHeat() {
 			return heat;
 		}
 		
@@ -297,9 +297,9 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			tag.setBoolean("standalone", isStandalone);
 			
 			if (!isStandalone) {
-				tag.setInteger("heat", heat);
-				tag.setInteger("heatRate", currentHeatRate);
-				tag.setInteger("heatMax", heatMax);
+				tag.setFloat("heat", heat);
+				tag.setFloat("heatRate", currentHeatRate);
+				tag.setFloat("heatMax", heatMax);
 				if (heatingElement != null) {
 					NBTTagCompound itemTag = new NBTTagCompound();
 					heatingElement.writeToNBT(itemTag);
@@ -334,9 +334,9 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 				isStandalone = true;
 			
 			if (!isStandalone) {
-				heat = tag.getInteger("heat");
-				currentHeatRate = tag.getInteger("heatRate");
-				heatMax = tag.getInteger("heatMax");
+				heat = tag.getFloat("heat");
+				currentHeatRate = tag.getFloat("heatRate");
+				heatMax = tag.getFloat("heatMax");
 				face = EnumFacing.getHorizontal(tag.getByte("facing"));
 				
 				if (tag.hasKey("element", NBT.TAG_COMPOUND)) {
@@ -376,13 +376,6 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 
 		public void onFirstTick() {
 			//check to see whether this should be standalone or not
-			BlockPos pos = new BlockPos(100, 100, 100);
-			System.out.println("pos: " + pos);
-			pos.north();
-			System.out.println("pos: " + pos);
-			pos.west();
-			System.out.println("pos: " + pos);
-			
 			
 			EnumFacing direction = null;
 			if (this.getWorld().getBlockState(pos.north()).getBlock()
@@ -407,7 +400,6 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			if (!isStandalone) //took out facing == direction
 				return;
 			
-			System.out.println("join");
 			//either not already standalone, or facing a different direction now
 			this.isStandalone = false;
 			this.face = direction;
@@ -474,7 +466,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 					heat = Math.min(heatMax, heat + currentHeatRate);
 				}
 			} else if (!isStandalone && heat > 0) {
-				heat = Math.max(0, heat - ModConfig.config.getHeatLoss());
+				heat = Math.max(0f, heat - ModConfig.config.getHeatLoss());
 			}
 			
 			if (burnTime <= 0) {
