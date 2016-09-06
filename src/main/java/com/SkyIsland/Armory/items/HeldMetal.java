@@ -63,13 +63,14 @@ public class HeldMetal extends ItemBase {
 		return 0;
 	}
 	
-	@Override
-	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+//	@Override
+	public void onHeatUpdate(ItemStack stack, int heatDelta, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+		//super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 		float heat = getHeat(stack);
+		System.out.println("fetched heat: " + heat);
 		
 		//cool item down
-		setHeat(stack, (heat == -1 ? 0 : heat - 1));
+		setHeat(stack, (heat == -1 ? 0 : heat - heatDelta));
 		updateHeat(entityIn, stack);
 	}
 	
@@ -162,6 +163,7 @@ public class HeldMetal extends ItemBase {
 	}
 	
 	public ItemStack createStack(Collection<ItemStack> containedMetals, float heat) {
+		System.out.println("new stack with heat: " + heat);
 		ItemStack stack = new ItemStack(this);
 		setHeat(stack, heat);
 		setMetals(stack, containedMetals);

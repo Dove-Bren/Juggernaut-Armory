@@ -30,7 +30,8 @@ public class ModConfig {
 		METAL_MIN_HEAT(Category.SERVER, "min_heat", new Float(400f), true, "Minimum heat a metal mixture can have before it solidifies"),
 		HEAT_LOSS(Category.SERVER, "heat_loss", new Float(0.2f), true, "Heat lost per tick when a forge's brazier is not lit"),
 		SHOW_ZEROS(Category.DISPLAY, "show_zeros", false, "When displaying damage or protection properties, should 0's be displayed? Default is false"),
-		SHOW_COMPONENTS(Category.DISPLAY, "show_components", false, "Show weapon components by default (without pressing shift)");
+		SHOW_COMPONENTS(Category.DISPLAY, "show_components", false, "Show weapon components by default (without pressing shift)"),
+		TONG_TABLE_SIZE(Category.SERVER, "tong_table_size", new Integer(200), true, "How many tong entries to keep in memory. Smaller sizes means tongs may overlap");
 		
 		
 //		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
@@ -362,6 +363,10 @@ public class ModConfig {
 	
 	public float getHeatLoss() {
 		return getFloatValue(Key.HEAT_LOSS, false);
+	}
+
+	public int getMaxTableSize() {
+		return getIntValue(Key.TONG_TABLE_SIZE, false);
 	}
 	
 	public float getTestValue(Key key) {

@@ -479,20 +479,20 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 				}
 			} else if (!isStandalone && heat > 0) {
 				heat = Math.max(0f, heat - ModConfig.config.getHeatLoss());
+			}
+			
+			/**
+			 * Update heating element (metal piece) if heat is greater
+			 */
+			if (heatingElement != null) {
+				//have something we're heating. What's it's heat?
+				float itemHeat = ((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL))
+				.getHeat(heatingElement);
 				
-				/**
-				 * Update heating element (metal piece) if heat is greater
-				 */
-				if (heatingElement != null) {
-					//have something we're heating. What's it's heat?
-					float itemHeat = ((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL))
-					.getHeat(heatingElement);
-					
-					if (heat > itemHeat) {
-						//add some of our heat to the item heat
-						((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL))
-						.setHeat(heatingElement, itemHeat + 0.2f);
-					}
+				if (heat > itemHeat) {
+					//add some of our heat to the item heat
+					((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL))
+					.setHeat(heatingElement, itemHeat + 0.2f);
 				}
 			}
 			

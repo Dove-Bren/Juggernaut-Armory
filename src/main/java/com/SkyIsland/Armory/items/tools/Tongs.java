@@ -1,5 +1,6 @@
 package com.SkyIsland.Armory.items.tools;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
@@ -10,6 +11,7 @@ import com.SkyIsland.Armory.forge.Forge;
 import com.SkyIsland.Armory.forge.Forge.ForgeTileEntity;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.ItemBase;
+import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.block.Block;
@@ -35,10 +37,19 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Tongs extends ItemBase {
-
+	
+//	@SidedProxy(clientSide="com.SkyIsland.Armory.items.proxy.ClientTongProxy", serverSide="com.SkyIsland.Armory.items.proxy.ServerTongProxy")
+//    public static CommonTongProxy proxy;
+	
+	private static Map<Integer, Integer> heatMap = new HashMap<Integer, Integer>();
+	
 	private static final float DAMAGE = 1.0f;
 	
 	private static final String NBT_HELD = "held";
+	
+	private static final String NBT_ID = "tong_id";
+	
+	private static int id = 0;
 	
 	private String registryName;
 	
@@ -68,6 +79,8 @@ public class Tongs extends ItemBase {
 		//create nbt compound for itemstack
 		if (!stack.hasTagCompound())
 			stack.setTagCompound(new NBTTagCompound());
+		
+		setID(stack, id++);
 	}
 	
 	/**
@@ -98,7 +111,7 @@ public class Tongs extends ItemBase {
 	 * @param tongs
 	 * @param stack
 	 */
-	protected void setHeldItem(ItemStack tongs, ItemStack stack) {
+	public void setHeldItem(ItemStack tongs, ItemStack stack) {
 		if (tongs == null || !(tongs.getItem() instanceof Tongs))
 			return;
 		
@@ -114,6 +127,41 @@ public class Tongs extends ItemBase {
 			nbt.setTag(NBT_HELD, stack.writeToNBT(subtag));
 			tongs.setItemDamage(1);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param stack
+	 * @return
+	 */
+	public int getID(ItemStack stack) {
+		if (stack == null || !(stack.getItem() instanceof Tongs))
+			return -1;
+		
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		NBTTagCompound nbt = stack.getTagCompound();
+		
+		if (nbt.hasKey(NBT_ID, NBT.TAG_INT))
+			return nbt.getInteger(NBT_HELD);
+		
+		return -1;
+	}
+	
+	/**
+	 * 
+	 * @param tongs
+	 * @param stack
+	 */
+	public void setID(ItemStack tongs, int id) {
+		if (tongs == null || !(tongs.getItem() instanceof Tongs))
+			return;
+		
+		if (!tongs.hasTagCompound())
+			tongs.setTagCompound(new NBTTagCompound());
+		NBTTagCompound nbt = tongs.getTagCompound();
+		
+		nbt.setInteger(NBT_ID, id);
 	}
 
 	@Override
@@ -277,9 +325,25 @@ public class Tongs extends ItemBase {
     @Override
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
     	
-    	ItemStack held = getHeldItem(stack);
+    	if (worldIn.isRemote)
+    		return;
+    	
+    	int id = getID(stack);
+    	if (!heatMap.containsKey(id))
+    		heatMap.put(id, 0);
+    	
+    	int tick = heatMap.get(id) + 1;
+    	heatMap.put(id, tick);
+    	if (tick < (20 * 5))
+    		return;
+    	
+    	//past tick count, so reset and process update
+    	heatMap.put(id, 0);
+		ItemStack held = getHeldItem(stack);
     	if (held != null) {
-    		held.getItem().onUpdate(held, worldIn, entityIn, itemSlot, isSelected);
+    		HeldMetal hm = (HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL);
+    		
+    		hm.onHeatUpdate(held, (1 * 20 * 5), worldIn, entityIn, itemSlot, isSelected);
     		
     		if (!(held.getItem() instanceof HeldMetal)) {
     			
@@ -291,8 +355,16 @@ public class Tongs extends ItemBase {
     			
     			stack.setItemDamage(0);
     			held = null;
+    			
+    			setHeldItem(stack, held);
+    		} else {
+    			System.out.println("heat: " + hm.getHeat(held));
     		}
-    		setHeldItem(stack, held);
+    		 
+//    		else {
+//    			heatMap.put(getID(stack) % ModConfig.config.getMaxTableSize(),
+//    					hm.getHeat(held));
+//    		}
     	}
     }
     
