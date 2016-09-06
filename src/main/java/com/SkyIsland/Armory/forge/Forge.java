@@ -12,6 +12,7 @@ import com.SkyIsland.Armory.forge.Brazier.BrazierTileEntity;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.MiscItems.Items;
+import com.SkyIsland.Armory.items.tools.Tongs;
 import com.SkyIsland.Armory.items.ScrapMetal;
 
 import net.minecraft.block.Block;
@@ -86,7 +87,8 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			float hitZ) {
 		
 			// Open GUI!
-			if (!worldIn.isRemote) {
+			if (!worldIn.isRemote && 
+	        		(playerIn.getCurrentEquippedItem() == null || !(playerIn.getCurrentEquippedItem().getItem() instanceof Tongs)  )) {
 			playerIn.openGui(Armory.instance, Armory.Gui_Type.FORGE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 			}
 			return true;

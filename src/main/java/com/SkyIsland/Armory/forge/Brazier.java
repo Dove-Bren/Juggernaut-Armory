@@ -2,6 +2,8 @@ package com.SkyIsland.Armory.forge;
 
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.FuelRecord;
@@ -9,6 +11,7 @@ import com.SkyIsland.Armory.blocks.BlockBase;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
+import com.SkyIsland.Armory.items.tools.Tongs;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -21,6 +24,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.item.EntityItem;
@@ -49,6 +54,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -76,6 +82,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 				new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north,standalone=true"),
 				new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north,standalone=false"));
 
+		ClientRegistry.bindTileEntitySpecialRenderer(BrazierTileEntity.class, new BrazierTileEntity.Renderer());
+		
 //		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 //		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName + "_attached", "normal"));
 //		
@@ -241,7 +249,8 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
     								float hitY,
     								float hitZ) {
         // Open GUI!
-        if (!worldIn.isRemote) {
+        if (!worldIn.isRemote && 
+        		(playerIn.getCurrentEquippedItem() == null || !(playerIn.getCurrentEquippedItem().getItem() instanceof Tongs)  )) {
         	System.out.println("Opening gui...");
         	playerIn.openGui(Armory.instance, Armory.Gui_Type.BRAZIER.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
@@ -732,6 +741,54 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			// TODO Auto-generated method stub
 			
 		}
+		
+		public static class Renderer extends TileEntitySpecialRenderer<BrazierTileEntity> {
+		
+			@Override
+			public void renderTileEntityAt(BrazierTileEntity te, double x, double y, double z, float partialTicks,
+					int destroyStage) {
+
+				if (te.isStandalone || te.heatingElement == null)
+					return;
+				
+				GlStateManager.pushMatrix();
+				
+
+				
+				//don't use GL11 stuff, use the manager
+				//GL11.glTranslated(x, y + 1.0f, z);
+				GlStateManager.translate(x + 0.5, y + 0.35, z + 0.5);
+				
+
+				
+				
+//						GlStateManager.rotate(90.0f * (te.face.getOpposite().getHorizontalIndex()) 
+//								, 0.0f, 1.0f, 0.0f);
+//				GlStateManager.rotate(
+//						ModConfig.config.getTestValue(Key.ROTATE_ANGLE),
+//						ModConfig.config.getTestValue(Key.ROTATE_X),
+//						ModConfig.config.getTestValue(Key.ROTATE_Y),
+//						ModConfig.config.getTestValue(Key.ROTATE_Z));
+
+//				if (te.heldRig.getItem() instanceof ItemSword
+//						|| te.heldRig.getItem() instanceof Weapon)
+//						GlStateManager.rotate(225.0f, 0.0f, 0.0f, 1.0f);
+				
+				
+					
+				
+				GlStateManager.enableRescaleNormal();
+				GlStateManager.scale(1.0, 1.0, 1.0); //tweak for making smaller!
+				
+				Minecraft.getMinecraft().getRenderItem().renderItem(te.heatingElement, TransformType.GROUND);
+				GlStateManager.disableRescaleNormal();
+				
+				GL11.glPopMatrix();
+				
+			}
+			
+		}
+
 		
 	}
 	

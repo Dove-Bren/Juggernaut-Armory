@@ -178,16 +178,16 @@ public class Tongs extends ItemBase {
 		
 		if (block instanceof Brazier) {
 			if (onBrazier(playerIn, stack, state, event.pos))
-				event.setCanceled(true);
+				event.setCanceled(false);
 		} else if (block instanceof Forge) {
 			if (onForge(playerIn, stack, state, event.pos))
-				event.setCanceled(true);
+				event.setCanceled(false);
 		} else if (block instanceof BlockAnvil) {
 			if (onAnvil(playerIn, stack, state))
-				event.setCanceled(true);
+				event.setCanceled(false);
 		} else if (block instanceof BlockCauldron) {
 			if (onCauldron(playerIn, stack, state))
-				event.setCanceled(true);
+				event.setCanceled(false);
 		}
 //		else if (block instanceof Trough)
 //			return onCauldron(playerIn, stack, state);
