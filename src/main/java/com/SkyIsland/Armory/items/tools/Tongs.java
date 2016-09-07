@@ -38,9 +38,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class Tongs extends ItemBase {
 	
-//	@SidedProxy(clientSide="com.SkyIsland.Armory.items.proxy.ClientTongProxy", serverSide="com.SkyIsland.Armory.items.proxy.ServerTongProxy")
-//    public static CommonTongProxy proxy;
-	
 	private static Map<Integer, Integer> heatMap = new HashMap<Integer, Integer>();
 	
 	private static final float DAMAGE = 1.0f;
