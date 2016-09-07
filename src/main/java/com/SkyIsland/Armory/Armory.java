@@ -16,6 +16,7 @@ import com.SkyIsland.Armory.entity.EntityArmorerStand;
 import com.SkyIsland.Armory.forge.Brazier;
 import com.SkyIsland.Armory.forge.Forge;
 import com.SkyIsland.Armory.forge.ForgeBlocks;
+import com.SkyIsland.Armory.forge.Trough;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.ModelRegistry;
@@ -118,6 +119,7 @@ public class Armory {
 	    Pedestal.preInit();
 	    Brazier.preInit();
 	    Forge.preInit();
+	    Trough.preInit();
 	  	
 	    proxy.preInit();
 	    

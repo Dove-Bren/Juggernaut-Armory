@@ -11,6 +11,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 public class ForgeManager {
 
@@ -38,6 +40,19 @@ public class ForgeManager {
 
 		public float getHeatRate() {
 			return heatRate;
+		}
+	}
+	
+	public static class CoolantRecord {
+		
+		private float coolingRate;
+		
+		public CoolantRecord(float coolingRate) {
+			this.coolingRate = coolingRate;
+		}
+		
+		public float getCoolingRate() {
+			return this.coolingRate;
 		}
 	}
 	
@@ -240,6 +255,9 @@ public class ForgeManager {
 		instance.registerInputMetal(new MetalRecord(Items.iron_ingot, 200, 1500));
 		instance.registerInputMetal(new MetalRecord(Items.gold_ingot, 160, 900));
 		instance.registerInputMetal(new MetalRecord(Items.coal, 400, 1800));
+		
+		//register coolants
+		instance.registerCoolant(FluidRegistry.WATER, new CoolantRecord(2.0f));
 	}
 	
 	public static ForgeManager instance() {
@@ -248,12 +266,15 @@ public class ForgeManager {
 	
 	private Map<Item, FuelRecord> fuels;
 	
+	private Map<Fluid, CoolantRecord> coolants;
+	
 	private List<MetalRecord> metals;
 	
 	private List<AlloyRecipe> recipes;
 	
 	private ForgeManager() {
 		fuels = new HashMap<Item, FuelRecord>();
+		coolants = new HashMap<Fluid, CoolantRecord>();
 		metals = new LinkedList<MetalRecord>();
 		recipes = new LinkedList<AlloyRecipe>();
 	}
@@ -311,5 +332,13 @@ public class ForgeManager {
 		}
 		
 		return null;
+	}
+	
+	public void registerCoolant(Fluid fluid, CoolantRecord record) {
+		this.coolants.put(fluid, record);
+	}
+	
+	public CoolantRecord getCoolant(Fluid fluid) {
+		return coolants.get(fluid);
 	}
 }
