@@ -3,13 +3,16 @@ package com.SkyIsland.Armory.items;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.SkyIsland.Armory.items.tools.ArmoryBook;
+
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public final class MiscItems {
 
 	public static enum Items {
 		SCRAP,
-		HELD_METAL;
+		HELD_METAL,
+		ARMORY_BOOK;
 	}
 	
 	private static Map<Items, ItemBase> itemMap;
@@ -25,6 +28,10 @@ public final class MiscItems {
 		itemMap.put(Items.HELD_METAL, new HeldMetal("held_metal"));
 		GameRegistry.registerItem(itemMap.get(Items.HELD_METAL), "held_metal");
 		itemMap.get(Items.HELD_METAL).init();
+		
+		itemMap.put(Items.ARMORY_BOOK, new ArmoryBook("armory_book"));
+		GameRegistry.registerItem(itemMap.get(Items.ARMORY_BOOK), "armory_book");
+		itemMap.get(Items.ARMORY_BOOK).init();
 	}
 	
 	public static ItemBase getItem(Items type) {

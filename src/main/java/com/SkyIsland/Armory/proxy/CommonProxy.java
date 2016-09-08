@@ -54,4 +54,8 @@ public class CommonProxy  {
 	public void registerMaterial(ExtendedMaterial extendedArmorMaterial) {
 		; //nothing really to do
 	}
+	
+	public void openArmoryBook() {
+		;
+	}
 }
