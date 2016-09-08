@@ -120,7 +120,7 @@ public class HeldMetal extends ItemBase {
 			metal.setTagCompound(new NBTTagCompound());
 		NBTTagCompound nbt = metal.getTagCompound();
 		
-		if (nbt.hasKey(NBT_METAL, NBT.TAG_LIST)) {
+		if (nbt.hasKey(NBT_METAL, NBT.TAG_COMPOUND)) {
 //			List<ItemStack> metals = new LinkedList<ItemStack>();
 //			
 //			NBTTagList list = nbt.getTagList(NBT_METALS, NBT.TAG_COMPOUND);
@@ -155,7 +155,9 @@ public class HeldMetal extends ItemBase {
 //			list.appendTag(sub);
 //		}
 		
-		metal.writeToNBT(nbt);
+		NBTTagCompound tag = new NBTTagCompound();
+		metal.writeToNBT(tag);
+		nbt.setTag(NBT_METAL, tag);
 		
 		//updateHeat(metal);
 	}
@@ -185,7 +187,7 @@ public class HeldMetal extends ItemBase {
 	/**
 	 * Returns the metal location map. This is guaranteed to be a 10x10
 	 * @param stack
-	 * @return a 2d boolean array representing where the metal lies. [x][y]
+	 * @return a 2d boolean array representing where the metal lies. [y][x]
 	 */
 	public boolean[][] getMetalMap(ItemStack stack) {
 		if (stack == null || !(stack.getItem() instanceof HeldMetal))
@@ -206,7 +208,7 @@ public class HeldMetal extends ItemBase {
 			
 	}
 	
-	private boolean[][] int2Map(int int1, int int2, int int3, int int4) {
+	private static boolean[][] int2Map(int int1, int int2, int int3, int int4) {
 		int index = 0;
 		int eval;
 		boolean[][] map = new boolean[10][10];
@@ -231,7 +233,7 @@ public class HeldMetal extends ItemBase {
 	 * @param map
 	 * @return 4 ints, with [0] being first (bits 0-31), etc
 	 */
-	private int[] map2Int(boolean[][] map) {
+	private static int[] map2Int(boolean[][] map) {
 		int intcount = 0;
 		int index = 0;
 		int[] ret = new int[]{0,0,0,0};
@@ -255,7 +257,6 @@ public class HeldMetal extends ItemBase {
 	 * Final step in moving held metal to an active useful part. This method takes
 	 * the held metal and turns it into an item of the right type, as defined
 	 * by the shape the metal is in and it's cooling method.
-	 * <strong>Note:</strong> after this call, the item will not be HeldMetal anymore.
 	 * This method does not check that the metal is such that it should be cast.
 	 * @return
 	 */
@@ -279,9 +280,11 @@ public class HeldMetal extends ItemBase {
 	 */
 	protected void updateHeat(Entity owner, ItemStack metal) {
 		if (getHeat(metal) < ModConfig.config.getMinimumHeat()) {
+			ItemStack ret = getMetal(metal);
+			ret.stackSize = 1;
 			metal.setItem(MiscItems.getItem(Items.SCRAP));
 			((ScrapMetal) metal.getItem()).setReturn(metal, 
-					getMetal(metal)
+					ret
 					);
 			owner.playSound(Armory.MODID + ":item.metal.cool", 1.0f, 1.0f);
 			return;
@@ -289,5 +292,40 @@ public class HeldMetal extends ItemBase {
 		
 		return;
 	}
+	
+	
+//	public static void test() {
+//		
+//		//test int2Map and reverse
+//		boolean[][] map = int2Map(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
+//		printArray(map);
+//		System.out.println();
+//		System.out.println();
+//		int[] ints = map2Int(map);
+//		printArray(ints);
+//		System.out.println();
+//		System.out.println();
+//		printArray(int2Map(ints[0], ints[1], ints[2], ints[3]));
+//	}
+//	
+//	private static final void printArray(boolean[][] map) {
+//		String out;
+//		for (boolean[] row : map) {
+//			out = "[ ";
+//			
+//			for (boolean b : row) {
+//				out += (b + " ");
+//			}
+//			
+//			System.out.println(out + "]");
+//		}
+//	}
+//	
+//	private static final void printArray(int[] ints) {
+//		String out = "[ ";
+//		for (int i : ints)
+//			out += (i + " ");
+//		System.out.println(out + "]");
+//	}
 	
 }

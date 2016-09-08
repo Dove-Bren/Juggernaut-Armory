@@ -8,6 +8,8 @@ import com.SkyIsland.Armory.api.ForgeManager.CoolantRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
+import com.SkyIsland.Armory.items.MiscItems.Items;
+import com.SkyIsland.Armory.items.ScrapMetal;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -15,6 +17,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -219,7 +222,22 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 				inst.setHeat(heldItem, inst.getHeat(heldItem) - record.getCoolingRate());
 				
 				if (inst.getHeat(heldItem) <= 0) {
-					inst.cast(heldItem);
+					ItemStack newItem = inst.cast(heldItem);
+					if (newItem == null) {
+						//make it scrap
+						ScrapMetal scrap = (ScrapMetal) MiscItems.getItem(Items.SCRAP);
+						newItem = new ItemStack(scrap);
+						ItemStack ret = inst.getMetal(heldItem);
+						ret.stackSize = 1;
+						scrap.setReturn(newItem, 
+								ret
+								);
+						
+						getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(),
+							Armory.MODID + ":item.metal.cool", 1.0f, 1.0f, false);
+					}
+					
+					this.heldItem = newItem;
 				}
 			}
 		}
@@ -227,7 +245,19 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 		public ItemStack takeItem() {
 			ItemStack ret = heldItem;
 			heldItem = null;
+			
+			getWorld().markBlockForUpdate(pos);
+			markDirty();
 			return ret;
+		}
+		
+		public boolean offerItem(ItemStack item) {
+			if (heldItem != null)
+				return false;
+			heldItem = item;
+			getWorld().markBlockForUpdate(pos);
+			markDirty();
+			return true;
 		}
 		
 		public static class Renderer extends TileEntitySpecialRenderer<TroughTileEntity> {
@@ -249,12 +279,12 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 				
 				//don't use GL11 stuff, use the manager
 				//GL11.glTranslated(x, y + 1.0f, z);
-				GlStateManager.translate(x + 0.5, y + 0.85, z + 0.5);
+				GlStateManager.translate(x + 0.5, y + 1.85, z + 0.5);
 				
 
 				
 //				if (rotate) {
-				GlStateManager.rotate(90.0f, 0.0f, 1.0f, 0.0f);
+				//GlStateManager.rotate(90.0f, 0.0f, 1.0f, 0.0f);
 //				GlStateManager.rotate(
 //						ModConfig.config.getTestValue(Key.ROTATE_ANGLE),
 //						ModConfig.config.getTestValue(Key.ROTATE_X),
@@ -264,13 +294,13 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 
 //				if (te.heldRig.getItem() instanceof ItemSword
 //						|| te.heldRig.getItem() instanceof Weapon)
-				GlStateManager.rotate(225.0f, 0.0f, 0.0f, 1.0f);
+				//GlStateManager.rotate(225.0f, 0.0f, 0.0f, 1.0f);
 					
 				
 				GlStateManager.enableRescaleNormal();
 				GlStateManager.scale(1.0, 1.0, 1.0); //tweak for making smaller!
 				
-				//Minecraft.getMinecraft().getRenderItem().renderItem(te.heldRig, TransformType.GROUND);
+				Minecraft.getMinecraft().getRenderItem().renderItem(te.heldItem, TransformType.GROUND);
 				GlStateManager.disableRescaleNormal();
 				
 				GL11.glPopMatrix();

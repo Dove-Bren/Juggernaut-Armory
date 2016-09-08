@@ -3,8 +3,6 @@ package com.SkyIsland.Armory.mechanics;
 import java.util.Map;
 
 import com.SkyIsland.Armory.config.ModConfig;
-import com.SkyIsland.Armory.items.HeldMetal;
-import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.armor.Armor;
 
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -15,7 +13,6 @@ import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.potion.Potion;
@@ -58,7 +55,8 @@ public class ArmorModificationManager {
 	
 			@SubscribeEvent
 			public void onTest(UseHoeEvent event) {
-				ItemStack stack;
+//				ItemStack stack;
+//				HeldMetal.test();
 				
 //				
 //				stack = Weapon.constructWeapon(
@@ -106,11 +104,11 @@ public class ArmorModificationManager {
 //				event.entityPlayer.inventory.addItemStackToInventory(piece4);
 //				event.entityPlayer.inventory.addItemStackToInventory(piece5);
 				
-				stack = new ItemStack(MiscItems.getItem(MiscItems.Items.HELD_METAL));
-				((HeldMetal) stack.getItem()).setHeat(stack, 500);
-				((HeldMetal) stack.getItem()).setMetal(stack, new ItemStack(Items.iron_ingot, 2));
-				
-				event.entityPlayer.inventory.addItemStackToInventory(stack);
+//				stack = new ItemStack(MiscItems.getItem(MiscItems.Items.HELD_METAL));
+//				((HeldMetal) stack.getItem()).setHeat(stack, 500);
+//				((HeldMetal) stack.getItem()).setMetal(stack, new ItemStack(Items.iron_ingot, 2));
+//				
+//				event.entityPlayer.inventory.addItemStackToInventory(stack);
 			}
 			
 		/////////////////////////////////////////

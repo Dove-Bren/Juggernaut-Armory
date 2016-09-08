@@ -9,9 +9,12 @@ import com.SkyIsland.Armory.forge.Brazier;
 import com.SkyIsland.Armory.forge.Brazier.BrazierTileEntity;
 import com.SkyIsland.Armory.forge.Forge;
 import com.SkyIsland.Armory.forge.Forge.ForgeTileEntity;
+import com.SkyIsland.Armory.forge.Trough;
+import com.SkyIsland.Armory.forge.Trough.TroughTileEntity;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.ItemBase;
 import com.SkyIsland.Armory.items.MiscItems;
+import com.SkyIsland.Armory.items.ScrapMetal;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.block.Block;
@@ -233,9 +236,10 @@ public class Tongs extends ItemBase {
 		} else if (block instanceof BlockCauldron) {
 			if (onCauldron(playerIn, stack, state))
 				event.setCanceled(false);
+		} else if (block instanceof Trough) {
+			if (onTrough(playerIn, stack, state, event.pos))
+				event.setCanceled(false);
 		}
-//		else if (block instanceof Trough)
-//			return onCauldron(playerIn, stack, state);
 //		else if (block instanceof CuttingMachine)
 //			return onCauldron(playerIn, stack, state);
 //		else if (block instanceof ConstructPedestal)
@@ -304,8 +308,35 @@ public class Tongs extends ItemBase {
     	return false;
     }
     
-    private boolean onTrough(EntityPlayer player, ItemStack tongs, IBlockState troughBlock) {
-    	System.out.println("Unimplemented method: Tongs#onTrough()!!!!!");
+    private boolean onTrough(EntityPlayer player, ItemStack tongs, IBlockState troughBlock, BlockPos pos) {
+    	TileEntity te = player.getEntityWorld().getTileEntity(pos);
+    	if (te == null || !(te instanceof TroughTileEntity)) {
+    		return false;
+    	}
+    	
+    	TroughTileEntity ent = (TroughTileEntity) te;
+    	ItemStack held = getHeldItem(tongs);
+    	if (held == null) {
+    		//try to collect from the brazier
+    		held = ent.takeItem();//ent.collectHeatingElement();
+    		if (held != null) {
+    			if (held.getItem() instanceof ScrapMetal) {
+    				//give as item instead
+    				player.inventory.addItemStackToInventory(held);
+    				return true;
+    			}
+    			
+    			setHeldItem(tongs, held);
+    			return true;
+    		}
+    	} else {
+    		//try to put our element in the brazier
+    		if (ent.offerItem(held)) {
+    			setHeldItem(tongs, null);
+    			return true;
+    		}
+    	}
+    	
     	return false;
     }
     
