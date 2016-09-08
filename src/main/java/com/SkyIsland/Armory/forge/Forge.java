@@ -373,8 +373,16 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			
 			if (same) {
 				//all the same item type
+				//get one itemstack with all put together
+				
+				int total = 0;
+				for (ItemStack s : meltedItems)
+					total += s.stackSize;
+				
+				ItemStack together = new ItemStack(meltedItems.get(0).getItem(), total);
+				
 				ItemStack stack = ((HeldMetal) MiscItems.getItem(Items.HELD_METAL))
-						.createStack(meltedItems, getHeat());
+						.createStack(together, getHeat());
 				meltedItems.clear();
 				return stack;
 			}

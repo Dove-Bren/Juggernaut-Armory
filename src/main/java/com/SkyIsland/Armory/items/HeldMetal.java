@@ -1,11 +1,8 @@
 package com.SkyIsland.Armory.items;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.api.ForgeManager;
+import com.SkyIsland.Armory.api.ForgeManager.MetalRecord;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.MiscItems.Items;
 
@@ -14,7 +11,6 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 
@@ -28,7 +24,9 @@ public class HeldMetal extends ItemBase {
 
 	private static final String NBT_HEAT = "heat";
 	
-	private static final String NBT_METALS = "metals";
+	private static final String NBT_METAL = "metal";
+	
+	private static final String NBT_MAP_PREFIX = "metalmap";
 	
 	private String registryName;
 	
@@ -67,7 +65,6 @@ public class HeldMetal extends ItemBase {
 	public void onHeatUpdate(ItemStack stack, int heatDelta, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		//super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 		float heat = getHeat(stack);
-		System.out.println("fetched heat: " + heat);
 		
 		//cool item down
 		setHeat(stack, (heat == -1 ? 0 : heat - heatDelta));
@@ -115,7 +112,7 @@ public class HeldMetal extends ItemBase {
 		//updateHeat(metal);
 	}
 	
-	public Collection<ItemStack> getMetals(ItemStack metal) {
+	public ItemStack getMetal(ItemStack metal) {
 		if (metal == null)
 			return null;
 		
@@ -123,52 +120,154 @@ public class HeldMetal extends ItemBase {
 			metal.setTagCompound(new NBTTagCompound());
 		NBTTagCompound nbt = metal.getTagCompound();
 		
-		if (nbt.hasKey(NBT_METALS, NBT.TAG_LIST)) {
-			List<ItemStack> metals = new LinkedList<ItemStack>();
-			
-			NBTTagList list = nbt.getTagList(NBT_METALS, NBT.TAG_COMPOUND);
-			NBTTagCompound sub;
-			while (!list.hasNoTags()) {
-				sub = (NBTTagCompound) list.removeTag(0);
-				metals.add(ItemStack.loadItemStackFromNBT(sub));
-			}
-			
-			return metals;
+		if (nbt.hasKey(NBT_METAL, NBT.TAG_LIST)) {
+//			List<ItemStack> metals = new LinkedList<ItemStack>();
+//			
+//			NBTTagList list = nbt.getTagList(NBT_METALS, NBT.TAG_COMPOUND);
+//			NBTTagCompound sub;
+//			while (!list.hasNoTags()) {
+//				sub = (NBTTagCompound) list.removeTag(0);
+//				metals.add(ItemStack.loadItemStackFromNBT(sub));
+//			}
+//			
+//			return metals;
+			return ItemStack.loadItemStackFromNBT(nbt.getCompoundTag(NBT_METAL));
 		}
 			
 		return null;
 	}
 	
-	public void setMetals(ItemStack metal, Collection<ItemStack> metals) {
-		if (metal == null || !(metal.getItem() instanceof HeldMetal)) {
+	public void setMetal(ItemStack holdingmetal, ItemStack metal) {
+		if (holdingmetal == null || !(holdingmetal.getItem() instanceof HeldMetal)) {
 			return;
 		}
 		
-		if (!metal.hasTagCompound())
-			metal.setTagCompound(new NBTTagCompound());
-		NBTTagCompound nbt = metal.getTagCompound();
+		if (!holdingmetal.hasTagCompound())
+			holdingmetal.setTagCompound(new NBTTagCompound());
+		NBTTagCompound nbt = holdingmetal.getTagCompound();
 		
-		NBTTagList list = new NBTTagList();
-		NBTTagCompound sub;
-		for (ItemStack addedMetal : metals) {
-			sub = new NBTTagCompound();
-			addedMetal.writeToNBT(sub);
-			
-			list.appendTag(sub);
-		}
+//		NBTTagList list = new NBTTagList();
+//		NBTTagCompound sub;
+//		for (ItemStack addedMetal : metals) {
+//			sub = new NBTTagCompound();
+//			addedMetal.writeToNBT(sub);
+//			
+//			list.appendTag(sub);
+//		}
 		
-		nbt.setTag(NBT_METALS, list);
+		metal.writeToNBT(nbt);
 		
 		//updateHeat(metal);
 	}
 	
-	public ItemStack createStack(Collection<ItemStack> containedMetals, float heat) {
-		System.out.println("new stack with heat: " + heat);
+	/**
+	 * Sets the map of metal location. This map signifies the squares which have
+	 * metal on them. If the map is not in the right proportions (10x10), it will
+	 * be expanded or chopped down to fit.
+	 * @param stack
+	 * @param metalMap
+	 */
+	public void setMetalMap(ItemStack stack, boolean[][] metalMap) {
+		if (stack == null || !(stack.getItem() instanceof HeldMetal))
+			return;
+		
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		int[] ints = map2Int(metalMap);
+		NBTTagCompound nbt = stack.getTagCompound();
+		
+		for (int i = 0; i < 4; i++) {
+			nbt.setInteger(NBT_MAP_PREFIX + i, ints[i]);
+		}
+	}
+	
+	/**
+	 * Returns the metal location map. This is guaranteed to be a 10x10
+	 * @param stack
+	 * @return a 2d boolean array representing where the metal lies. [x][y]
+	 */
+	public boolean[][] getMetalMap(ItemStack stack) {
+		if (stack == null || !(stack.getItem() instanceof HeldMetal))
+			return null;
+		
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		int[] ints = new int[]{0,0,0,0};
+		NBTTagCompound nbt = stack.getTagCompound();
+		
+		for (int i = 0; i < 4; i++) {
+			if (nbt.hasKey(NBT_MAP_PREFIX + i, NBT.TAG_INT))
+				ints[i] = nbt.getInteger(NBT_MAP_PREFIX + i);
+		}
+		
+		return int2Map(ints[0], ints[1], ints[2], ints[3]);
+			
+	}
+	
+	private boolean[][] int2Map(int int1, int int2, int int3, int int4) {
+		int index = 0;
+		int eval;
+		boolean[][] map = new boolean[10][10];
+		for (; index < 100; index++) {
+			if (index < 32)
+				eval = int1;
+			else if (index < 64)
+				eval = int2;
+			else if (index < 96)
+				eval = int3;
+			else
+				eval = int4;
+			
+			map[index / 10][index % 10] = ((eval & 1 << (index % 32)) != 0);
+		}
+		
+		return map;
+	}
+	
+	/**
+	 * Assumes 10x10!
+	 * @param map
+	 * @return 4 ints, with [0] being first (bits 0-31), etc
+	 */
+	private int[] map2Int(boolean[][] map) {
+		int intcount = 0;
+		int index = 0;
+		int[] ret = new int[]{0,0,0,0};
+		for (; index < 100; index++) {
+			intcount = index / 32; //what int to put into
+			ret[intcount] = (ret[intcount] << 1) | (map[index/10][index % 10] ? 1 : 0);
+		}
+		
+		return ret;
+	}
+	
+	public ItemStack createStack(ItemStack containedMetal, float heat) {
 		ItemStack stack = new ItemStack(this);
 		setHeat(stack, heat);
-		setMetals(stack, containedMetals);
+		setMetal(stack, containedMetal);
 		
 		return stack;
+	}
+	
+	/**
+	 * Final step in moving held metal to an active useful part. This method takes
+	 * the held metal and turns it into an item of the right type, as defined
+	 * by the shape the metal is in and it's cooling method.
+	 * <strong>Note:</strong> after this call, the item will not be HeldMetal anymore.
+	 * This method does not check that the metal is such that it should be cast.
+	 * @return
+	 */
+	public ItemStack cast(ItemStack containerMetal) {
+		ItemStack held = getMetal(containerMetal);
+		if (held == null)
+			return null;
+		MetalRecord record = ForgeManager.instance().getMetalRecord(held);
+		if (record == null)
+			return null;
+		
+		return ForgeManager.instance().getForgeResult(record, getMetalMap(containerMetal));
 	}
 	
 	/**
@@ -182,29 +281,13 @@ public class HeldMetal extends ItemBase {
 		if (getHeat(metal) < ModConfig.config.getMinimumHeat()) {
 			metal.setItem(MiscItems.getItem(Items.SCRAP));
 			((ScrapMetal) metal.getItem()).setReturn(metal, 
-					getRandomMetal(metal)
+					getMetal(metal)
 					);
 			owner.playSound(Armory.MODID + ":item.metal.cool", 1.0f, 1.0f);
 			return;
 		}
 		
 		return;
-	}
-	
-	protected ItemStack getRandomMetal(ItemStack metal) {
-		Collection<ItemStack> metals = getMetals(metal);
-		if (metals == null || metals.isEmpty())
-			return null;
-		
-		Iterator<ItemStack> it = metals.iterator();
-		int index = Armory.random.nextInt(metals.size());
-		int i = 0;
-		while (i < index) {
-			it.next();
-			i++;
-		}
-		
-		return it.next();
 	}
 	
 }

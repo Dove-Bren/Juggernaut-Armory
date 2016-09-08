@@ -6,7 +6,6 @@ import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.armor.Armor;
-import com.google.common.collect.Lists;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -109,7 +108,7 @@ public class ArmorModificationManager {
 				
 				stack = new ItemStack(MiscItems.getItem(MiscItems.Items.HELD_METAL));
 				((HeldMetal) stack.getItem()).setHeat(stack, 500);
-				((HeldMetal) stack.getItem()).setMetals(stack, Lists.asList(new ItemStack(Items.iron_ingot), new ItemStack[]{new ItemStack(Items.gold_ingot)}));
+				((HeldMetal) stack.getItem()).setMetal(stack, new ItemStack(Items.iron_ingot, 2));
 				
 				event.entityPlayer.inventory.addItemStackToInventory(stack);
 			}

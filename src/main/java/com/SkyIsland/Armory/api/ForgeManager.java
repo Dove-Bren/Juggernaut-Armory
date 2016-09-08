@@ -7,6 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.config.ModConfig;
+
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -234,6 +237,92 @@ public class ForgeManager {
 		}
 	}
 	
+	/**
+	 * Recipe template used when finalizing hot metal into final products.
+	 */
+	public static class ForgeRecipe {
+		
+		private boolean[][] metalMap;
+		
+		private IForgeTemplate template;
+		
+		private int fullCache;
+		
+		public ForgeRecipe(boolean[][] metalMap, IForgeTemplate template) {
+			fullCache = 0;
+			if (metalMap != null) {
+				this.metalMap = new boolean[10][10];
+				int i = 0;
+				for (boolean[] row : metalMap) {
+					if (i > 10) {
+						Armory.logger.warn("Forge recipe registered with too large of a MetalMap. This will be chopped to a 10x10");
+						break;
+					}
+					
+					if (row.length != 10) {
+						Armory.logger.warn("  Found row in metalMap that was not 10 long. This will be expanded (or truncated) to 10");
+						for (int j = 0; j < 10; j++) {
+							if (j < row.length) {
+								this.metalMap[i][j] = row[j];
+								if (row[j]) fullCache++; //increment count of full
+							} else
+								this.metalMap[i][j] = false;
+						}
+					} else {
+						//this.metalMap[i] = row;
+						for (int j = 0; j < 10; j++) {
+							this.metalMap[i][j] = row[j];
+							if (row[j]) fullCache++;
+						}
+					}
+				}
+				
+				if (i < 10) {
+					//didn't reach 10 rows
+					Armory.logger.warn("  MetalMap recipe found with fewer than 10 rows. This will be expanded to fit 10 rows.");
+					for (; i < 10; i++) {
+						this.metalMap[i] = new boolean[]{false, false, false, false, false, false, false, false, false, false};
+					}
+				}
+			}
+			
+			this.template = template;
+		}
+		
+		/**
+		 * Runs and checks whether the given metal map matches this recipe.
+		 * If it does, returns the user's relative performance. (ranges from 0 to 1).
+		 * If it does not, returns -1;
+		 * @param inputMap
+		 * @return [0-1] on success, -1 on failure
+		 * @throws IllegalArgumentException when the input map is not the right size
+		 */
+		public float matches(boolean[][] inputMap) throws IllegalArgumentException {
+			if (inputMap.length != 10 || inputMap[0].length != 10) {
+				throw new IllegalArgumentException("Invalid input map size: " + inputMap.length + " x " + inputMap[0].length);
+			}
+			int misses = 0;
+			for (int i = 0; i < 10; i++)
+			for (int j = 0; j < 10; j++) {
+				if (inputMap[i][j] == metalMap[i][j])
+					continue;
+				misses++;
+			}
+			
+			//misses now has the number of cells that didn't match
+			int maxMisses = Math.max(0, Math.round(
+					ModConfig.config.getRecipeTolerance() * (float) fullCache));
+			if (misses > maxMisses)
+				return -1f;
+			
+			return ((float) misses / (float) maxMisses);
+		}
+		
+		public ItemStack produce(MetalRecord baseMetal, float performance) {
+			return template.produce(baseMetal, performance);
+		}
+	}
+	
 	private static ForgeManager instance;
 	
 	public static void init() {
@@ -272,11 +361,14 @@ public class ForgeManager {
 	
 	private List<AlloyRecipe> recipes;
 	
+	private List<ForgeRecipe> forgeRecipes;
+	
 	private ForgeManager() {
 		fuels = new HashMap<Item, FuelRecord>();
 		coolants = new HashMap<Fluid, CoolantRecord>();
 		metals = new LinkedList<MetalRecord>();
 		recipes = new LinkedList<AlloyRecipe>();
+		forgeRecipes = new LinkedList<ForgeRecipe>();
 	}
 	
 	public void registerFuel(Item item, FuelRecord record) {
@@ -340,5 +432,56 @@ public class ForgeManager {
 	
 	public CoolantRecord getCoolant(Fluid fluid) {
 		return coolants.get(fluid);
+	}
+	
+	public void registerForgeRecipe(ForgeRecipe recipe) {
+		this.forgeRecipes.add(recipe);
+	}
+	
+	/**
+	 * Attempts to match the given input map to a registered. Finds the recipe
+	 * that matched with the highest performance (or the first registered in
+	 * case of a tie!) and uses it to produce a result with the given baseMetal.
+	 * @param baseMetal
+	 * @param inputMap
+	 * @return A new forged item, or null if no matches were found (including when
+	 * no recipes were <emphasis>close enough</emphasis>
+	 * @see {@link ModConfig#getRecipeTolerance()}
+	 */
+	public ItemStack getForgeResult(MetalRecord baseMetal, boolean[][] inputMap) {
+		if (forgeRecipes.isEmpty())
+			return null;
+		
+		float[] perf = new float[forgeRecipes.size()];
+		int i = 0;
+		
+		//Below relies on same iteration order. Since linked list, is good.
+		//Be careful not to change it...
+		for (ForgeRecipe recipe : forgeRecipes) {
+			try {
+			perf[i] = recipe.matches(inputMap);
+			} catch (IllegalArgumentException e) {
+				Armory.logger.warn("Unable to parse forge recipe:");
+				Armory.logger.warn(e.getMessage());
+				perf[i] = -1;
+			}
+			i++;
+		}
+		
+		int bestIndex = -1; //keep track of best match
+		float best = -1f; //keep track of best performance
+		for (i = 0; i < forgeRecipes.size(); i++) {
+			if (perf[i] > best) {
+				best = perf[i];
+				bestIndex = i;
+			}
+		}
+		
+		if (bestIndex == -1 || best < 0) {
+			//no real matches. everything sucked
+			return null;
+		}
+		
+		return forgeRecipes.get(bestIndex).produce(baseMetal, perf[bestIndex]);
 	}
 }
