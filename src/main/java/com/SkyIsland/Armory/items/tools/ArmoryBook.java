@@ -85,9 +85,9 @@ public class ArmoryBook extends ItemBase {
 		
 		pages.add(new PlainTextPage("The Armory is a structure that allows you to melt down metals and shape them into complex weapons and armor. From the left pauldron on your chestplate to the visor on your helm to the head on your mace, each piece is picked and crafted by you. Everything starts with a forge. To construct it,"));
 		pages.add(new HSplitPage(new PlainTextPage("you'll need both a forge block and a brazier. Once you have crafted each block, place them next to eachother and add some fuel to the brazier."),
-				new VSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/armory_book_11.png"), 45, 45, 0, 0, 45, 45, null), new ItemPage(new ItemStack(ForgeBlocks.getBlock(ArmoryBlocks.FORGE))))));
+				new VSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/armory_book_brazier.png"), 45, 45, 0, 0, 45, 45, null), new ItemPage(new ItemStack(ForgeBlocks.getBlock(ArmoryBlocks.FORGE))))));
 		pages.add(new HSplitPage(new PlainTextPage("The type of fuel you chose determines the speed the forge heats up, and how hot it can get. You can check how hot the forge is by opening up the forge GUI."),
-				new VSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/armory_book_21.png"), 45, 45, 0, 0, 45, 45, null), new ItemPage(new ItemStack(ForgeBlocks.getBlock(ArmoryBlocks.BRAZIER))))));
+				new VSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/armory_book_forge.png"), 45, 45, 0, 0, 45, 45, null), new ItemPage(new ItemStack(ForgeBlocks.getBlock(ArmoryBlocks.BRAZIER))))));
 		
 		IBookPage page1 = null, page2 = null;
 		for (Entry<Item, FuelRecord> entry : ForgeManager.instance().getFuelRecords().entrySet()) {
@@ -130,6 +130,13 @@ public class ArmoryBook extends ItemBase {
 			pages.add(new HSplitPage(page1, new PlainTextPage("")));
 			page1 = null;
 		}
+		
+		pages.add(new PlainTextPage("Once some metal has been melted into the forge, you must retrieve it with a pair of tongs. Using the tongs on the forge will take out all molten metal contained in the forge. If the metal is not of the same type (and it doesn't result in an alloy), you will have a piece of unusable scrap."));
+	  //pages.add(new HSplitPage(new PlainTextPage("The type of fuel you chose determines the speed the forge heats up, and how hot it can get. You can check how hot the forge is by opening up the forge GUI."),
+		pages.add(new HSplitPage(new PlainTextPage("Scrap can be melted back down in a forge to reclaim some of the metal tha went into it, but is very lossy. If the metals in the forge do result in an alloy"),
+				new VSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/armory_book_tongs.png"), 45, 45, 0, 0, 45, 45, null), new ItemPage(new ItemStack(ToolItems.getItem(ToolItems.Tools.TONGS))))));
+		pages.add(new PlainTextPage("or are the same type, however, you'll have a piece of molten metal in your tongs instead. This metal begins to cool as soon as it's taken from the forge, so you must act quickly! The temperature of the metal is that of the forge when you took it out. The higher the temperature of the metal,"));
+		pages.add(new PlainTextPage("the longer it will take to cool down. If your metal becomes too cool, it will solidify and become scrap. To heat the metal back up again, it can be inserted into a lit brazier (must be attached to a forge), where it will be heated up in a similar fashion to the forge."));
 		
 //		pages.add(new PlainTextPage("this is page 1"));
 //		pages.add(new HSplitPage(new PlainTextPage("This is the new and improved page 2 description"), new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50, null), true));
