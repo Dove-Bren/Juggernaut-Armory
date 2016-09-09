@@ -7,7 +7,9 @@ import java.util.Map;
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.gui.ArmoryBookScreen;
+import com.SkyIsland.Armory.gui.HSplitPage;
 import com.SkyIsland.Armory.gui.IBookPage;
+import com.SkyIsland.Armory.gui.ImagePage;
 import com.SkyIsland.Armory.gui.PlainTextPage;
 import com.SkyIsland.Armory.items.ItemBase;
 import com.SkyIsland.Armory.items.ToolItems;
@@ -19,6 +21,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -65,8 +68,10 @@ public class ArmoryBook extends ItemBase {
 		
 		List<IBookPage> pages = new LinkedList<IBookPage>();
 		pages.add(new PlainTextPage("this is page 1"));
-		pages.add(new PlainTextPage("this is page 2!!!!!!!!!!!!!!!!!!!!!!"));
+		pages.add(new HSplitPage(new PlainTextPage("This is the new and improved page 2 description"), new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50), true));
 		pages.add(new PlainTextPage("this is page 3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
+		pages.add(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50));
+		pages.add(new HSplitPage(new PlainTextPage("This page is nearly identical to page 2"), new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50), false));
 		ArmoryBook.screen = new ArmoryBookScreen(pages);
 	}
 	
