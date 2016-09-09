@@ -6,9 +6,9 @@ import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.CoolantRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
+import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
-import com.SkyIsland.Armory.items.MiscItems.Items;
 import com.SkyIsland.Armory.items.ScrapMetal;
 
 import net.minecraft.block.Block;
@@ -21,6 +21,8 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -63,6 +65,11 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 	public static void preInit() {
 		GameRegistry.registerTileEntity(TroughTileEntity.class, Armory.MODID + "_" + unlocalizedName);
 		ClientRegistry.bindTileEntitySpecialRenderer(TroughTileEntity.class, new TroughTileEntity.Renderer());
+	}
+	
+	public void init() {
+		GameRegistry.addShapedRecipe(new ItemStack(ForgeBlocks.getBlock(ArmoryBlocks.TROUGH)),
+				new Object[]{"B B", "IUI", "III", 'I', Items.iron_ingot, 'B', Item.getItemFromBlock(Blocks.iron_bars), 'U', Items.bucket});
 	}
 	
 	public Trough() {
@@ -225,7 +232,7 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 					ItemStack newItem = inst.cast(heldItem);
 					if (newItem == null) {
 						//make it scrap
-						ScrapMetal scrap = (ScrapMetal) MiscItems.getItem(Items.SCRAP);
+						ScrapMetal scrap = (ScrapMetal) MiscItems.getItem(MiscItems.Items.SCRAP);
 						newItem = new ItemStack(scrap);
 						ItemStack ret = inst.getMetal(heldItem);
 						ret.stackSize = 1;

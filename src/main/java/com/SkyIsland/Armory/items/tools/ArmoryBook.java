@@ -12,6 +12,7 @@ import com.SkyIsland.Armory.gui.IBookPage;
 import com.SkyIsland.Armory.gui.ImagePage;
 import com.SkyIsland.Armory.gui.ItemPage;
 import com.SkyIsland.Armory.gui.PlainTextPage;
+import com.SkyIsland.Armory.gui.VSplitPage;
 import com.SkyIsland.Armory.items.ItemBase;
 import com.SkyIsland.Armory.items.ToolItems;
 import com.SkyIsland.Armory.items.ToolItems.Tools;
@@ -69,12 +70,18 @@ public class ArmoryBook extends ItemBase {
     	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"));
 		
 		List<IBookPage> pages = new LinkedList<IBookPage>();
-		pages.add(new PlainTextPage("this is page 1"));
-		pages.add(new HSplitPage(new PlainTextPage("This is the new and improved page 2 description"), new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50, null), true));
-		pages.add(new PlainTextPage("this is page 3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
-		pages.add(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50, Lists.asList("Cool image tooltip", new String[0])));
-		pages.add(new HSplitPage(new PlainTextPage("This page is nearly identical to page 2"), new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50, null), false));
-		pages.add(new ItemPage(new ItemStack(Items.iron_axe, 2)));
+		pages.add(new PlainTextPage(""));
+		pages.add(new HSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/armory_book_front.png"), 75, 75, 0, 0, 75, 75, null), new PlainTextPage("A Smith's Guide")));
+		
+		pages.add(new PlainTextPage("The Armory is a structure that allows you to melt down metals and shape them into complex weapons and armor. From the left pauldron on your chestplate to the visor on your helm to the head on your mace, each piece is picked and crafted by you."));
+		pages.add(new HSplitPage(new PlainTextPage("Everything starts with a forge. To construct it, you'll need both a forge block and a brazier. Once you"),
+				new VSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/armory_book_11.png"), 75, 75, 0, 0, 75, 75, null), new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/armory_book_12.png"), 75, 75, 0, 0, 75, 75, null))));
+//		pages.add(new PlainTextPage("this is page 1"));
+//		pages.add(new HSplitPage(new PlainTextPage("This is the new and improved page 2 description"), new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50, null), true));
+//		pages.add(new PlainTextPage("this is page 3!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
+//		pages.add(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50, Lists.asList("Cool image tooltip", new String[0])));
+//		pages.add(new HSplitPage(new PlainTextPage("This page is nearly identical to page 2"), new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50, null), false));
+//		pages.add(new ItemPage(new ItemStack(Items.iron_axe, 2)));
 		ArmoryBook.screen = new ArmoryBookScreen(pages);
 	}
 	

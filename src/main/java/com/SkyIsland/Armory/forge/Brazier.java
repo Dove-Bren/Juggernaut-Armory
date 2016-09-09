@@ -9,6 +9,7 @@ import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.FuelRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.tools.Tongs;
@@ -58,6 +59,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class Brazier extends BlockBase implements ITileEntityProvider {
 
@@ -93,6 +95,12 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	
 	public static void preInit() {
 		GameRegistry.registerTileEntity(BrazierTileEntity.class, Armory.MODID + "_" + unlocalizedName);
+	}
+	
+	public void init() {
+		GameRegistry.addShapedRecipe(new ItemStack(ForgeBlocks.getBlock(ArmoryBlocks.BRAZIER)),
+				"I I", "ISI", "LWL", 'I', Items.iron_ingot, 'S', Item.getItemFromBlock(Blocks.stone_slab), 'W', new ItemStack(Blocks.planks, 1, OreDictionary.WILDCARD_VALUE), 'L', new ItemStack(Blocks.wooden_slab, 1, OreDictionary.WILDCARD_VALUE));
+				//new Object[]{"I I", "ISI", "LWL", 'I', Items.iron_ingot, 'S', Item.getItemFromBlock(Blocks.stone_slab), 'W', Item.getItemFromBlock(Blocks.planks), 'L', Item.getItemFromBlock(Blocks.wooden_slab)});
 	}
 	
 	public Brazier(boolean on) {

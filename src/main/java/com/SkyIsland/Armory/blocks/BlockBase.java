@@ -10,5 +10,9 @@ public abstract class BlockBase extends Block implements ClientInitializable {
 	public BlockBase(Material materialIn) {
 		super(materialIn);
 	}
+	
+	public void init() {
+		;
+	}
 
 }

@@ -9,9 +9,9 @@ import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.MetalRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
 import com.SkyIsland.Armory.forge.Brazier.BrazierTileEntity;
+import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
-import com.SkyIsland.Armory.items.MiscItems.Items;
 import com.SkyIsland.Armory.items.tools.Tongs;
 import com.SkyIsland.Armory.items.ScrapMetal;
 
@@ -25,6 +25,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -62,6 +64,11 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		GameRegistry.registerTileEntity(ForgeTileEntity.class, Armory.MODID + "_" + unlocalizedName);
 	}
 	
+	public void init() {
+		GameRegistry.addShapedRecipe(new ItemStack(block),
+				new Object[]{"BIB", "IUI", "SIS", 'I', Items.iron_ingot, 'B', Item.getItemFromBlock(Blocks.iron_bars), 'S', Item.getItemFromBlock(Blocks.stone), 'U', Items.bucket});
+	}
+	
 	public Forge() {
 		super(Material.ground);
 		this.blockHardness = 200;
@@ -69,6 +76,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 		this.setStepSound(Block.soundTypeStone);
 		this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
         this.setCreativeTab(Armory.creativeTab);
+        block = this;
 	}
 
 	@Override
@@ -381,7 +389,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 				
 				ItemStack together = new ItemStack(meltedItems.get(0).getItem(), total);
 				
-				ItemStack stack = ((HeldMetal) MiscItems.getItem(Items.HELD_METAL))
+				ItemStack stack = ((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL))
 						.createStack(together, getHeat());
 				meltedItems.clear();
 				return stack;

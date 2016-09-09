@@ -3,6 +3,8 @@ package com.SkyIsland.Armory.proxy;
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.config.network.ServerConfigMessage;
+import com.SkyIsland.Armory.forge.ForgeBlocks;
+import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
 import com.SkyIsland.Armory.gui.GuiHandler;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
@@ -24,6 +26,9 @@ public class CommonProxy  {
 	  public void init() {
 		  System.out.println("Network Proxy initializing.");
 		  NetworkRegistry.INSTANCE.registerGuiHandler(Armory.instance, new GuiHandler());
+		  
+		  for (ArmoryBlocks key : ArmoryBlocks.values())
+				ForgeBlocks.getBlock(key).init();
 	  }
 
 	  /**
