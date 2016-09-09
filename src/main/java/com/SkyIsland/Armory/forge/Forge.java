@@ -9,10 +9,9 @@ import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.MetalRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
 import com.SkyIsland.Armory.forge.Brazier.BrazierTileEntity;
-import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
+import com.SkyIsland.Armory.gui.table.TableGui;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
-import com.SkyIsland.Armory.items.tools.Tongs;
 import com.SkyIsland.Armory.items.ScrapMetal;
 
 import net.minecraft.block.Block;
@@ -95,10 +94,14 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			float hitZ) {
 		
 			// Open GUI!
-			if (!worldIn.isRemote && 
-	        		(playerIn.getCurrentEquippedItem() == null || !(playerIn.getCurrentEquippedItem().getItem() instanceof Tongs)  )) {
-			playerIn.openGui(Armory.instance, Armory.Gui_Type.FORGE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-			}
+//			if (!worldIn.isRemote && 
+//	        		(playerIn.getCurrentEquippedItem() == null || !(playerIn.getCurrentEquippedItem().getItem() instanceof Tongs)  )) {
+//			playerIn.openGui(Armory.instance, Armory.Gui_Type.FORGE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+//			}
+		
+		/////for testing table
+		TableGui.displayGui(playerIn, playerIn.getHeldItem());
+		
 			return true;
 		}
 	

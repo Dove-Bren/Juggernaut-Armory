@@ -45,6 +45,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+@SuppressWarnings("deprecation")
 public class Trough extends BlockBase implements ITileEntityProvider {
 	
 	public static Block block;

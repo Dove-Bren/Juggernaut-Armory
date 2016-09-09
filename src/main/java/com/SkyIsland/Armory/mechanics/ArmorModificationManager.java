@@ -55,6 +55,8 @@ public class ArmorModificationManager {
 	
 			@SubscribeEvent
 			public void onTest(UseHoeEvent event) {
+						
+				
 //				ItemStack stack;
 //				HeldMetal.test();
 				
