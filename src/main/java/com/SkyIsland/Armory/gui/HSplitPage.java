@@ -38,6 +38,8 @@ public class HSplitPage implements IBookPage {
 		heightCache = height;
 		
 		int divideSize = 10; //amount in middle as seperation.
+		if (!drawSplit)
+			divideSize = 0;
 		int subheight = (height - divideSize) / 2;
 		
 		//draw dividing line on bottom (if applicable)
@@ -60,9 +62,9 @@ public class HSplitPage implements IBookPage {
 		
 		//find out of in top of bottom
 		if (mouseY < subheight) {
-			top.overlay(parent, fonter, mouseX, mouseY, 0, 0);
+			top.overlay(parent, fonter, mouseX, mouseY, trueX, trueY);
 		} else if (mouseY > subheight + divideSize) {
-			bottom.overlay(parent, fonter, mouseX, mouseY, 0, 0);
+			bottom.overlay(parent, fonter, mouseX, mouseY - (subheight + divideSize), trueX, trueY);
 		}
 	}
 	

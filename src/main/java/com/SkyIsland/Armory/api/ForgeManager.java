@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ForgeManager {
 
@@ -81,7 +82,7 @@ public class ForgeManager {
 		}
 		
 		protected boolean accepts(ItemStack stack) {
-			return (stack != null && stack.getItem() == metal
+			return (stack != null && OreDictionary.itemMatches(stack, new ItemStack(metal), meta != -1)
 					&& (meta == -1 || meta == stack.getItemDamage()));
 			//return whether the stack is the same item and (requiredMeta is -1 or the same)
 		}
@@ -483,5 +484,25 @@ public class ForgeManager {
 		}
 		
 		return forgeRecipes.get(bestIndex).produce(baseMetal, perf[bestIndex]);
+	}
+	
+	public Map<Item, FuelRecord> getFuelRecords() {
+		return fuels;
+	}
+	
+	public Map<Fluid, CoolantRecord> getCoolantRecords() {
+		return coolants;
+	}
+	
+	public List<MetalRecord> getMetalRecords() {
+		return metals;
+	}
+	
+	public List<AlloyRecipe> getAlloyRecipes() {
+		return recipes;
+	}
+	
+	public List<ForgeRecipe> getForgeRecipes() {
+		return forgeRecipes;
 	}
 }

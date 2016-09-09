@@ -24,7 +24,7 @@ public class ItemPage implements IBookPage {
 		
 		int centerx = xoffset + (width / 2);
 		int centery = yoffset + (height / 2);
-		centerx -= 8; //offset for 32x32 item icon
+		centerx -= 8; //offset for 16x16 item icon
 		centery -= 8;
 		
 		GlStateManager.pushMatrix();
@@ -52,9 +52,6 @@ public class ItemPage implements IBookPage {
 			if (mouseX > x && mouseX < x + 16)
 			if (mouseY > y && mouseY < y + 16)
 				parent.renderTooltip(item, trueX, trueY);
-			
-			fonter.drawString("x: " + x + "     y: " + y, 10, 10, 0xAACCFF);
-			fonter.drawString("mx: " + mouseX + "    mouseY: " + mouseY, 10, 30, 0xCCFFAA);
 		}
 		
 		

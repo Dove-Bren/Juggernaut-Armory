@@ -2,40 +2,36 @@ package com.SkyIsland.Armory.gui;
 
 import net.minecraft.client.gui.FontRenderer;
 
-public class VSplitPage implements IBookPage {
+public class VDynamicSplitPage implements IBookPage {
 	
 	private IBookPage left;
 	
 	private IBookPage right;
 	
-	private int widthCache;
+	private int leftWidth;
 	
-	public VSplitPage(IBookPage left, IBookPage right) {
+	public VDynamicSplitPage(IBookPage left, IBookPage right, int leftWidth) {
 		this.left = left;
 		this.right = right;
+		this.leftWidth = leftWidth;
 	}
 
 	@Override
 	public void draw(ArmoryBookScreen parent, FontRenderer fonter, int xoffset, int yoffset, int width, int height) {
-		widthCache = width;
-		int subwidth = width / 2;
 		
+		left.draw(parent, fonter, xoffset, yoffset, leftWidth, height);
 		
-		left.draw(parent, fonter, xoffset, yoffset, subwidth, height);
-		
-		xoffset += subwidth; //move offset to the right
-		right.draw(parent, fonter, xoffset, yoffset, subwidth, height);
+		xoffset += leftWidth; //move offset to the right
+		right.draw(parent, fonter, xoffset, yoffset, width - leftWidth, height);
 	}
 
 	@Override
 	public void overlay(ArmoryBookScreen parent, FontRenderer fonter, int mouseX, int mouseY, int trueX, int trueY) {
-		int subwidth = widthCache / 2;
-		
 		//find out of in left or right
-		if (mouseX < subwidth) {
+		if (mouseX < leftWidth) {
 			left.overlay(parent, fonter, mouseX, mouseY, trueX, trueY);
 		} else {
-			right.overlay(parent, fonter, mouseX - subwidth, mouseY, trueX, trueY);
+			right.overlay(parent, fonter, mouseX - leftWidth, mouseY, trueX, trueY);
 		}
 	}
 	

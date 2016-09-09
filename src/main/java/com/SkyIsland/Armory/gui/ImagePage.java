@@ -84,9 +84,6 @@ public class ImagePage implements IBookPage {
 			if (mouseX > x && mouseX < x + this.width)
 			if (mouseY > y && mouseY < y + this.height)
 				parent.renderTooltip(tooltip, trueX, trueY);
-
-			fonter.drawString("x: " + x + "     y: " + y, 10, 50, 0xAACCFF);
-			fonter.drawString("mx: " + mouseX + "    mouseY: " + mouseY, 10, 70, 0xCCFFAA);
 		}
 	}
 	
