@@ -1,7 +1,6 @@
 package com.SkyIsland.Armory.gui;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 
 public class PlainTextPage implements IBookPage {
 	
@@ -12,8 +11,13 @@ public class PlainTextPage implements IBookPage {
 	}
 
 	@Override
-	public void draw(Gui parent, FontRenderer fonter, int xoffset, int yoffset, int width, int height) {
+	public void draw(ArmoryBookScreen parent, FontRenderer fonter, int xoffset, int yoffset, int width, int height) {
 		fonter.drawSplitString(text, xoffset, yoffset, width, 0x000000);
+	}
+
+	@Override
+	public void overlay(ArmoryBookScreen parent, FontRenderer fonter, int mouseX, int mouseY, int trueX, int trueY) {
+		; //nothing to do
 	}
 	
 }

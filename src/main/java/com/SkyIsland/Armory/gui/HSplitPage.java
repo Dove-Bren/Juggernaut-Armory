@@ -21,6 +21,8 @@ public class HSplitPage implements IBookPage {
 	
 	private boolean drawSplit;
 	
+	private int heightCache;
+	
 	public HSplitPage(IBookPage top, IBookPage bottom) {
 		this(top, bottom, false);
 	}
@@ -32,7 +34,9 @@ public class HSplitPage implements IBookPage {
 	}
 
 	@Override
-	public void draw(Gui parent, FontRenderer fonter, int xoffset, int yoffset, int width, int height) {
+	public void draw(ArmoryBookScreen parent, FontRenderer fonter, int xoffset, int yoffset, int width, int height) {
+		heightCache = height;
+		
 		int divideSize = 10; //amount in middle as seperation.
 		int subheight = (height - divideSize) / 2;
 		
@@ -47,6 +51,19 @@ public class HSplitPage implements IBookPage {
 		
 		yoffset += (subheight + divideSize); //offset a subheight + divide length down
 		bottom.draw(parent, fonter, xoffset, yoffset, width, subheight);
+	}
+
+	@Override
+	public void overlay(ArmoryBookScreen parent, FontRenderer fonter, int mouseX, int mouseY, int trueX, int trueY) {
+		int divideSize = 10; //amount in middle as seperation.
+		int subheight = (heightCache - divideSize) / 2;
+		
+		//find out of in top of bottom
+		if (mouseY < subheight) {
+			top.overlay(parent, fonter, mouseX, mouseY, 0, 0);
+		} else if (mouseY > subheight + divideSize) {
+			bottom.overlay(parent, fonter, mouseX, mouseY, 0, 0);
+		}
 	}
 	
 }

@@ -11,6 +11,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -134,6 +136,19 @@ public class ArmoryBookScreen extends GuiScreen {
 			pages.get((currentPage * 2) + 1).draw(this, fontRendererObj, leftOffset + PAGE_HOFFSET + PAGE_WIDTH + PAGE_DISTANCE, topOffset + PAGE_VOFFSET,
 					PAGE_WIDTH, PAGE_HEIGHT);
 		
+		//now do overlays
+		if (parWidth > (leftOffset + PAGE_HOFFSET) && parWidth < (leftOffset + TEXT_WIDTH) - PAGE_HOFFSET
+				&& parHeight > topOffset + PAGE_VOFFSET && parHeight < (topOffset + TEXT_HEIGHT) + PAGE_VOFFSET) {
+			//in bounds. Now figure out which it is
+			if (parWidth < (width/2) - PAGE_HOFFSET) {
+				pages.get(currentPage * 2).overlay(this, fontRendererObj,
+						parWidth - (leftOffset + PAGE_HOFFSET), parHeight - (topOffset + PAGE_VOFFSET), parWidth, parHeight);
+			} else if (pages.size() > (currentPage * 2) + 1 && parWidth > (width / 2) + PAGE_HOFFSET) {
+				pages.get((currentPage * 2) + 1).overlay(this, fontRendererObj,
+						parWidth - (leftOffset + PAGE_HOFFSET + PAGE_WIDTH + PAGE_DISTANCE), parHeight - (topOffset + PAGE_VOFFSET), parWidth, parHeight); 
+			}
+		}
+		
 		super.drawScreen(parWidth, parHeight, p_73863_3_);
 	}
 	
@@ -153,6 +168,24 @@ public class ArmoryBookScreen extends GuiScreen {
 			if (currentPage < maxPage)
 				currentPage++;
 		}
+	}
+	
+	public RenderItem getRenderItem() {
+		return this.itemRender;
+	}
+	
+	public void renderTooltip(ItemStack item, int x, int y) {
+		GlStateManager.pushAttrib();
+		this.renderToolTip(item, x, y);
+		GlStateManager.popAttrib();
+		GlStateManager.enableBlend();
+	}
+	
+	public void renderTooltip(List<String> lines, int x, int y) {
+		GlStateManager.pushAttrib();
+		this.drawHoveringText(lines, x, y, this.fontRendererObj);
+		GlStateManager.popAttrib();
+		GlStateManager.enableBlend();
 	}
 	
 	/**
