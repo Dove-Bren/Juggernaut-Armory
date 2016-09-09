@@ -54,15 +54,18 @@ public class ArmoryBookScreen extends GuiScreen {
 		this.pages = pages;
 		this.currentPage = 0;
 		this.maxPage = pages.size() / 2;
+		System.out.println("maxpages: " + maxPage);
 	}
 
 	@Override
 	public void initGui() {
+		currentPage = 0;
 		int leftOffset = (this.width - TEXT_WIDTH) / 2; //distance from left
 		int topOffset = (this.height - TEXT_HEIGHT) / 2;
-		backButton = new NextPageButton(0, leftOffset + 10, topOffset + this.height - 20, false);
+		backButton = new NextPageButton(0, leftOffset + 20, topOffset + 150, false);
 		this.buttonList.add(backButton);
-		nextButton = new NextPageButton(1, leftOffset + width - 10, topOffset + this.height - 20, true);
+		nextButton = new NextPageButton(1, leftOffset + TEXT_WIDTH - (20 + 23), topOffset + 150, true);
+																	//     /\ arrow size
 		this.buttonList.add(nextButton);
 	}
 	
@@ -118,6 +121,8 @@ public class ArmoryBookScreen extends GuiScreen {
 		
 		int leftOffset = (this.width - TEXT_WIDTH) / 2; //distance from left
 		int topOffset = (this.height - TEXT_HEIGHT) / 2;
+		//float hscale = ((float) this.width / (float) TEXT_WIDTH);
+		//float vscale = ((float) this.height / (float) TEXT_HEIGHT);
 		
 		Gui.drawModalRectWithCustomSizedTexture(leftOffset, topOffset, 0, 0,
 				TEXT_WIDTH, TEXT_HEIGHT, TEXT_WHOLE_WIDTH, TEXT_WHOLE_HEIGHT);
@@ -125,8 +130,8 @@ public class ArmoryBookScreen extends GuiScreen {
 		pages.get(currentPage * 2).draw(this, fontRendererObj, leftOffset + PAGE_HOFFSET, topOffset + PAGE_VOFFSET,
 				PAGE_WIDTH, PAGE_HEIGHT);
 		
-		if (pages.size() > (currentPage * 2))
-			pages.get((currentPage * 2) + 1).draw(this, fontRendererObj, leftOffset + PAGE_HOFFSET + PAGE_DISTANCE, topOffset + PAGE_VOFFSET,
+		if (pages.size() > (currentPage * 2) + 1)
+			pages.get((currentPage * 2) + 1).draw(this, fontRendererObj, leftOffset + PAGE_HOFFSET + PAGE_WIDTH + PAGE_DISTANCE, topOffset + PAGE_VOFFSET,
 					PAGE_WIDTH, PAGE_HEIGHT);
 		
 		super.drawScreen(parWidth, parHeight, p_73863_3_);
@@ -199,7 +204,7 @@ public class ArmoryBookScreen extends GuiScreen {
                 {
                     textureY += 13;
                 }
-
+                
                 Gui.drawModalRectWithCustomSizedTexture(xPosition, yPosition, textureX, textureY,
         				23, 13, TEXT_WHOLE_WIDTH, TEXT_WHOLE_HEIGHT);
                 

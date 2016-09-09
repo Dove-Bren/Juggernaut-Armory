@@ -4,6 +4,7 @@ item.armorer_stand.name=Armorer's Stand
 item.tongs.name=Tongs
 item.scrap_metal.name=Scrap Metal
 item.held_metal.name=Molten Metal
+item.armory_book.name=A Smith's Guide
 
 item.torso_base.name=Chestplate Armor Piece
 
@@ -18,6 +19,7 @@ tile.skylander_armory_whetstone_block.name=Whetstone Block
 tile.skylander_armory_pedestal.name=Pedestal
 tile.skylander_armory_brazier_block.name=Brazier
 tile.skylander_armory_forge_block.name=Forge
+tile.skylander_armory_forge_trough.name=Trough
 
 entity.armorer_stand.name=Armorer's Stand
 
