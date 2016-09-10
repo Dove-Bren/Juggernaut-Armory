@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.items;
 
+import java.awt.Color;
+
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.MetalRecord;
@@ -59,8 +61,20 @@ public class HeldMetal extends ItemBase {
 	
 	@Override
 	public int getColorFromItemStack(ItemStack stack, int tintIndex) {
+		int maxdisplay = 2000;
 		
-		return 0;
+		int red = 255;
+		float heat = getHeat(stack);
+		heat -= ModConfig.config.getMinimumHeat();
+		if (heat < maxdisplay) {
+			if (heat < 1)
+				red = 64;
+			else
+				red = 64 + Math.round(190 * (heat / (float) maxdisplay));
+		}
+		
+		return new Color(red,
+				48, 48).getRGB();
 	}
 	
 //	@Override
