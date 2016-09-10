@@ -146,17 +146,6 @@ public class Armory {
 		map.put(DamageType.MAGIC, 0.0f);
 		map.put(DamageType.OTHER, 0.0f);
 	    
-		material = new ExtendedMaterial(
-				"iron",
-				"iron",
-				100,
-				new float[]{.15f, .4f, .3f, .15f},
-				map,
-				damageMap,
-				25,
-				Items.iron_ingot
-				);
-		
 	    material = new ExtendedMaterial(
 				"void",
 				"void",
