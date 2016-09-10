@@ -3,6 +3,7 @@ package com.SkyIsland.Armory.items;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.SkyIsland.Armory.items.materials.IngotCopper;
 import com.SkyIsland.Armory.items.tools.ArmoryBook;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -12,7 +13,8 @@ public final class MiscItems {
 	public static enum Items {
 		SCRAP,
 		HELD_METAL,
-		ARMORY_BOOK;
+		ARMORY_BOOK,
+		COPPER_INGOT;
 	}
 	
 	private static Map<Items, ItemBase> itemMap;
@@ -32,6 +34,10 @@ public final class MiscItems {
 		itemMap.put(Items.ARMORY_BOOK, new ArmoryBook("armory_book"));
 		GameRegistry.registerItem(itemMap.get(Items.ARMORY_BOOK), "armory_book");
 		itemMap.get(Items.ARMORY_BOOK).init();
+		
+		itemMap.put(Items.COPPER_INGOT, new IngotCopper("copper_ingot"));
+		GameRegistry.registerItem(itemMap.get(Items.COPPER_INGOT), "copper_ingot");
+		itemMap.get(Items.COPPER_INGOT).init();
 	}
 	
 	public static ItemBase getItem(Items type) {

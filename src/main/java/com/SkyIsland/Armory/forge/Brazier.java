@@ -112,6 +112,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
         this.setCreativeTab(Armory.creativeTab);
         this.isBlockContainer = true;
+        this.lightOpacity = 0;
         
         this.setDefaultState(this.blockState.getBaseState().withProperty(STANDALONE, true)
         		.withProperty(FACING, EnumFacing.NORTH));

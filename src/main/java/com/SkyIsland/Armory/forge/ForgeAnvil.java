@@ -38,7 +38,7 @@ public class ForgeAnvil extends BlockBase implements ITileEntityProvider {
 	
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "inventory"));
+		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
 	}
 	
 	public static void preInit() {

@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.SkyIsland.Armory.api.ArmorManager;
 import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.WeaponManager;
+import com.SkyIsland.Armory.blocks.CopperOreBlock;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.config.ModConfig;
@@ -124,6 +125,10 @@ public class Armory {
 	    ForgeAnvil.preInit();
 	  	
 	    proxy.preInit();
+	    
+
+	    
+	    CopperOreBlock.preInit();
 	    
 	    new ModConfig(new Configuration(event.getSuggestedConfigurationFile()));
 	    new ModelRegistry();

@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "normal": { "model": "skylander_armory:copper_ore" },
+        "inventory": { "model": "skylander_armory:copper_ore" }
+    }
+}

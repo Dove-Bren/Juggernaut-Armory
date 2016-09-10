@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "skylander_armory:whetstone_block" }
+        "normal": { "model": "skylander_armory:whetstone_block" },
+        "inventory": { "model": "skylander_armory:whetstone_block" }
     }
 }
