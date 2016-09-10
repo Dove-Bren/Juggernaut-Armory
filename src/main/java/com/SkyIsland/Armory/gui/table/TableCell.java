@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 
 public class TableCell extends GuiButton {
 
-	private static final Color filledColor = new Color(0x20, 0x20, 0x10, 0x40);
+	private static final Color filledColor = new Color(0x40, 0x40, 0x20, 0xA0);
 
 	private static final int CELL_SIZE = 15;
 	
@@ -19,7 +19,7 @@ public class TableCell extends GuiButton {
 	private TableGui parent;
 	
 	public TableCell(int id, TableGui parent, int x, int y, int displayX, int displayY) {
-		super(id, displayX, displayY, null);
+		super(id, displayX, displayY, 15, 15, null);
 		this.x = x;
 		this.y = y;
 		this.parent = parent;
@@ -27,6 +27,14 @@ public class TableCell extends GuiButton {
 		//TODO set width, height
 	}
 	
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
 	public boolean getFilled() {
 		if (parent.metalMap == null)
 			return false;
@@ -38,16 +46,19 @@ public class TableCell extends GuiButton {
      * Draws this button to the screen.
      */
     @Override
-    public void drawButton(Minecraft mc, int parX, int parY) {
+    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (visible && getFilled())
         {
         	GlStateManager.pushMatrix();
     		
-    		this.drawGradientRect(x, y, x + CELL_SIZE, y + CELL_SIZE, filledColor.brighter().getRGB(), filledColor.getRGB());
+    		this.drawGradientRect(xPosition, yPosition, xPosition + CELL_SIZE, yPosition + CELL_SIZE, filledColor.brighter().getRGB(), filledColor.getRGB());
     		
     		GlStateManager.popMatrix();
             
         }
+        
+        //this.drawCenteredString(Minecraft.getMinecraft().fontRendererObj, x + "|" + y, xPosition, yPosition, 0xFFFFFFFF);
+        //super.drawButton(mc, mouseX, mouseY);
     }
 	
 }

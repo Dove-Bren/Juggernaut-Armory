@@ -8,11 +8,15 @@ import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.MetalRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
+import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.forge.Brazier.BrazierTileEntity;
 import com.SkyIsland.Armory.gui.table.TableGui;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.ScrapMetal;
+import com.SkyIsland.Armory.items.ToolItems;
+import com.SkyIsland.Armory.items.ToolItems.Tools;
+import com.SkyIsland.Armory.items.tools.Tongs;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -100,7 +104,12 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 //			}
 		
 		/////for testing table
-		TableGui.displayGui(playerIn, playerIn.getHeldItem());
+		HeldMetal inst = (HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL);
+		Tongs tinst = (Tongs) ToolItems.getItem(Tools.TONGS);
+		ItemStack test = inst.createStack(new ItemStack(Items.iron_ingot, 2), 5000.0f, 20);
+		ItemStack tongs = new ItemStack(tinst);
+		tinst.setHeldItem(tongs, test);
+		TableGui.displayGui(playerIn, tongs);
 		
 			return true;
 		}
@@ -391,9 +400,11 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 					total += s.stackSize;
 				
 				ItemStack together = new ItemStack(meltedItems.get(0).getItem(), total);
+				int tiles = total * ModConfig.config.getTileRate();
+				
 				
 				ItemStack stack = ((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL))
-						.createStack(together, getHeat());
+						.createStack(together, getHeat(), tiles);
 				meltedItems.clear();
 				return stack;
 			}

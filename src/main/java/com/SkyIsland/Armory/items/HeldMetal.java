@@ -28,6 +28,8 @@ public class HeldMetal extends ItemBase {
 	
 	private static final String NBT_MAP_PREFIX = "metalmap";
 	
+	private static final String NBT_LEFTOVER = "leftover";
+	
 	private String registryName;
 	
 	public HeldMetal(String unlocalizedName) {
@@ -177,6 +179,13 @@ public class HeldMetal extends ItemBase {
 			stack.setTagCompound(new NBTTagCompound());
 		
 		int[] ints = map2Int(metalMap);
+
+		
+//		System.out.println("setting map--------------------");
+//		printArray(ints);
+//		System.out.println("-----");
+//		printArray(metalMap);
+		
 		NBTTagCompound nbt = stack.getTagCompound();
 		
 		for (int i = 0; i < 4; i++) {
@@ -204,11 +213,43 @@ public class HeldMetal extends ItemBase {
 				ints[i] = nbt.getInteger(NBT_MAP_PREFIX + i);
 		}
 		
-		return int2Map(ints[0], ints[1], ints[2], ints[3]);
+		boolean[][] map = int2Map(ints[0], ints[1], ints[2], ints[3]);
+//		System.out.println("fetch mapxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+//		printArray(ints);
+//		System.out.println("-----");
+//		printArray(map);
+		return map;
 			
 	}
+
+	public int getSpreadableMetal(ItemStack stack) {
+		if (stack == null || !(stack.getItem() instanceof HeldMetal))
+			return 0;
+		
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		NBTTagCompound nbt = stack.getTagCompound();
+		
+		if (nbt.hasKey(NBT_LEFTOVER, NBT.TAG_INT))
+			return nbt.getInteger(NBT_LEFTOVER);
+		
+		return 0;
+	}
 	
-	private static boolean[][] int2Map(int int1, int int2, int int3, int int4) {
+	public void setSpreadableMetal(ItemStack stack, int spreadableMetal) {
+		if (stack == null || !(stack.getItem() instanceof HeldMetal))
+			return;
+		
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		NBTTagCompound nbt = stack.getTagCompound();
+		
+		nbt.setInteger(NBT_LEFTOVER, spreadableMetal);
+	}
+	
+	public static boolean[][] int2Map(int int1, int int2, int int3, int int4) {
 		int index = 0;
 		int eval;
 		boolean[][] map = new boolean[10][10];
@@ -222,7 +263,7 @@ public class HeldMetal extends ItemBase {
 			else
 				eval = int4;
 			
-			map[index / 10][index % 10] = ((eval & 1 << (index % 32)) != 0);
+			map[index / 10][index % 10] = ((eval & (1 << (index % 32))) != 0);
 		}
 		
 		return map;
@@ -233,22 +274,39 @@ public class HeldMetal extends ItemBase {
 	 * @param map
 	 * @return 4 ints, with [0] being first (bits 0-31), etc
 	 */
-	private static int[] map2Int(boolean[][] map) {
+	public static int[] map2Int(boolean[][] map) {
 		int intcount = 0;
 		int index = 0;
 		int[] ret = new int[]{0,0,0,0};
 		for (; index < 100; index++) {
-			intcount = index / 32; //what int to put into
+			intcount = (index / 32); //what int to put into
 			ret[intcount] = (ret[intcount] << 1) | (map[index/10][index % 10] ? 1 : 0);
+		}
+//		System.out.println("backwards ints:");
+//		printArray(ret);
+		
+		//reflect bits since we shifted same direction
+		for (int i = 0; i < 4; i++) {
+			int val = 0;
+			for (int j = 0; j < 32; j++) {
+				val |= (ret[i] >> j) & 1;
+				if (j != 31)
+					val <<= 1;
+			}
+			ret[i] = val;
 		}
 		
 		return ret;
 	}
 	
-	public ItemStack createStack(ItemStack containedMetal, float heat) {
+	public ItemStack createStack(ItemStack containedMetal, float heat, int maxSpread) {
 		ItemStack stack = new ItemStack(this);
 		setHeat(stack, heat);
 		setMetal(stack, containedMetal);
+		setSpreadableMetal(stack, maxSpread);
+		boolean[][] map = new boolean[10][10];
+		map[Armory.random.nextBoolean() ? 4 : 5][Armory.random.nextBoolean() ? 4 : 5] = true;
+		setMetalMap(stack, map);
 		
 		return stack;
 	}
@@ -293,21 +351,6 @@ public class HeldMetal extends ItemBase {
 		return;
 	}
 	
-	
-//	public static void test() {
-//		
-//		//test int2Map and reverse
-//		boolean[][] map = int2Map(0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
-//		printArray(map);
-//		System.out.println();
-//		System.out.println();
-//		int[] ints = map2Int(map);
-//		printArray(ints);
-//		System.out.println();
-//		System.out.println();
-//		printArray(int2Map(ints[0], ints[1], ints[2], ints[3]));
-//	}
-//	
 //	private static final void printArray(boolean[][] map) {
 //		String out;
 //		for (boolean[] row : map) {
@@ -327,5 +370,4 @@ public class HeldMetal extends ItemBase {
 //			out += (i + " ");
 //		System.out.println(out + "]");
 //	}
-	
 }

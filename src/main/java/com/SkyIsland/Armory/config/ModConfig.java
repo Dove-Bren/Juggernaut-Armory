@@ -32,7 +32,8 @@ public class ModConfig {
 		SHOW_ZEROS(Category.DISPLAY, "show_zeros", false, "When displaying damage or protection properties, should 0's be displayed? Default is false"),
 		SHOW_COMPONENTS(Category.DISPLAY, "show_components", false, "Show weapon components by default (without pressing shift)"),
 		TONG_TABLE_SIZE(Category.SERVER, "tong_table_size", new Integer(200), true, "How many tong entries to keep in memory. Smaller sizes means tongs may overlap"),
-		FORGE_RECIPE_TOLERANCE(Category.SERVER, "forge_recipe_tolerance", new Float(.2), true, "Factor used to determine what the cutoff for a recipe is. This is multiplied by the number of full cells to get maximum allowable errors.");
+		FORGE_RECIPE_TOLERANCE(Category.SERVER, "forge_recipe_tolerance", new Float(.2), true, "Factor used to determine what the cutoff for a recipe is. This is multiplied by the number of full cells to get maximum allowable errors."),
+		FORGE_TILES_PER_INGOT(Category.SERVER, "forge_tiles_per", new Integer(10), true, "How many tiles are given per input ingot. This sets how big a metal work can get.");
 		
 //		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
 //		DEPTH_N(Category.TEST, "depth_n", new Float(0.1f), false, "north depth"),
@@ -371,6 +372,10 @@ public class ModConfig {
 	
 	public float getRecipeTolerance() {
 		return getFloatValue(Key.FORGE_RECIPE_TOLERANCE, false);
+	}
+	
+	public int getTileRate() {
+		return getIntValue(Key.FORGE_TILES_PER_INGOT, false);
 	}
 	
 	public float getTestValue(Key key) {
