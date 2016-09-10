@@ -384,6 +384,12 @@ public class Tongs extends ItemBase {
     }
     
     @Override
+    public boolean onEntityItemUpdate(EntityItem entityItem) {
+    	onUpdate(entityItem.getEntityItem(), entityItem.worldObj, null, -1, false);
+    	return false;
+    }
+    
+    @Override
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
     	
     	if (worldIn.isRemote)
@@ -408,7 +414,7 @@ public class Tongs extends ItemBase {
     		
     		if (!(held.getItem() instanceof HeldMetal)) {
     			
-    			if (entityIn instanceof EntityPlayer) {
+    			if (entityIn != null && entityIn instanceof EntityPlayer) {
     				((EntityPlayer) entityIn).inventory.addItemStackToInventory(held);
     			} else {
     				worldIn.spawnEntityInWorld(new EntityItem(worldIn, entityIn.posX, entityIn.posY, entityIn.posZ, held));

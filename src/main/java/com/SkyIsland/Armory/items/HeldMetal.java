@@ -358,7 +358,8 @@ public class HeldMetal extends ItemBase {
 			((ScrapMetal) metal.getItem()).setReturn(metal, 
 					ret
 					);
-			owner.playSound(Armory.MODID + ":item.metal.cool", 1.0f, 1.0f);
+			if (owner != null)
+				owner.playSound(Armory.MODID + ":item.metal.cool", 1.0f, 1.0f);
 			return;
 		}
 		
