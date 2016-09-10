@@ -13,7 +13,9 @@ public enum ChatFormat {
 	DAMAGE(EnumChatFormatting.BLUE.toString()),
 	DAMAGE_TYPE(EnumChatFormatting.RESET.toString()),
 	COMPONENTS(EnumChatFormatting.DARK_GRAY.toString()),
-	LUSTER(EnumChatFormatting.GOLD.toString());
+	LUSTER(EnumChatFormatting.GOLD.toString()),
+	HEAT_BAD(EnumChatFormatting.RED.toString()),
+	HEAT_GOOD(EnumChatFormatting.GREEN.toString());
 	
 	private String prefix;
 	

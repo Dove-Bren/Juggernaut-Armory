@@ -8,7 +8,9 @@ import net.minecraft.client.renderer.GlStateManager;
 
 public class TableCell extends GuiButton {
 
-	private static final Color filledColor = new Color(0x40, 0x40, 0x20, 0xA0);
+	private static final Color filledColor = new Color(0x3E, 0x12, 0x09, 0xA0);
+	
+	private static final Color scrapColor = new Color(0x3D, 0x32, 0x30, 0xA0);
 
 	private static final int CELL_SIZE = 15;
 	
@@ -51,7 +53,11 @@ public class TableCell extends GuiButton {
         {
         	GlStateManager.pushMatrix();
     		
-    		this.drawGradientRect(xPosition, yPosition, xPosition + CELL_SIZE, yPosition + CELL_SIZE, filledColor.brighter().getRGB(), filledColor.getRGB());
+        	Color color = filledColor;
+        	if (parent.isCooled())
+        		color = scrapColor;
+        	
+    		this.drawGradientRect(xPosition, yPosition, xPosition + CELL_SIZE, yPosition + CELL_SIZE, color.brighter().getRGB(), color.getRGB());
     		
     		GlStateManager.popMatrix();
             

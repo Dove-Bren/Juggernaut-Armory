@@ -10,12 +10,9 @@ import com.SkyIsland.Armory.api.ForgeManager.MetalRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.forge.Brazier.BrazierTileEntity;
-import com.SkyIsland.Armory.gui.table.TableGui;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.ScrapMetal;
-import com.SkyIsland.Armory.items.ToolItems;
-import com.SkyIsland.Armory.items.ToolItems.Tools;
 import com.SkyIsland.Armory.items.tools.Tongs;
 
 import net.minecraft.block.Block;
@@ -88,31 +85,18 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 	}
 	
 	@Override
-	public boolean onBlockActivated(
-			World worldIn, BlockPos pos,
-			IBlockState state,
-			EntityPlayer playerIn,
-			EnumFacing side,
-			float hitX,
-			float hitY,
-			float hitZ) {
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state,
+			EntityPlayer playerIn, EnumFacing side,	float hitX,	float hitY,	float hitZ) {
 		
-			// Open GUI!
-//			if (!worldIn.isRemote && 
-//	        		(playerIn.getCurrentEquippedItem() == null || !(playerIn.getCurrentEquippedItem().getItem() instanceof Tongs)  )) {
-//			playerIn.openGui(Armory.instance, Armory.Gui_Type.FORGE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-//			}
-		
-		/////for testing table
-		HeldMetal inst = (HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL);
-		Tongs tinst = (Tongs) ToolItems.getItem(Tools.TONGS);
-		ItemStack test = inst.createStack(new ItemStack(Items.iron_ingot, 2), 5000.0f, 20);
-		ItemStack tongs = new ItemStack(tinst);
-		tinst.setHeldItem(tongs, test);
-		TableGui.displayGui(playerIn, tongs);
-		
-			return true;
+		// Open GUI!
+		if (!worldIn.isRemote && 
+        		(playerIn.getCurrentEquippedItem() == null || !(playerIn.getCurrentEquippedItem().getItem() instanceof Tongs)  )) {
+			playerIn.openGui(Armory.instance, Armory.Gui_Type.FORGE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
+		
+		
+		return true;
+	}
 	
 	/**
 	 * Sets the forge in the given location to consider the brazier in the given

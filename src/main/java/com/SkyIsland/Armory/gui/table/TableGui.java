@@ -5,17 +5,15 @@ import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.chat.ChatFormat;
+import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.forge.ForgeAnvil.AnvilTileEntity;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
-import com.SkyIsland.Armory.items.ToolItems;
-import com.SkyIsland.Armory.items.ToolItems.Tools;
-import com.SkyIsland.Armory.items.tools.Tongs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
@@ -35,9 +33,9 @@ public class TableGui extends GuiScreen {
 	
 	private static final int GUI_HEIGHT = 196;
 	
-	private static final int TEXT_WIDTH = 450;
-	
-	private static final int TEXT_HEIGHT = 500;
+//	private static final int TEXT_WIDTH = 450;
+//	
+//	private static final int TEXT_HEIGHT = 500;
 	
 	private static final int CELL_HOFFSET = 8;
 	
@@ -59,7 +57,9 @@ public class TableGui extends GuiScreen {
 	
 	private static int idBase = 0;
 	
-	private ItemStack metal;
+	//private ItemStack metal;
+	
+	private AnvilTileEntity tileEntity;
 	
 	private TableCell[][] cells;
 	
@@ -74,11 +74,13 @@ public class TableGui extends GuiScreen {
 	 */
 	protected int cellsLeft;
 	
+	//TODO heat! KEep and update heat!
+	
 	protected boolean isClient;
 	
 	protected final int id;
 	
-	private TableGui(ItemStack input, boolean isClient) {
+	private TableGui(AnvilTileEntity te, boolean isClient) {
 		if (channel == null)
 			init();
 		
@@ -87,20 +89,20 @@ public class TableGui extends GuiScreen {
 		
 		this.isClient = isClient;
 		
+		this.tileEntity = te;
+		ItemStack input = null;
+		if (te != null)
+			input = te.getItem(false);
+		
 		if (input != null) {
 			//assume input is held metal
-			metal = input;
 			HeldMetal inst = ((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL));
 			metalMap = inst.getMetalMap(input);
 			cellsLeft = inst.getSpreadableMetal(input);
 		} else {
-			metal = null;
 			metalMap = null;
 			cellsLeft = 0;
 		}
-		
-		//this.width = GUI_WIDTH;
-		//this.height = GUI_HEIGHT;
 	}
 	
 	private static final void init() {
@@ -121,18 +123,19 @@ public class TableGui extends GuiScreen {
 	 * player's inventory). False otherwise. In both cases, the gui is shown
 	 * to the player.
 	 */
-	public static boolean displayGui(EntityPlayer player, ItemStack heldItem) {
+	public static boolean displayGui(EntityPlayer player, AnvilTileEntity tileEntity) {
 		boolean isClient = player.getEntityWorld().isRemote;
 		boolean ret = false;
 		TableGui gui = null;
-		if (heldItem != null && heldItem.getItem() instanceof Tongs) {
-			ItemStack heldMetal = ((Tongs) ToolItems.getItem(Tools.TONGS)).getHeldItem(heldItem);
-			//need to make sure it's not scrap
-			gui = new TableGui(heldMetal, isClient);
-			ret = true;
-		} else {
-			gui = new TableGui(null, isClient);
-		}
+//		if (heldItem != null && heldItem.getItem() instanceof Tongs) {
+//			ItemStack heldMetal = ((Tongs) ToolItems.getItem(Tools.TONGS)).getHeldItem(heldItem);
+//			//need to make sure it's not scrap
+//			gui = new TableGui(heldMetal, isClient);
+//			ret = true;
+//		} else {
+//			gui = new TableGui(null, isClient);
+//		}
+		gui = new TableGui(tileEntity, isClient);
 		gui.pos = new BlockPos(player.posX, player.posY, player.posZ);
 		gui.world = player.worldObj;
 		
@@ -177,9 +180,18 @@ public class TableGui extends GuiScreen {
 		int tagwidth = fontRendererObj.getStringWidth(GUI_TITLE) / 2;
 		this.fontRendererObj.drawStringWithShadow(GUI_TITLE, (width / 2) - (tagwidth), topOffset + (TEXT_HEAD_SIZE / 2), 0xFFFFFFFF);
 		
-		String tag = "Left: " + ChatFormat.DAMAGE.wrap(cellsLeft + "");
-		tagwidth = fontRendererObj.getStringWidth(tag);
-		this.fontRendererObj.drawString(tag, this.width - (leftOffset + tagwidth + 10), topOffset + 10, 0xFFFFFFFF);
+		if (tileEntity != null) {
+			String tag = "Heat: " + (tileEntity.getHeat() > 1.25 * ModConfig.config.getMinimumHeat() ? ChatFormat.HEAT_GOOD : ChatFormat.HEAT_BAD)
+					.wrap(Math.round(tileEntity.getHeat()) + "");
+			fontRendererObj.drawString(tag, leftOffset + 10, topOffset + 10, 0xFFFFFFFF);
+			
+			if (tileEntity.getItem(false) != null) {
+				tag = "Left: " + (cellsLeft > 5 ? ChatFormat.HEAT_GOOD : ChatFormat.HEAT_BAD)
+						.wrap(cellsLeft + "");
+				tagwidth = fontRendererObj.getStringWidth(tag);
+				this.fontRendererObj.drawString(tag, this.width - (leftOffset + tagwidth + 10), topOffset + 10, 0xFFFFFFFF);
+			}
+		}
 		
 		GlStateManager.popMatrix();
 		
@@ -190,6 +202,9 @@ public class TableGui extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if (button == null)
+			return;
+		
+		if (tileEntity == null || tileEntity.getItem(false) == null)
 			return;
 		
 		if (!(button instanceof TableCell)) {
@@ -203,14 +218,31 @@ public class TableGui extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		activeGuis.remove(id);
+		commitMetal();
 		
 		if (isClient) {
 			closeServerside();
-		} else if (metal != null) {
-			EntityItem e = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), metal);
-			metal = null;
-			world.spawnEntityInWorld(e);
-		}
+		} 
+//		else if (metal != null) {
+//			commitMetal(metal);
+//			EntityItem e = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), metal);
+//			metal = null;
+//			world.spawnEntityInWorld(e);
+//		}
+	}
+	
+	@Override
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
+	
+	private void commitMetal() {
+		if (tileEntity == null || tileEntity.getItem(false) == null || !(tileEntity.getItem(false).getItem() instanceof HeldMetal))
+			return;
+		
+		HeldMetal inst = ((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL));
+		inst.setMetalMap(tileEntity.getItem(false), metalMap);
+		inst.setSpreadableMetal(tileEntity.getItem(false), cellsLeft);	
 	}
 	
 	private void closeServerside() {
@@ -310,6 +342,11 @@ public class TableGui extends GuiScreen {
             }
 		}
 			
+	}
+	
+	public boolean isCooled() {
+		return (tileEntity == null || tileEntity.getItem(false) == null
+				|| !(tileEntity.getItem(false).getItem() instanceof HeldMetal));
 	}
 	
 	@Override

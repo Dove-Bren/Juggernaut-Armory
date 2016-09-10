@@ -9,6 +9,8 @@ import com.SkyIsland.Armory.forge.Brazier;
 import com.SkyIsland.Armory.forge.Brazier.BrazierTileEntity;
 import com.SkyIsland.Armory.forge.Forge;
 import com.SkyIsland.Armory.forge.Forge.ForgeTileEntity;
+import com.SkyIsland.Armory.forge.ForgeAnvil;
+import com.SkyIsland.Armory.forge.ForgeAnvil.AnvilTileEntity;
 import com.SkyIsland.Armory.forge.Trough;
 import com.SkyIsland.Armory.forge.Trough.TroughTileEntity;
 import com.SkyIsland.Armory.items.HeldMetal;
@@ -18,7 +20,6 @@ import com.SkyIsland.Armory.items.ScrapMetal;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -230,8 +231,8 @@ public class Tongs extends ItemBase {
 		} else if (block instanceof Forge) {
 			if (onForge(playerIn, stack, state, event.pos))
 				event.setCanceled(false);
-		} else if (block instanceof BlockAnvil) {
-			if (onAnvil(playerIn, stack, state))
+		} else if (block instanceof ForgeAnvil) {
+			if (onAnvil(playerIn, stack, state, event.pos))
 				event.setCanceled(false);
 		} else if (block instanceof BlockCauldron) {
 			if (onCauldron(playerIn, stack, state))
@@ -298,9 +299,41 @@ public class Tongs extends ItemBase {
     	return true;
     }
     
-    private boolean onAnvil(EntityPlayer player, ItemStack tongs, IBlockState anvilBlock) {
-    	System.out.println("Unimplemented method: Tongs#onAnvil()!!!!!");
-    	return false;
+    private boolean onAnvil(EntityPlayer player, ItemStack tongs, IBlockState anvilBlock, BlockPos pos) {
+    	TileEntity te = player.getEntityWorld().getTileEntity(pos);
+    	if (te == null || !(te instanceof AnvilTileEntity)) {
+    		return false;
+    	}
+    	
+    	AnvilTileEntity ent = (AnvilTileEntity) te;
+    	
+    	//if regular click:
+    		//open gui. if something in tongs but not in anvil, place first
+    	//if shift click:
+    		//if tongs full, try to place. if tongs not, try to take
+    	
+    	if (player.isSneaking()) {
+    		
+    		if (getHeldItem(tongs) == null) {
+    			setHeldItem(tongs, ent.getItem(true));
+    		} else {
+    			if (ent.getItem(false) == null) {
+    				ent.setItem(getHeldItem(tongs), true);
+    				setHeldItem(tongs, null);
+    			}
+    		}
+    		return true;
+    	} else {
+    		//open gui. First check to see about putting it in
+    		if (ent.getItem(false) == null && getHeldItem(tongs) != null) {
+    			ent.setItem(getHeldItem(tongs), true);
+    			setHeldItem(tongs, null);
+    		}
+    		
+    		//open gui
+    		return false;
+    	}
+    	
     }
     
     private boolean onCauldron(EntityPlayer player, ItemStack tongs, IBlockState cauldronBlock) {
@@ -371,7 +404,7 @@ public class Tongs extends ItemBase {
     	if (held != null) {
     		HeldMetal hm = (HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL);
     		
-    		hm.onHeatUpdate(held, (1 * 20 * 5), worldIn, entityIn, itemSlot, isSelected);
+    		hm.onHeatUpdate(held, (1 * 20 * 5), worldIn, entityIn);
     		
     		if (!(held.getItem() instanceof HeldMetal)) {
     			

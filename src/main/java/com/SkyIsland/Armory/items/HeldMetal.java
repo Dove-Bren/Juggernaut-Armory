@@ -64,7 +64,7 @@ public class HeldMetal extends ItemBase {
 	}
 	
 //	@Override
-	public void onHeatUpdate(ItemStack stack, int heatDelta, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+	public void onHeatUpdate(ItemStack stack, int heatDelta, World worldIn, Entity entityIn) {
 		//super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 		float heat = getHeat(stack);
 		
@@ -349,6 +349,24 @@ public class HeldMetal extends ItemBase {
 		}
 		
 		return;
+	}
+	
+	/**
+	 * Returns the result of this held metal cooling and turning into scrap.
+	 * This method doesn't check the shape or temperature of the metal. It just
+	 * returns the result.
+	 * This method also leaves the heldMetal instance intact.
+	 * @param metal
+	 * @return
+	 */
+	public ItemStack getScrap(ItemStack metal) {
+		ItemStack ret = getMetal(metal);
+		ScrapMetal inst = (ScrapMetal) MiscItems.getItem(Items.SCRAP);
+		ItemStack scrap = new ItemStack(inst);
+		
+		ret.stackSize = 1;
+		inst.setReturn(scrap, ret);
+		return scrap;
 	}
 	
 //	private static final void printArray(boolean[][] map) {

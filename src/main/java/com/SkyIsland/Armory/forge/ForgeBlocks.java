@@ -13,7 +13,8 @@ public class ForgeBlocks {
 		FORGE,
 		BRAZIER,
 		BRAZIER_LIT,
-		TROUGH;
+		TROUGH,
+		ANVIL;
 	}
 	
 	private static Map<ArmoryBlocks, BlockBase> blockMap;
@@ -25,10 +26,12 @@ public class ForgeBlocks {
 		blockMap.put(ArmoryBlocks.BRAZIER, new Brazier(false));
 		blockMap.put(ArmoryBlocks.BRAZIER_LIT, new Brazier(true));
 		blockMap.put(ArmoryBlocks.TROUGH, new Trough());
+		blockMap.put(ArmoryBlocks.ANVIL, new ForgeAnvil());
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.FORGE), "forge_block");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.BRAZIER), "brazier_block");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.BRAZIER_LIT), "brazier_block_lit");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.TROUGH), "trough_block");
+		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.ANVIL), "forge_anvil");
 	}
 	
 	public static BlockBase getBlock(ArmoryBlocks baseType) {
