@@ -7,10 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.gui.ArmorerStandGui;
+import com.SkyIsland.Armory.gui.ArmorerStandGui.Location;
+import com.SkyIsland.Armory.gui.ArmorerStandGui.StandContainer;
+import com.SkyIsland.Armory.gui.ArmorerStandGui.StandGui;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -18,19 +25,30 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ArmorTorso extends Armor {
 
+	private static final ResourceLocation TEXT = new ResourceLocation(Armory.MODID + ":textures/gui/container/torso_back.png");
+	
+	private static final int GUI_WIDTH = 57;
+	
+	private static final int GUI_HEIGHT = 71;
+	
+	private static final int[] SUB_COMPONENT_HOFFSET = new int[]{1, 3, 21, 39, 40};
+	
+	private static final int[] SUB_COMPONENT_VOFFSET = new int[]{3, 21, 36, 52};
+	
 	public static enum Slot {
-		BREASTPLATE(1, "Breastplate", true),
-		VAMBRACE_LEFT(2, "Vambrace_Left", true),
-		VAMBRACE_RIGHT(3, "Vambrace_Right", true),
-		PAULDRON_LEFT(4, "Pauldron_Left", true),
-		PAULDRON_RIGHT(5, "Pauldron_Right", true),
-		CAPE(0, "Cape", false);
+		BREASTPLATE(1, "Breastplate", true, 2, 3),
+		VAMBRACE_LEFT(2, "Vambrace_Left", true, 0, 2),
+		VAMBRACE_RIGHT(3, "Vambrace_Right", true, 4, 2),
+		PAULDRON_LEFT(4, "Pauldron_Left", true, 1, 0),
+		PAULDRON_RIGHT(5, "Pauldron_Right", true, 3, 0),
+		CAPE(0, "Cape", false, 2, 1);
 		
 		public static Slot FromSlot(int inventoryPos) {
 			for (Slot slot : values())
@@ -55,10 +73,16 @@ public class ArmorTorso extends Armor {
 		 */
 		private int pos;
 		
-		private Slot(int pos, String key, boolean contributing) {
+		private int guix;
+		
+		private int guiy;
+		
+		private Slot(int pos, String key, boolean contributing, int guix, int guiy) {
 			this.pos = pos;
 			this.contributingPiece = contributing;
 			this.nbtKey = key;
+			this.guix = guix;
+			this.guiy = guiy;
 		}
 		
 		/**
@@ -76,6 +100,14 @@ public class ArmorTorso extends Armor {
 		
 		public int getInventoryPosition() {
 			return pos;
+		}
+
+		public int getGuix() {
+			return guix;
+		}
+
+		public int getGuiy() {
+			return guiy;
 		}
 	}
 	
@@ -429,6 +461,29 @@ public class ArmorTorso extends Armor {
 	@Override
 	protected ModelBiped getModelBiped() {
 		return armorModel;
+	}
+
+	@Override
+	public void decorateGui(StandGui gui, ItemStack stack, int xoffset, int yoffset, int width, int height) {
+		GlStateManager.color(1.0F,  1.0F, 1.0F, 1.0F);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TEXT);
+		
+		Gui.drawModalRectWithCustomSizedTexture(xoffset, yoffset, 0,0, GUI_WIDTH, GUI_HEIGHT, GUI_WIDTH, GUI_HEIGHT);
+	}
+
+	@Override
+	public void setupContainer(StandContainer gui, ItemStack stack, int xoffset, int yoffset, int width, int height) {
+		TorsoComponents inv = new TorsoComponents(stack);
+		net.minecraft.inventory.Slot invSlot;
+		for (Slot slot : Slot.values()) {
+			invSlot = new net.minecraft.inventory.Slot(inv, slot.getInventoryPosition(), xoffset + SUB_COMPONENT_HOFFSET[slot.getGuix()], yoffset + SUB_COMPONENT_VOFFSET[slot.getGuiy()]);
+			gui.registerSlot(invSlot);
+		}
+	}
+
+	@Override
+	public Location getGuiLocation() {
+		return ArmorerStandGui.Location.CENTER_LEFT;
 	}
 
 }

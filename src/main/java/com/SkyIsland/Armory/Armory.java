@@ -71,7 +71,8 @@ public class Armory {
 	public enum Gui_Type {
 		BRAZIER,
 		FORGE,
-		ANVIL;
+		ANVIL,
+		ARMORY_STAND;
 	}
 	
 	public static int genModID() {
