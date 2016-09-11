@@ -58,6 +58,10 @@ public abstract class Armor extends ItemArmor {
     		ModelRegistry.instance.register(Armory.MODID, this.registryName, this.getSmartModel());
     }
     
+    public void init() {
+    	;
+    }
+    
     /**
      * Return a smart model that can be used to render this armor piece.
      * @return

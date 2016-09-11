@@ -6,6 +6,8 @@ import com.SkyIsland.Armory.config.network.ServerConfigMessage;
 import com.SkyIsland.Armory.forge.ForgeBlocks;
 import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
 import com.SkyIsland.Armory.gui.GuiHandler;
+import com.SkyIsland.Armory.items.ArmorItems;
+import com.SkyIsland.Armory.items.ArmorItems.Armors;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 import com.SkyIsland.Armory.world.ArmoryOreGenerator;
@@ -30,6 +32,8 @@ public class CommonProxy  {
 		  
 		  for (ArmoryBlocks key : ArmoryBlocks.values())
 				ForgeBlocks.getBlock(key).init();
+			for (Armors key : Armors.values())
+				ArmorItems.getArmorBase(key).init();
 		  
 		  GameRegistry.registerWorldGenerator(new ArmoryOreGenerator(), 0);
 	  }

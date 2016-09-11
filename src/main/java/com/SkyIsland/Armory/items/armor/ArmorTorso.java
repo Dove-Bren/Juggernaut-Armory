@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.client.model.ModelBiped;
@@ -17,6 +18,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ArmorTorso extends Armor {
 
@@ -321,6 +323,12 @@ public class ArmorTorso extends Armor {
 		piece.setyOffset(0.0f);
 		piece.setzOffset(0.0f);
 		pieces.put(Slot.CAPE, piece);
+	}
+	
+	@Override
+	public void init() {
+		GameRegistry.addShapedRecipe(new ItemStack(this), "S S", "SSS", "SSS",
+				'S', MiscItems.getItem(MiscItems.Items.STUDDED_LEATHER));
 	}
 	
 	public ArmorPiece getComponentItem(Slot slot) {
