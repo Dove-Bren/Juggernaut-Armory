@@ -116,7 +116,6 @@ public class ArmorerStandGui {
 		public StandContainer(IInventory playerInv, EntityArmorerStand stand) {
 			this.stand = stand;
 			
-			
 			// Construct player inventory
 			for (int y = 0; y < 3; y++) {
 				for (int x = 0; x < 9; x++) {
@@ -209,7 +208,8 @@ public class ArmorerStandGui {
 		public StandGui(StandContainer forge) {
 			super(forge);
 			this.standContainer = forge;
-			
+			this.xSize = GUI_WIDTH;
+			this.ySize = GUI_HEIGHT;
 		}
 		
 		@Override
@@ -230,7 +230,7 @@ public class ArmorerStandGui {
 					continue;
 				
 				inst = (Armor) armor.getItem();
-				inst.decorateGui(this, armor, calcXOffset(inst), calcYOffset(inst), CELL_WIDTH, CELL_HEIGHT);
+				inst.decorateGui(this, armor, horizontalMargin + calcXOffset(inst), verticalMargin + calcYOffset(inst), CELL_WIDTH, CELL_HEIGHT);
 			}
 			
 		}

@@ -165,11 +165,12 @@ public class ArmorTorso extends Armor {
 
 		@Override
 		public ItemStack removeStackFromSlot(int index) {
+			ItemStack ret = inv[index];
 			inv[index] = null;
 			
 			markDirty();
 			
-			return null;
+			return ret;
 		}
 
 		@Override
