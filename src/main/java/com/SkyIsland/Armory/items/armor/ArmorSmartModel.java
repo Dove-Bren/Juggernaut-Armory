@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.ISmartItemModel;
@@ -19,13 +20,19 @@ public class ArmorSmartModel implements ISmartItemModel {
 	
 	//private Armor originPiece;
 	
+	private ModelResourceLocation flatLocation;
+	
+	private boolean cached;
+	
 	private IBakedModel baseModel;
 	
 	private Collection<ItemStack> subItems;
 	
-	public ArmorSmartModel(Armor base, IBakedModel baseModel) {
+	public ArmorSmartModel(Armor base, ModelResourceLocation loc) {
 		//this.originPiece = base;
-		this.baseModel = baseModel;
+		//this.baseModel = baseModel;
+		this.flatLocation = loc;
+		cached = false;
 	}
 	
 	@Override
@@ -66,9 +73,24 @@ public class ArmorSmartModel implements ISmartItemModel {
 //		}
 		
 	}
+	
+	private void fetchModel() {
+		if (cached)
+			return;
+		
+		cached = true;
+		if (flatLocation == null)
+			return;
+		
+		baseModel = Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+				.getModelManager().getModel(flatLocation);
+	}
 
 	@Override
 	public List<BakedQuad> getFaceQuads(EnumFacing facing) {
+		if (!cached)
+			fetchModel();
+		
 		List<BakedQuad> quadList = new LinkedList<BakedQuad>();
 		if (baseModel != null)
 			quadList.addAll(baseModel.getFaceQuads(facing));
@@ -92,6 +114,9 @@ public class ArmorSmartModel implements ISmartItemModel {
 
 	@Override
 	public List<BakedQuad> getGeneralQuads() {
+		if (!cached)
+			fetchModel();
+		
 		List<BakedQuad> quadList = new LinkedList<BakedQuad>();
 		if (baseModel != null)
 			quadList.addAll(baseModel.getGeneralQuads());

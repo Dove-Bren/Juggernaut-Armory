@@ -6,10 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -413,7 +415,9 @@ public class ArmorTorso extends Armor {
 
 	@Override
 	protected ISmartItemModel getSmartModel() {
-		return new ArmorSmartModel(this, null);
+		return new ArmorSmartModel(this, 
+				new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "base")
+				);
 	}
 
 	@Override

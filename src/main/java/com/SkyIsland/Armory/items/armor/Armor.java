@@ -9,6 +9,7 @@ import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,9 +33,11 @@ public abstract class Armor extends ItemArmor {
 	
 	protected static final String COMPONENT_LIST_KEY = "Components";
 	
+	protected static final String BASE_SUFFIX = "_base";
+	
 	private static final ArmorMaterial material = EnumHelper.addArmorMaterial("armor_null_material", "none", 1, new int[] {1, 1, 1, 1}, 1);
 	
-	private String registryName;
+	protected String registryName;
 	
 	private ArmorSlot slot;
 	
@@ -53,6 +56,8 @@ public abstract class Armor extends ItemArmor {
     public void clientInit() {
     	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
     	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"));
+    	
+    	ModelBakery.registerItemVariants(this, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "base"));
     	
     	if (getSmartModel() != null)
     		ModelRegistry.instance.register(Armory.MODID, this.registryName, this.getSmartModel());
