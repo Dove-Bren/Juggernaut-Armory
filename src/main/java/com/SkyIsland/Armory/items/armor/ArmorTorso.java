@@ -477,7 +477,15 @@ public class ArmorTorso extends Armor {
 		TorsoComponents inv = new TorsoComponents(stack);
 		net.minecraft.inventory.Slot invSlot;
 		for (Slot slot : Slot.values()) {
-			invSlot = new net.minecraft.inventory.Slot(inv, slot.getInventoryPosition(), xoffset + SUB_COMPONENT_HOFFSET[slot.getGuix()], yoffset + SUB_COMPONENT_VOFFSET[slot.getGuiy()]);
+			final Slot ins = slot;
+			invSlot = new net.minecraft.inventory.Slot(inv, slot.getInventoryPosition(), xoffset + SUB_COMPONENT_HOFFSET[slot.getGuix()], yoffset + SUB_COMPONENT_VOFFSET[slot.getGuiy()]){
+				
+				@Override
+				public boolean isItemValid(ItemStack item) {
+					return (item != null && item.getItem().equals(pieces.get(ins)));
+				}
+				
+			};
 			gui.registerSlot(invSlot);
 		}
 	}
