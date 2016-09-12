@@ -130,10 +130,13 @@ public class ArmorerStandGui {
 			slotId = 40;
 			
 			//for armor stand armor piece, setup container
+			System.out.println("pre:");
 			Armor inst;
 			for (ItemStack armor : stand.getArmors()) {
 				if (armor == null)
 					continue;
+				
+				System.out.println("proccessing armor: " + armor);
 				
 				inst = (Armor) armor.getItem();
 				inst.setupContainer(this, armor, calcXOffset(inst), calcYOffset(inst), CELL_WIDTH, CELL_HEIGHT);
