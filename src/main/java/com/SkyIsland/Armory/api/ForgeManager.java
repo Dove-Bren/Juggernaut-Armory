@@ -394,11 +394,11 @@ public class ForgeManager {
 		map.put(DamageType.MAGIC, 0.0f);
 		map.put(DamageType.OTHER, 0.0f);
 		Map<DamageType, Float> damageMap = DamageType.freshMap();
-		map.put(DamageType.SLASH, 5.0f);
-		map.put(DamageType.PIERCE, 2.0f);
-		map.put(DamageType.CRUSH, 2.0f);
-		map.put(DamageType.MAGIC, 0.0f);
-		map.put(DamageType.OTHER, 0.0f);
+		damageMap.put(DamageType.SLASH, 5.0f);
+		damageMap.put(DamageType.PIERCE, 2.0f);
+		damageMap.put(DamageType.CRUSH, 2.0f);
+		damageMap.put(DamageType.MAGIC, 0.0f);
+		damageMap.put(DamageType.OTHER, 0.0f);
 	    
 		ExtendedMaterial material;
 		material = new ExtendedMaterial(

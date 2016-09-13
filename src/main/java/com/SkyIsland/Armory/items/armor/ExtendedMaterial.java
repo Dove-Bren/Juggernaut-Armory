@@ -90,7 +90,7 @@ public class ExtendedMaterial {
         float total = 0.0f;
         for (int i = 0; i < 4; i++)
         	total += Math.abs(majorPartRatios[i]);
-        
+
         if (total <= 0) {
         	//map is all 0's, so...
         	partRatio = defaultRatios();

@@ -5,6 +5,8 @@ item.tongs.name=Tongs
 item.scrap_metal.name=Scrap Metal
 item.held_metal.name=Molten Metal
 item.armory_book.name=A Smith's Guide
+item.studded_leather.name=Studded Leather
+item.copper_ingot.name=Copper Ingot
 
 item.torso_base.name=Chestplate Armor Piece
 
@@ -21,6 +23,9 @@ tile.skylander_armory_brazier_block.name=Brazier
 tile.skylander_armory_forge_block.name=Forge
 tile.skylander_armory_forge_anvil.name=Smith's Anvil
 tile.skylander_armory_forge_trough.name=Trough
+tile.skylander_armory_cutting_table_block.name=Cutting Table
+
+tile.copper_ore.name=Copper Ore
 
 entity.armorer_stand.name=Armorer's Stand
 

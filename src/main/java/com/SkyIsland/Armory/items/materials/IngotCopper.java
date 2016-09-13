@@ -54,11 +54,11 @@ public class IngotCopper extends ItemBase {
 		map.put(DamageType.MAGIC, 0.0f);
 		map.put(DamageType.OTHER, 0.0f);
 		Map<DamageType, Float> damageMap = DamageType.freshMap();
-		map.put(DamageType.SLASH, 3.0f);
-		map.put(DamageType.PIERCE, 2.0f);
-		map.put(DamageType.CRUSH, 3.0f);
-		map.put(DamageType.MAGIC, 0.0f);
-		map.put(DamageType.OTHER, 0.0f);
+		damageMap.put(DamageType.SLASH, 3.0f);
+		damageMap.put(DamageType.PIERCE, 2.0f);
+		damageMap.put(DamageType.CRUSH, 3.0f);
+		damageMap.put(DamageType.MAGIC, 0.0f);
+		damageMap.put(DamageType.OTHER, 0.0f);
 	    
 		material = new ExtendedMaterial(
 				"Copper",
