@@ -328,7 +328,7 @@ public class ForgeManager {
 			if (misses > maxMisses)
 				return -1f;
 			
-			return ((float) misses / (float) maxMisses);
+			return 1 - ((float) misses / (float) maxMisses);
 		}
 		
 		public ItemStack produce(MetalRecord baseMetal, float performance) {
@@ -402,7 +402,7 @@ public class ForgeManager {
 	    
 		ExtendedMaterial material;
 		material = new ExtendedMaterial(
-				"iron",
+				"Iron",
 				"iron",
 				100,
 				new float[]{.15f, .4f, .3f, .15f},

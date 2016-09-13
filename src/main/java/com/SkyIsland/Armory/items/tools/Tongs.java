@@ -353,7 +353,8 @@ public class Tongs extends ItemBase {
     		//try to collect from the brazier
     		held = ent.takeItem();//ent.collectHeatingElement();
     		if (held != null) {
-    			if (held.getItem() instanceof ScrapMetal) {
+    			//if (held.getItem() instanceof ScrapMetal) {
+    			if (!(held.getItem() instanceof HeldMetal)) {
     				//give as item instead
     				player.inventory.addItemStackToInventory(held);
     				return true;

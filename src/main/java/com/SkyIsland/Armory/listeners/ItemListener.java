@@ -59,9 +59,14 @@ public class ItemListener {
 						tmp = event.toolTip;
 					}
 					
-					tmp.add(ChatFormat.COMPONENTS.wrap("Components:"));
-					for (ItemStack sub : ((Armor) stack.getItem()).getNestedArmorStacks(stack)) {
-						tmp.add(ChatFormat.COMPONENTS.wrap(" - " + sub.getDisplayName()));
+					Armor base = (Armor) stack.getItem();
+					if (base.getNestedArmorStacks(stack).isEmpty()) {
+						tmp.add(ChatFormat.COMPONENTS.wrap("No Components"));
+					} else {
+						tmp.add(ChatFormat.COMPONENTS.wrap("Components:"));
+						for (ItemStack sub : ((Armor) stack.getItem()).getNestedArmorStacks(stack)) {
+							tmp.add(ChatFormat.COMPONENTS.wrap(" - " + sub.getDisplayName()));
+						}
 					}
 				}
 				
@@ -115,6 +120,30 @@ public class ItemListener {
 						event.toolTip.add("[Hold Shift]");
 					}
 				}
+			} else if (stack.getItem() instanceof ArmorPiece) {
+				List<String> hiddenList;
+				if (ModConfig.config.getShowPieceValues())
+					hiddenList = event.toolTip;
+				else
+					hiddenList = new LinkedList<String>();
+				
+				Map<DamageType, Float> protectionMap = ArmorUtils.getValues(stack);
+				
+				for (DamageType type : DamageType.values())
+					if (ModConfig.config.getShowZeros() || protectionMap.get(type) != 0.0f)
+					if (type.isVisible()) {
+						hiddenList.add(formatProtection(type, protectionMap.get(type)));
+					}
+					
+					if (!hiddenList.isEmpty()) {
+						if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+							for (String item : hiddenList)
+								event.toolTip.add(item);
+						} else {
+							event.toolTip.add("[Hold Shift]");
+						}
+					}
+				
 			}
 		}
 	}

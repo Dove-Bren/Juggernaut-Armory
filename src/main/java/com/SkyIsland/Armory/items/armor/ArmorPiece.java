@@ -134,7 +134,7 @@ public class ArmorPiece extends Item {
 		if (stack == null || !(stack.getItem() instanceof ArmorPiece))
 			return null;
 		
-		String texturePrefix = getUnderlyingMaterial(stack);
+		String texturePrefix = getTexturePrefix(stack);//getUnderlyingMaterial(stack);
 		return new ModelResourceLocation(Armory.MODID + ":" + texturePrefix + "_" + getModelSuffix(), variant);
 	}
 	
@@ -148,8 +148,10 @@ public class ArmorPiece extends Item {
 	
 	public ItemStack constructPiece(ExtendedMaterial material, float performance) {
 		Map<DamageType, Float> materialValues = material.getDamageReductionAmount(parentSlot);
+		System.out.println("Material map: " + materialValues);
 		
 		ItemStack stack = new ItemStack(this);
+		stack.setStackDisplayName(material.getName() + " " + stack.getDisplayName());
 		
 		Map<DamageType, Float> outMap = DamageType.freshMap();
 		for (DamageType type : DamageType.values()) {
@@ -306,7 +308,8 @@ public class ArmorPiece extends Item {
 	}
 	
 	/**
-	 * Returns nbt-stored material name
+	 * Returns nbt-stored material name. This is NOT the texture prefix!
+	 * To get the texture prefix, use #getTexturePrefix
 	 * @param stack
 	 * @return the material name, or "" if no name was found
 	 */
@@ -327,6 +330,14 @@ public class ArmorPiece extends Item {
 			return null;
 		
 		return ExtendedMaterial.lookupMaterial(materialName);
+	}
+	
+	public String getTexturePrefix(ItemStack stack) {
+		ExtendedMaterial material = fetchMaterial(stack);
+		if (material == null)
+			return "";
+		
+		return material.getTexturePrefix();
 	}
 	
 	/**

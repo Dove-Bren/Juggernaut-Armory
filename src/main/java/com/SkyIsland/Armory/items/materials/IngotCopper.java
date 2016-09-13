@@ -61,7 +61,7 @@ public class IngotCopper extends ItemBase {
 		map.put(DamageType.OTHER, 0.0f);
 	    
 		material = new ExtendedMaterial(
-				"copper",
+				"Copper",
 				"copper",
 				60,
 				new float[]{.15f, .3f, .4f, .15f},

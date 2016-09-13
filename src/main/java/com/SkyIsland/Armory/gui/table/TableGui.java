@@ -153,14 +153,18 @@ public class TableGui extends GuiScreen {
 		cells = new TableCell[10][10];
 		TableCell cell;
 		int cellid = 0;
-		//for (int i = 0; i < 10; i++)
-		//for (int j = 0; j < 10; j++) {
-		for (int j = 0; j < 10; j++)
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 10; i++)
+		for (int j = 0; j < 10; j++) {
+//			cell = new TableCell(cellid++, this, i, j,
+//					leftOffset + CELL_HOFFSET + (i * CELL_HSIZE),
+//					topOffset + CELL_VOFFSET + (j * CELL_VSIZE));
+//			cells[i][j] = cell;
+			//swap i, j
 			cell = new TableCell(cellid++, this, i, j,
-					leftOffset + CELL_HOFFSET + (i * CELL_HSIZE),
-					topOffset + CELL_VOFFSET + (j * CELL_VSIZE));
-			cells[i][j] = cell;
+					leftOffset + CELL_HOFFSET + (j * CELL_HSIZE),
+					topOffset + CELL_VOFFSET + (i * CELL_VSIZE));
+			cells[j][i] = cell;
+			
 			this.buttonList.add(cell);
 			cell.visible = true;
 		}

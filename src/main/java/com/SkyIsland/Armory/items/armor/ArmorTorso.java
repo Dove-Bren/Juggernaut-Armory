@@ -197,7 +197,18 @@ public class ArmorTorso extends Armor {
 				inv[i] = null;
 			
 			writeToNBT(baseStack.getTagCompound());
+			//refreshStack(baseStack);
 		}
+		
+//		/**
+//		 * Takes a torso and sets values according to NBT data
+//		 * @param stack
+//		 */
+//		private void refreshStack(ItemStack stack) {
+//			
+//			for (Slot slot : Slot.values())
+//					setArmorPiece(stack, slot, inv[slot.getInventoryPosition()]);
+//		}
 
 		private void writeToNBT(NBTTagCompound tagCompound) {
 			//create base compount
