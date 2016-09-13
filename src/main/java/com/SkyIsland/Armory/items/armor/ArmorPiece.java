@@ -14,6 +14,8 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ArmorPiece extends Item {
 	
@@ -43,6 +45,7 @@ public class ArmorPiece extends Item {
 	
 	protected float durabilityRate;
 	
+	@SideOnly(Side.CLIENT)
 	protected ArmorPieceSmartModel model;
 	
 	protected float xOffset;
@@ -77,11 +80,10 @@ public class ArmorPiece extends Item {
 		this.canRepair = false;
 		this.setUnlocalizedName("armorpiece_" + itemKey);
 		
-		this.model = null;
-		
 		Armory.proxy.registerArmorPiece(this);
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
     	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + getModelSuffix(), "inventory"));
@@ -130,6 +132,7 @@ public class ArmorPiece extends Item {
 		this.zOffset = zOffset;
 	}
 
+	@SideOnly(Side.CLIENT)
 	public ModelResourceLocation constructModelLocation(ItemStack stack, String variant) {
 		if (stack == null || !(stack.getItem() instanceof ArmorPiece))
 			return null;

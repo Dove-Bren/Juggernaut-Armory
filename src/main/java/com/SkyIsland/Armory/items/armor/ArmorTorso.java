@@ -34,6 +34,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ArmorTorso extends Armor {
 
@@ -292,12 +294,13 @@ public class ArmorTorso extends Armor {
 	
 	protected Map<Slot, ArmorPiece> pieces;
 	
+	@SideOnly(Side.CLIENT)
 	protected ArmorPlayerModel armorModel;
 	
 	public ArmorTorso(String unlocalizedName) {
 		super(ArmorSlot.TORSO, unlocalizedName);
 		pieces = new EnumMap<Slot, ArmorPiece>(Slot.class);
-		armorModel = new ArmorPlayerModel(this);
+		
 		
 		//initialize slot pieces
 		Map<DamageType, Float> pieceContribution;
@@ -504,12 +507,15 @@ public class ArmorTorso extends Armor {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void clientInit() {
 		super.clientInit();
+		armorModel = new ArmorPlayerModel(this);
 		; //nothing else to do
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	protected ISmartItemModel getSmartModel() {
 		return new ArmorSmartModel(this, 
 				new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "base")
@@ -517,17 +523,20 @@ public class ArmorTorso extends Armor {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public String getBaseArmorTexture() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	protected ModelBiped getModelBiped() {
 		return armorModel;
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void decorateGui(StandGui gui, ItemStack stack, int xoffset, int yoffset, int width, int height) {
 		GlStateManager.color(1.0F,  1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TEXT);
@@ -554,6 +563,7 @@ public class ArmorTorso extends Armor {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public Location getGuiLocation() {
 		return ArmorerStandGui.Location.CENTER_LEFT;
 	}

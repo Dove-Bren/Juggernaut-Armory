@@ -16,7 +16,6 @@ import com.SkyIsland.Armory.forge.Trough.TroughTileEntity;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.ItemBase;
 import com.SkyIsland.Armory.items.MiscItems;
-import com.SkyIsland.Armory.items.ScrapMetal;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.block.Block;
@@ -39,6 +38,8 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Tongs extends ItemBase {
 	
@@ -175,6 +176,7 @@ public class Tongs extends ItemBase {
 		GameRegistry.addShapedRecipe(new ItemStack(this), new Object[]{" I ", "ILI", "II ", 'I', Items.iron_ingot, 'L', Items.leather});
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public void clientInit() {
 		ModelBakery.registerItemVariants(this, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"),
 				new ModelResourceLocation(Armory.MODID + ":" + this.registryName + "_full" , "inventory"));

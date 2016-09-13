@@ -1,5 +1,6 @@
 package com.SkyIsland.Armory.proxy;
 
+import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.forge.ForgeBlocks;
@@ -8,6 +9,7 @@ import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ArmorItems.Armors;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.MiscItems.Items;
+import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.items.ToolItems;
 import com.SkyIsland.Armory.items.ToolItems.Tools;
 import com.SkyIsland.Armory.items.WeaponItems;
@@ -18,6 +20,7 @@ import com.SkyIsland.Armory.items.tools.ArmoryBook;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ResourceLocation;
 
 public class ClientProxy extends CommonProxy {
 
@@ -26,7 +29,7 @@ public class ClientProxy extends CommonProxy {
 	   */
 	@Override
 	public void preInit() {
-	    // register my Items, Blocks, Entities, etc
+		new ModelRegistry(); //create model registry
 	}
 	
 	@Override
@@ -49,6 +52,8 @@ public class ClientProxy extends CommonProxy {
 		for (ArmoryBlocks key : ArmoryBlocks.values())
 			ForgeBlocks.getBlock(key).clientInit();
 		super.init();
+		
+		ModelRegistry.instance.performInjection();
 	}
 
 	/**
@@ -81,6 +86,8 @@ public class ClientProxy extends CommonProxy {
 	public void registerMaterial(ExtendedMaterial extendedArmorMaterial) {
 //		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 //		.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
+		
+		ModelRegistry.instance.registerTexture(new ResourceLocation(Armory.MODID + ":" + ExtendedMaterial.textureLocation + extendedArmorMaterial.getTexturePrefix()));
 	}
 	
 	@Override

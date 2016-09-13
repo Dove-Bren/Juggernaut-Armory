@@ -28,6 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Skyler
  *
  */
+@SideOnly(Side.CLIENT)
 public class ModelRegistry {
 
 	public static ModelRegistry instance;

@@ -267,8 +267,6 @@ public class TableGui extends GuiScreen {
 		if (!metalMap[x][y])
 			return false;
 		
-		System.out.println("POUND CLICK");
-		
 		//try to spread the metal.
 		if (x < 9)
 		if (!metalMap[x+1][y] && cellsLeft > 0) {
@@ -332,7 +330,6 @@ public class TableGui extends GuiScreen {
 		if (gui == null)
 			return false;
 		
-		System.out.println("static doPound call");
 		return gui.onPound(x, y);
 	}
 	

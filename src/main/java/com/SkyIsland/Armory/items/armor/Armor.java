@@ -55,6 +55,7 @@ public abstract class Armor extends ItemArmor {
 //			protectionMap.put(key, 0.0f);
 	}
     
+	@SideOnly(Side.CLIENT)
     public void clientInit() {
     	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
     	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"));
@@ -73,6 +74,7 @@ public abstract class Armor extends ItemArmor {
      * Return a smart model that can be used to render this armor piece.
      * @return
      */
+    @SideOnly(Side.CLIENT)
     protected abstract ISmartItemModel getSmartModel();
     
 	/**
@@ -113,6 +115,7 @@ public abstract class Armor extends ItemArmor {
 	 * Returns a ModelBiped that will render the armor on a player
 	 * @return
 	 */
+	@SideOnly(Side.CLIENT)
 	protected abstract ModelBiped getModelBiped();
 	
 	/**
@@ -123,6 +126,7 @@ public abstract class Armor extends ItemArmor {
 	 * @param width
 	 * @param height
 	 */
+	@SideOnly(Side.CLIENT)
 	public abstract void decorateGui(ArmorerStandGui.StandGui gui, ItemStack stack, int xoffset, int yoffset, int width, int height);
 	
 	public abstract void setupContainer(StandContainer gui, ItemStack stack, int xoffset, int yoffset, int width, int height);
@@ -132,6 +136,7 @@ public abstract class Armor extends ItemArmor {
 	 * in the decorateGui method point to
 	 * @return
 	 */
+	@SideOnly(Side.CLIENT)
 	public abstract ArmorerStandGui.Location getGuiLocation();
 	
 	@Override

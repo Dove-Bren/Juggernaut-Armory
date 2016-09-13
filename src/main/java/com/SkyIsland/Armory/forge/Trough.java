@@ -44,6 +44,8 @@ import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SuppressWarnings("deprecation")
 public class Trough extends BlockBase implements ITileEntityProvider {
@@ -58,14 +60,16 @@ public class Trough extends BlockBase implements ITileEntityProvider {
     
     protected TroughTileEntity tile;
 	
+	@SideOnly(Side.CLIENT)
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
+		
+		ClientRegistry.bindTileEntitySpecialRenderer(TroughTileEntity.class, new TroughTileEntity.Renderer());
 	}
 	
 	public static void preInit() {
 		GameRegistry.registerTileEntity(TroughTileEntity.class, Armory.MODID + "_" + unlocalizedName);
-		ClientRegistry.bindTileEntitySpecialRenderer(TroughTileEntity.class, new TroughTileEntity.Renderer());
 	}
 	
 	public void init() {
@@ -268,6 +272,7 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 			return true;
 		}
 		
+		@SideOnly(Side.CLIENT)
 		public static class Renderer extends TileEntitySpecialRenderer<TroughTileEntity> {
 
 			@Override

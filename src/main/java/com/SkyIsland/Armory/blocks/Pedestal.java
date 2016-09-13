@@ -2,9 +2,8 @@ package com.SkyIsland.Armory.blocks;
 
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.blocks.renderer.PedestalRenderer;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 
 import net.minecraft.block.Block;
@@ -15,9 +14,6 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -40,7 +36,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SuppressWarnings("deprecation")
 public class Pedestal extends BlockContainer {
 	
 	public static class PedestalTileEntity extends TileEntity {
@@ -98,55 +93,10 @@ public class Pedestal extends BlockContainer {
 			return true;
 		}
 		
-		public static class Renderer extends TileEntitySpecialRenderer<PedestalTileEntity> {
-
-			@Override
-			public void renderTileEntityAt(PedestalTileEntity te, double x, double y, double z, float partialTicks,
-					int destroyStage) {
-
-				if (te.heldRig == null)
-					return;
-				
-				boolean rotate = false;
-				if (te.getBlockMetadata() > 3) //3 and 4 are W and E facings
-					rotate = true;
-				
-				GlStateManager.pushMatrix();
-				
-
-				
-				//don't use GL11 stuff, use the manager
-				//GL11.glTranslated(x, y + 1.0f, z);
-				GlStateManager.translate(x + 0.5, y + 0.85, z + 0.5);
-				
-
-				
-				if (rotate) {
-				GlStateManager.rotate(90.0f, 0.0f, 1.0f, 0.0f);
-//				GlStateManager.rotate(
-//						ModConfig.config.getTestValue(Key.ROTATE_ANGLE),
-//						ModConfig.config.getTestValue(Key.ROTATE_X),
-//						ModConfig.config.getTestValue(Key.ROTATE_Y),
-//						ModConfig.config.getTestValue(Key.ROTATE_Z));
-				}
-
-//				if (te.heldRig.getItem() instanceof ItemSword
-//						|| te.heldRig.getItem() instanceof Weapon)
-				GlStateManager.rotate(225.0f, 0.0f, 0.0f, 1.0f);
-					
-				
-				GlStateManager.enableRescaleNormal();
-				GlStateManager.scale(1.0, 1.0, 1.0); //tweak for making smaller!
-				
-				Minecraft.getMinecraft().getRenderItem().renderItem(te.heldRig, TransformType.GROUND);
-				GlStateManager.disableRescaleNormal();
-				
-				GL11.glPopMatrix();
-				
-			}
-			
+		public ItemStack getHeld() {
+			return this.heldRig;
 		}
-
+		
 	}
 	
 	private static final float BLOCK_WIDTH = 0.5f;
@@ -173,12 +123,13 @@ public class Pedestal extends BlockContainer {
         GameRegistry.registerTileEntity(PedestalTileEntity.class, Armory.MODID + "_" + unlocalizedName);
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public static void clientInit() {
 		for (int i = 0; i < 6; i++) {
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 			.register(Item.getItemFromBlock(block), i, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north"));
 		}
-		ClientRegistry.bindTileEntitySpecialRenderer(PedestalTileEntity.class, new PedestalTileEntity.Renderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(PedestalTileEntity.class, new PedestalRenderer());
 	}
 	
 	public Pedestal() {

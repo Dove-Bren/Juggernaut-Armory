@@ -14,8 +14,11 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.ISmartItemModel;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SuppressWarnings("deprecation")
+@SideOnly(Side.CLIENT)
 public class ArmorSmartModel implements ISmartItemModel {
 	
 	//private Armor originPiece;

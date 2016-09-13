@@ -77,6 +77,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	
 	protected static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	
+	@SideOnly(Side.CLIENT)
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north,standalone=true"));
@@ -765,6 +766,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			
 		}
 		
+		@SideOnly(Side.CLIENT)
 		public static class Renderer extends TileEntitySpecialRenderer<BrazierTileEntity> {
 		
 			@Override
