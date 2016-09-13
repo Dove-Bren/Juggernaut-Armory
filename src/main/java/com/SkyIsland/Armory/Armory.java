@@ -15,13 +15,13 @@ import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.entity.EntityArmorerStand;
 import com.SkyIsland.Armory.forge.Brazier;
+import com.SkyIsland.Armory.forge.CuttingTable;
 import com.SkyIsland.Armory.forge.Forge;
 import com.SkyIsland.Armory.forge.ForgeAnvil;
 import com.SkyIsland.Armory.forge.ForgeBlocks;
 import com.SkyIsland.Armory.forge.Trough;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.MiscItems;
-import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.items.ToolItems;
 import com.SkyIsland.Armory.items.WeaponItems;
 import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
@@ -72,7 +72,8 @@ public class Armory {
 		BRAZIER,
 		FORGE,
 		ANVIL,
-		ARMORY_STAND;
+		ARMORY_STAND,
+		CUTTING;
 	}
 	
 	public static int genModID() {
@@ -122,6 +123,7 @@ public class Armory {
 	    Forge.preInit();
 	    Trough.preInit();
 	    ForgeAnvil.preInit();
+	    CuttingTable.preInit();
 	  	
 	    proxy.preInit();
 	    

@@ -14,7 +14,8 @@ public class ForgeBlocks {
 		BRAZIER,
 		BRAZIER_LIT,
 		TROUGH,
-		ANVIL;
+		ANVIL,
+		CUTTING;
 	}
 	
 	private static Map<ArmoryBlocks, BlockBase> blockMap;
@@ -27,11 +28,13 @@ public class ForgeBlocks {
 		blockMap.put(ArmoryBlocks.BRAZIER_LIT, new Brazier(true));
 		blockMap.put(ArmoryBlocks.TROUGH, new Trough());
 		blockMap.put(ArmoryBlocks.ANVIL, new ForgeAnvil());
+		blockMap.put(ArmoryBlocks.CUTTING, new CuttingTable());
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.FORGE), "forge_block");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.BRAZIER), "brazier_block");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.BRAZIER_LIT), "brazier_block_lit");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.TROUGH), "trough_block");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.ANVIL), "forge_anvil");
+		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.CUTTING), "cutting_table_block");
 	}
 	
 	public static BlockBase getBlock(ArmoryBlocks baseType) {

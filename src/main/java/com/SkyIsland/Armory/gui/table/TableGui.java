@@ -47,7 +47,7 @@ public class TableGui extends GuiScreen {
 	
 	private static final int TEXT_HEAD_SIZE = 25;
 	
-	private static Map<Integer, TableGui> activeGuis = new HashMap<Integer, TableGui>();
+	protected static Map<Integer, TableGui> activeGuis = new HashMap<Integer, TableGui>();
 
 	public static SimpleNetworkWrapper channel;
 	
@@ -59,7 +59,7 @@ public class TableGui extends GuiScreen {
 	
 	//private ItemStack metal;
 	
-	private AnvilTileEntity tileEntity;
+	protected AnvilTileEntity tileEntity;
 	
 	private TableCell[][] cells;
 	
@@ -80,7 +80,7 @@ public class TableGui extends GuiScreen {
 	
 	protected final int id;
 	
-	private TableGui(AnvilTileEntity te, boolean isClient) {
+	protected TableGui(AnvilTileEntity te, boolean isClient) {
 		if (channel == null)
 			init();
 		
