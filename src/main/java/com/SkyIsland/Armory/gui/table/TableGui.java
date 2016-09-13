@@ -153,8 +153,10 @@ public class TableGui extends GuiScreen {
 		cells = new TableCell[10][10];
 		TableCell cell;
 		int cellid = 0;
-		for (int i = 0; i < 10; i++)
-		for (int j = 0; j < 10; j++) {
+		//for (int i = 0; i < 10; i++)
+		//for (int j = 0; j < 10; j++) {
+		for (int j = 0; j < 10; j++)
+		for (int i = 0; i < 10; i++) {
 			cell = new TableCell(cellid++, this, i, j,
 					leftOffset + CELL_HOFFSET + (i * CELL_HSIZE),
 					topOffset + CELL_VOFFSET + (j * CELL_VSIZE));

@@ -143,6 +143,10 @@ public class ArmorPiece extends Item {
 	}
 	
 	public ItemStack constructPiece(ExtendedMaterial material) {
+		return constructPiece(material, 1.0f);
+	}
+	
+	public ItemStack constructPiece(ExtendedMaterial material, float performance) {
 		Map<DamageType, Float> materialValues = material.getDamageReductionAmount(parentSlot);
 		
 		ItemStack stack = new ItemStack(this);
@@ -152,6 +156,7 @@ public class ArmorPiece extends Item {
 			outMap.put(type, 
 					(materialValues.get(type) == null ? 0.0f : materialValues.get(type))
 				  * (protectionRatios.get(type) == null ? 0.0f : protectionRatios.get(type))
+				  * performance //performance is how well it was made. 1.0f is best
 					);
 		}
 		setProtection(stack, outMap);

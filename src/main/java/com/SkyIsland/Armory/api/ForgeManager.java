@@ -285,6 +285,7 @@ public class ForgeManager {
 							if (row[j]) fullCache++;
 						}
 					}
+					i++;
 				}
 				
 				if (i < 10) {
@@ -322,6 +323,8 @@ public class ForgeManager {
 			//misses now has the number of cells that didn't match
 			int maxMisses = Math.max(0, Math.round(
 					ModConfig.config.getRecipeTolerance() * (float) fullCache));
+			System.out.println("Recipe check. Misses: " + misses + " (max " + maxMisses + ")");
+			
 			if (misses > maxMisses)
 				return -1f;
 			
@@ -330,6 +333,39 @@ public class ForgeManager {
 		
 		public ItemStack produce(MetalRecord baseMetal, float performance) {
 			return template.produce(baseMetal, performance);
+		}
+		
+		/**
+		 * Makes a 10x10 grid of booleans based on the passed rows. spaces
+		 * represent false's, and anything else represents a true. Example:
+		 * ".. . ...  " is [true,true,false,true,false,true,true,true,false,false]
+		 * @return
+		 */
+		public static final boolean[][] drawMap(String[] rows) {
+			boolean[][] map = new boolean[10][10];
+			
+			int i, pos;
+			for (i = 0; i < rows.length; i++) {
+				if (i >= 10)
+					break;
+				
+				boolean[] row = new boolean[10];
+				pos = 0;
+				for (char c :rows[i].toCharArray()) {
+					if (c == ' ')
+						;
+					else
+						row[pos] = true;
+					
+					pos++;
+				}
+				map[i] = row;
+			}
+			
+			// if (i < 10)
+			// dont' need to insert blanks, as they default to false
+			
+			return map;
 		}
 	}
 	

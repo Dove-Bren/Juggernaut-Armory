@@ -336,10 +336,13 @@ public class HeldMetal extends ItemBase {
 		ItemStack held = getMetal(containerMetal);
 		if (held == null)
 			return null;
+		
+		System.out.println("Held item found. Fetching metal record....");
 		MetalRecord record = ForgeManager.instance().getMetalRecord(held);
 		if (record == null)
 			return null;
 		
+		System.out.println("Found metal record! Fetching results!");
 		return ForgeManager.instance().getForgeResult(record, getMetalMap(containerMetal));
 	}
 	
@@ -384,23 +387,23 @@ public class HeldMetal extends ItemBase {
 		return scrap;
 	}
 	
-//	private static final void printArray(boolean[][] map) {
-//		String out;
-//		for (boolean[] row : map) {
-//			out = "[ ";
-//			
-//			for (boolean b : row) {
-//				out += (b + " ");
-//			}
-//			
-//			System.out.println(out + "]");
-//		}
-//	}
-//	
-//	private static final void printArray(int[] ints) {
-//		String out = "[ ";
-//		for (int i : ints)
-//			out += (i + " ");
-//		System.out.println(out + "]");
-//	}
+	public static final void printArray(boolean[][] map) {
+		String out;
+		for (boolean[] row : map) {
+			out = "[ ";
+			
+			for (boolean b : row) {
+				out += (b + " ");
+			}
+			
+			System.out.println(out + "]");
+		}
+	}
+	
+	public static final void printArray(int[] ints) {
+		String out = "[ ";
+		for (int i : ints)
+			out += (i + " ");
+		System.out.println(out + "]");
+	}
 }

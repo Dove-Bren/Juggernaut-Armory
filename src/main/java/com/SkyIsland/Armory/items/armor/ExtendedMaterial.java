@@ -293,5 +293,24 @@ public class ExtendedMaterial {
 		return registeredMaterials.get(name);
 	}
 	
+	/**
+	 * Finds a registered material by the material registered as it's repair
+	 * item. If multiple exist, the first is returned.
+	 * @param baseMaterial
+	 * @return null if none found, else first ExtendedMaterial such
+	 * that baseMaterial.equals(material.getRepairItem())
+	 */
+	public static ExtendedMaterial lookupMaterial(Item baseMaterial) {
+		if (registeredMaterials.isEmpty())
+			return null;
+		
+		for (ExtendedMaterial material : registeredMaterials.values()) {
+			if (baseMaterial.equals(material.getRepairItem()))
+				return material;
+		}
+		
+		return null;
+	}
+	
 	
 }

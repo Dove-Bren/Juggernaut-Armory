@@ -7,10 +7,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.api.ArmorPieceRecipe;
+import com.SkyIsland.Armory.api.ForgeManager;
+import com.SkyIsland.Armory.api.ForgeManager.ForgeRecipe;
+import com.SkyIsland.Armory.api.IForgeTemplate;
 import com.SkyIsland.Armory.gui.ArmorerStandGui;
 import com.SkyIsland.Armory.gui.ArmorerStandGui.Location;
 import com.SkyIsland.Armory.gui.ArmorerStandGui.StandContainer;
 import com.SkyIsland.Armory.gui.ArmorerStandGui.StandGui;
+import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
@@ -285,7 +290,9 @@ public class ArmorTorso extends Armor {
 		
 		//initialize slot pieces
 		Map<DamageType, Float> pieceContribution;
+		boolean[][] metalMap;
 		ArmorPiece piece;
+		IForgeTemplate recipe;
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.40f);
@@ -298,6 +305,17 @@ public class ArmorTorso extends Armor {
 		piece.setyOffset(.4f);
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.BREASTPLATE, piece);
+		metalMap = ForgeRecipe.drawMap(new String[]{
+			" ", "  ..  ..", "  ......", "   ....", "   ....", "   ....",
+			"    ..", "   ....", "  ......", " "
+		});
+		System.out.println("Breasplate metal map:");
+		HeldMetal.printArray(metalMap);
+		
+		recipe = new ArmorPieceRecipe(piece);
+		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
+				metalMap, recipe
+				));
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.20f);
@@ -310,6 +328,14 @@ public class ArmorTorso extends Armor {
 		piece.setyOffset(0.6f);
 		piece.setzOffset(0.5f);
 		pieces.put(Slot.VAMBRACE_LEFT, piece);
+		metalMap = ForgeRecipe.drawMap(new String[]{
+				" ", " ", "     .", "  . ..", "  ....", "    ..",
+				"    ..", "   . .", " ", " "
+			});
+		recipe = new ArmorPieceRecipe(piece);
+		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
+				metalMap, recipe
+				));
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.30f);
@@ -322,6 +348,14 @@ public class ArmorTorso extends Armor {
 		piece.setyOffset(0.6f);
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.VAMBRACE_RIGHT, piece);
+		metalMap = ForgeRecipe.drawMap(new String[]{
+				" ", " ", "    .", "    .. .", "    ....", "    ..",
+				"    ..", "    . .", " ", " "
+			});
+		recipe = new ArmorPieceRecipe(piece);
+		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
+				metalMap, recipe
+				));
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.05f);
@@ -334,6 +368,14 @@ public class ArmorTorso extends Armor {
 //		piece.setyOffset(0.0f);
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.PAULDRON_LEFT, piece);
+		metalMap = ForgeRecipe.drawMap(new String[]{
+				" ", "   .", " ...", " . ...", "   ....", "   ...",
+				" ", " ", " ", " "
+			});
+		recipe = new ArmorPieceRecipe(piece);
+		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
+				metalMap, recipe
+				));
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.05f);
@@ -346,6 +388,14 @@ public class ArmorTorso extends Armor {
 //		piece.setyOffset(0.0f);
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.PAULDRON_RIGHT, piece);
+		metalMap = ForgeRecipe.drawMap(new String[]{
+				" ", "      .", "      ...", "    ... .", "   ....", "    ...",
+				" ", " ", " ", " "
+			});
+		recipe = new ArmorPieceRecipe(piece);
+		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
+				metalMap, recipe
+				));
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.0f);
@@ -358,6 +408,8 @@ public class ArmorTorso extends Armor {
 		piece.setyOffset(0.0f);
 		piece.setzOffset(0.0f);
 		pieces.put(Slot.CAPE, piece);
+		
+		
 	}
 	
 	@Override
