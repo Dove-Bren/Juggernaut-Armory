@@ -150,6 +150,10 @@ public class ArmorPiece extends Item {
 	}
 	
 	public ItemStack constructPiece(ExtendedMaterial material, float performance) {
+		if (material == null) {
+			//no material to build part from. return null
+			return null;
+		}
 		Map<DamageType, Float> materialValues = material.getDamageReductionAmount(parentSlot);
 		System.out.println("Material map: " + materialValues);
 		

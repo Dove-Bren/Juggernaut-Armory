@@ -243,8 +243,11 @@ public class Tongs extends ItemBase {
 			if (onTrough(playerIn, stack, state, event.pos))
 				event.setCanceled(false);
 		}
+		
+		//handled in cutting machine
 //		else if (block instanceof CuttingMachine)
 //			return onCauldron(playerIn, stack, state);
+		
 //		else if (block instanceof ConstructPedestal)
 //			return onCauldron(playerIn, stack, state);
 	}
@@ -373,11 +376,6 @@ public class Tongs extends ItemBase {
     		}
     	}
     	
-    	return false;
-    }
-    
-    private boolean onCutting(EntityPlayer player, ItemStack tongs, IBlockState cuttingBlock) {
-    	System.out.println("Unimplemented method: Tongs#onCutting()!!!!!");
     	return false;
     }
     

@@ -337,12 +337,13 @@ public class HeldMetal extends ItemBase {
 		if (held == null)
 			return null;
 		
-		System.out.println("Held item found. Fetching metal record....");
 		MetalRecord record = ForgeManager.instance().getMetalRecord(held);
 		if (record == null)
 			return null;
 		
-		System.out.println("Found metal record! Fetching results!");
+		if (record.getMaterial() == null)
+			return null;
+		
 		return ForgeManager.instance().getForgeResult(record, getMetalMap(containerMetal));
 	}
 	

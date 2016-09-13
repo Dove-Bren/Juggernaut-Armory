@@ -1,6 +1,5 @@
 package com.SkyIsland.Armory;
 
-import java.util.Map;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +26,6 @@ import com.SkyIsland.Armory.items.WeaponItems;
 import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 import com.SkyIsland.Armory.listeners.ItemListener;
 import com.SkyIsland.Armory.mechanics.ArmorModificationManager;
-import com.SkyIsland.Armory.mechanics.DamageType;
 import com.SkyIsland.Armory.proxy.CommonProxy;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -134,18 +132,18 @@ public class Armory {
 	    new ModConfig(new Configuration(event.getSuggestedConfigurationFile()));
 	    
 	    
-	    Map<DamageType, Float> map = DamageType.freshMap();
-		map.put(DamageType.SLASH, 14.0f);
-		map.put(DamageType.PIERCE, 12.0f);
-		map.put(DamageType.CRUSH, 10.0f);
-		map.put(DamageType.MAGIC, 0.0f);
-		map.put(DamageType.OTHER, 0.0f);
-		Map<DamageType, Float> damageMap = DamageType.freshMap();
-		map.put(DamageType.SLASH, 5.0f);
-		map.put(DamageType.PIERCE, 2.0f);
-		map.put(DamageType.CRUSH, 2.0f);
-		map.put(DamageType.MAGIC, 0.0f);
-		map.put(DamageType.OTHER, 0.0f);
+//	    Map<DamageType, Float> map = DamageType.freshMap();
+//		map.put(DamageType.SLASH, 14.0f);
+//		map.put(DamageType.PIERCE, 12.0f);
+//		map.put(DamageType.CRUSH, 10.0f);
+//		map.put(DamageType.MAGIC, 0.0f);
+//		map.put(DamageType.OTHER, 0.0f);
+//		Map<DamageType, Float> damageMap = DamageType.freshMap();
+//		damageMap.put(DamageType.SLASH, 5.0f);
+//		damageMap.put(DamageType.PIERCE, 2.0f);
+//		damageMap.put(DamageType.CRUSH, 2.0f);
+//		damageMap.put(DamageType.MAGIC, 0.0f);
+//		damageMap.put(DamageType.OTHER, 0.0f);
 	    
 //	    material = new ExtendedMaterial(
 //				"void",
