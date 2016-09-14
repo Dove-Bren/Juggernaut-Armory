@@ -23,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
@@ -83,6 +84,25 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new ForgeTileEntity();
 	}
+	
+	@Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    	
+		ForgeTileEntity entity = (ForgeTileEntity) worldIn.getTileEntity(pos);
+        if (entity != null) {
+        	ItemStack contained = entity.input;
+        	if (contained != null) {
+        		EntityItem ent = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), contained);
+        		worldIn.spawnEntityInWorld(ent);
+        	}
+        	
+        	entity.input = null;
+        	
+        }
+
+        super.breakBlock(worldIn, pos, state);
+    }
 	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state,

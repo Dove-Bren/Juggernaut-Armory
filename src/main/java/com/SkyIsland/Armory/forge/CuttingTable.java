@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -58,6 +59,23 @@ public class CuttingTable extends ForgeAnvil {
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new CuttingTableTileEntity();
 	}
+	
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    	
+    	CuttingTableTileEntity entity = (CuttingTableTileEntity) worldIn.getTileEntity(pos);
+        if (entity != null) {
+        	ItemStack contained = entity.getItem(true);
+        	if (contained != null) {
+        		EntityItem ent = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), contained);
+        		worldIn.spawnEntityInWorld(ent);
+        	}
+        	
+        }
+
+        super.breakBlock(worldIn, pos, state);
+    }
 	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state,

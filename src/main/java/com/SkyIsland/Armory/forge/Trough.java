@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -118,6 +119,23 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 		TroughTileEntity te = (TroughTileEntity) tent;
 		return te.takeItem();
 	}
+	
+	@Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    	
+		TroughTileEntity entity = (TroughTileEntity) worldIn.getTileEntity(pos);
+        if (entity != null) {
+        	ItemStack contained = entity.takeItem();
+        	if (contained != null) {
+        		EntityItem ent = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), contained);
+        		worldIn.spawnEntityInWorld(ent);
+        	}
+        	
+        }
+
+        super.breakBlock(worldIn, pos, state);
+    }
 	
 	@Override
 	public boolean onBlockActivated(

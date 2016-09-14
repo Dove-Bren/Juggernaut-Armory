@@ -14,6 +14,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -67,6 +68,23 @@ public class ForgeAnvil extends BlockBase implements ITileEntityProvider {
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new AnvilTileEntity();
 	}
+	
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+    	
+    	AnvilTileEntity entity = (AnvilTileEntity) worldIn.getTileEntity(pos);
+        if (entity != null) {
+        	ItemStack contained = entity.getItem(true);
+        	if (contained != null) {
+        		EntityItem ent = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), contained);
+        		worldIn.spawnEntityInWorld(ent);
+        	}
+        	
+        }
+
+        super.breakBlock(worldIn, pos, state);
+    }
 	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state,
