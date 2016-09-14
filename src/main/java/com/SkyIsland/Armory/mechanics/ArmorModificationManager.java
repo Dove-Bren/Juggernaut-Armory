@@ -2,8 +2,14 @@ package com.SkyIsland.Armory.mechanics;
 
 import java.util.Map;
 
+import com.SkyIsland.Armory.api.ForgeManager.ForgeRecipe;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.items.HeldMetal;
+import com.SkyIsland.Armory.items.MiscItems;
+import com.SkyIsland.Armory.items.ToolItems;
+import com.SkyIsland.Armory.items.ToolItems.Tools;
 import com.SkyIsland.Armory.items.armor.Armor;
+import com.SkyIsland.Armory.items.tools.Tongs;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -13,6 +19,7 @@ import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.potion.Potion;
@@ -56,7 +63,20 @@ public class ArmorModificationManager {
 			@SubscribeEvent
 			public void onTest(UseHoeEvent event) {
 						
+				Tongs inst = (Tongs) ToolItems.getItem(Tools.TONGS);
+				ItemStack tongs = new ItemStack(inst);
+				HeldMetal held = (HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL);
+
+				boolean[][] metalMap = ForgeRecipe.drawMap(new String[]{
+						" ", "  ..  ..", "  ......", "   ....", "   ....", "   ....",
+						"    ..", "   ....", "  ......", " "
+					});
 				
+				ItemStack metal = held.createStack(new ItemStack(Items.iron_ingot), 2500.0f, 0);
+				held.setMetalMap(metal, metalMap);
+				inst.setHeldItem(tongs, metal);
+				
+				event.entityPlayer.inventory.addItemStackToInventory(tongs);
 //				ItemStack stack;
 //				HeldMetal.test();
 				

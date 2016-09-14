@@ -77,6 +77,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	
 	protected static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	
+	@SideOnly(Side.CLIENT)
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "facing=north,standalone=true"));
@@ -112,6 +113,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 		this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
         this.setCreativeTab(Armory.creativeTab);
         this.isBlockContainer = true;
+        this.lightOpacity = 0;
         
         this.setDefaultState(this.blockState.getBaseState().withProperty(STANDALONE, true)
         		.withProperty(FACING, EnumFacing.NORTH));
@@ -486,6 +488,15 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 					//add heat
 					heat = Math.min(heatMax, heat + currentHeatRate);
 				}
+				
+				//check for rain
+				if (getWorld().isRaining()) {
+					//check if outside
+					if (getWorld().canSeeSky(pos)) {
+						burnTime = 0;
+						worldObj.playSound((double)((float)pos.getX() + 0.5F), (double)((float)pos.getY() + 0.5F), (double)((float)pos.getZ() + 0.5F), "fire.fire", 1.0F + Armory.random.nextFloat(), Armory.random.nextFloat() * 0.7F + 0.3F, false);
+					}
+				}
 			} else if (!isStandalone && heat > 0) {
 				heat = Math.max(0f, heat - ModConfig.config.getHeatLoss());
 			}
@@ -508,6 +519,10 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			if (burnTime <= 0) {
 				//check for fuel
 				if (fuel != null) {
+					//make sure it's not raining
+					if (worldObj.isRaining() && worldObj.canSeeSky(pos))
+						return;
+					
 					if (isStandalone) {
 						if (getVanillaFuel(fuel) > 0) {
 							burnTime = getVanillaFuel(fuel);
@@ -751,6 +766,7 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			
 		}
 		
+		@SideOnly(Side.CLIENT)
 		public static class Renderer extends TileEntitySpecialRenderer<BrazierTileEntity> {
 		
 			@Override

@@ -14,6 +14,8 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ArmorPiece extends Item {
 	
@@ -43,6 +45,7 @@ public class ArmorPiece extends Item {
 	
 	protected float durabilityRate;
 	
+	@SideOnly(Side.CLIENT)
 	protected ArmorPieceSmartModel model;
 	
 	protected float xOffset;
@@ -77,11 +80,10 @@ public class ArmorPiece extends Item {
 		this.canRepair = false;
 		this.setUnlocalizedName("armorpiece_" + itemKey);
 		
-		this.model = null;
-		
 		Armory.proxy.registerArmorPiece(this);
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
     	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + getModelSuffix(), "inventory"));
@@ -130,11 +132,12 @@ public class ArmorPiece extends Item {
 		this.zOffset = zOffset;
 	}
 
+	@SideOnly(Side.CLIENT)
 	public ModelResourceLocation constructModelLocation(ItemStack stack, String variant) {
 		if (stack == null || !(stack.getItem() instanceof ArmorPiece))
 			return null;
 		
-		String texturePrefix = getUnderlyingMaterial(stack);
+		String texturePrefix = getTexturePrefix(stack);//getUnderlyingMaterial(stack);
 		return new ModelResourceLocation(Armory.MODID + ":" + texturePrefix + "_" + getModelSuffix(), variant);
 	}
 	
@@ -143,15 +146,22 @@ public class ArmorPiece extends Item {
 	}
 	
 	public ItemStack constructPiece(ExtendedMaterial material) {
+		return constructPiece(material, 1.0f);
+	}
+	
+	public ItemStack constructPiece(ExtendedMaterial material, float performance) {
 		Map<DamageType, Float> materialValues = material.getDamageReductionAmount(parentSlot);
+		System.out.println("Material map: " + materialValues);
 		
 		ItemStack stack = new ItemStack(this);
+		stack.setStackDisplayName(material.getName() + " " + stack.getDisplayName());
 		
 		Map<DamageType, Float> outMap = DamageType.freshMap();
 		for (DamageType type : DamageType.values()) {
 			outMap.put(type, 
 					(materialValues.get(type) == null ? 0.0f : materialValues.get(type))
 				  * (protectionRatios.get(type) == null ? 0.0f : protectionRatios.get(type))
+				  * performance //performance is how well it was made. 1.0f is best
 					);
 		}
 		setProtection(stack, outMap);
@@ -301,7 +311,8 @@ public class ArmorPiece extends Item {
 	}
 	
 	/**
-	 * Returns nbt-stored material name
+	 * Returns nbt-stored material name. This is NOT the texture prefix!
+	 * To get the texture prefix, use #getTexturePrefix
 	 * @param stack
 	 * @return the material name, or "" if no name was found
 	 */
@@ -322,6 +333,14 @@ public class ArmorPiece extends Item {
 			return null;
 		
 		return ExtendedMaterial.lookupMaterial(materialName);
+	}
+	
+	public String getTexturePrefix(ItemStack stack) {
+		ExtendedMaterial material = fetchMaterial(stack);
+		if (material == null)
+			return "";
+		
+		return material.getTexturePrefix();
 	}
 	
 	/**

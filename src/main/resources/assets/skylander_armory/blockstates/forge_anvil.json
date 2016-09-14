@@ -1,5 +1,5 @@
 {
     "variants": {
-        "inventory": { "model": "skylander_armory:forge_anvil" }
+        "normal": { "model": "skylander_armory:forge_anvil" }
     }
 }

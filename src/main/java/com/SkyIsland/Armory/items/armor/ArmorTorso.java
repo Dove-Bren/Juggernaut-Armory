@@ -6,27 +6,56 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.api.ArmorPieceRecipe;
+import com.SkyIsland.Armory.api.ForgeManager;
+import com.SkyIsland.Armory.api.ForgeManager.ForgeRecipe;
+import com.SkyIsland.Armory.api.IForgeTemplate;
+import com.SkyIsland.Armory.gui.ArmorerStandGui;
+import com.SkyIsland.Armory.gui.ArmorerStandGui.Location;
+import com.SkyIsland.Armory.gui.ArmorerStandGui.StandContainer;
+import com.SkyIsland.Armory.gui.ArmorerStandGui.StandGui;
+import com.SkyIsland.Armory.items.HeldMetal;
+import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ISmartItemModel;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ArmorTorso extends Armor {
 
+	private static final ResourceLocation TEXT = new ResourceLocation(Armory.MODID + ":textures/gui/container/torso_back.png");
+	
+	private static final int GUI_WIDTH = 57;
+	
+	private static final int GUI_HEIGHT = 71;
+	
+	private static final int[] SUB_COMPONENT_HOFFSET = new int[]{1, 3, 21, 39, 40};
+	
+	private static final int[] SUB_COMPONENT_VOFFSET = new int[]{3, 21, 36, 52};
+	
 	public static enum Slot {
-		BREASTPLATE(1, "Breastplate", true),
-		VAMBRACE_LEFT(2, "Vambrace_Left", true),
-		VAMBRACE_RIGHT(3, "Vambrace_Right", true),
-		PAULDRON_LEFT(4, "Pauldron_Left", true),
-		PAULDRON_RIGHT(5, "Pauldron_Right", true),
-		CAPE(0, "Cape", false);
+		BREASTPLATE(1, "Breastplate", true, 2, 3),
+		VAMBRACE_LEFT(2, "Vambrace_Left", true, 0, 2),
+		VAMBRACE_RIGHT(3, "Vambrace_Right", true, 4, 2),
+		PAULDRON_LEFT(4, "Pauldron_Left", true, 1, 0),
+		PAULDRON_RIGHT(5, "Pauldron_Right", true, 3, 0),
+		CAPE(0, "Cape", false, 2, 1);
 		
 		public static Slot FromSlot(int inventoryPos) {
 			for (Slot slot : values())
@@ -51,10 +80,16 @@ public class ArmorTorso extends Armor {
 		 */
 		private int pos;
 		
-		private Slot(int pos, String key, boolean contributing) {
+		private int guix;
+		
+		private int guiy;
+		
+		private Slot(int pos, String key, boolean contributing, int guix, int guiy) {
 			this.pos = pos;
 			this.contributingPiece = contributing;
 			this.nbtKey = key;
+			this.guix = guix;
+			this.guiy = guiy;
 		}
 		
 		/**
@@ -72,6 +107,14 @@ public class ArmorTorso extends Armor {
 		
 		public int getInventoryPosition() {
 			return pos;
+		}
+
+		public int getGuix() {
+			return guix;
+		}
+
+		public int getGuiy() {
+			return guiy;
 		}
 	}
 	
@@ -129,11 +172,12 @@ public class ArmorTorso extends Armor {
 
 		@Override
 		public ItemStack removeStackFromSlot(int index) {
+			ItemStack ret = inv[index];
 			inv[index] = null;
 			
 			markDirty();
 			
-			return null;
+			return ret;
 		}
 
 		@Override
@@ -155,7 +199,18 @@ public class ArmorTorso extends Armor {
 				inv[i] = null;
 			
 			writeToNBT(baseStack.getTagCompound());
+			//refreshStack(baseStack);
 		}
+		
+//		/**
+//		 * Takes a torso and sets values according to NBT data
+//		 * @param stack
+//		 */
+//		private void refreshStack(ItemStack stack) {
+//			
+//			for (Slot slot : Slot.values())
+//					setArmorPiece(stack, slot, inv[slot.getInventoryPosition()]);
+//		}
 
 		private void writeToNBT(NBTTagCompound tagCompound) {
 			//create base compount
@@ -239,16 +294,19 @@ public class ArmorTorso extends Armor {
 	
 	protected Map<Slot, ArmorPiece> pieces;
 	
+	@SideOnly(Side.CLIENT)
 	protected ArmorPlayerModel armorModel;
 	
 	public ArmorTorso(String unlocalizedName) {
 		super(ArmorSlot.TORSO, unlocalizedName);
 		pieces = new EnumMap<Slot, ArmorPiece>(Slot.class);
-		armorModel = new ArmorPlayerModel(this);
+		
 		
 		//initialize slot pieces
 		Map<DamageType, Float> pieceContribution;
+		boolean[][] metalMap;
 		ArmorPiece piece;
+		IForgeTemplate recipe;
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.40f);
@@ -261,6 +319,17 @@ public class ArmorTorso extends Armor {
 		piece.setyOffset(.4f);
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.BREASTPLATE, piece);
+		metalMap = ForgeRecipe.drawMap(new String[]{
+			" ", "  ..  ..", "  ......", "   ....", "   ....", "   ....",
+			"    ..", "   ....", "  ......", " "
+		});
+		System.out.println("Breasplate metal map:");
+		HeldMetal.printArray(metalMap);
+		
+		recipe = new ArmorPieceRecipe(piece);
+		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
+				metalMap, recipe
+				));
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.20f);
@@ -273,6 +342,14 @@ public class ArmorTorso extends Armor {
 		piece.setyOffset(0.6f);
 		piece.setzOffset(0.5f);
 		pieces.put(Slot.VAMBRACE_LEFT, piece);
+		metalMap = ForgeRecipe.drawMap(new String[]{
+				" ", " ", "     .", "  . ..", "  ....", "    ..",
+				"    ..", "   . .", " ", " "
+			});
+		recipe = new ArmorPieceRecipe(piece);
+		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
+				metalMap, recipe
+				));
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.30f);
@@ -285,6 +362,14 @@ public class ArmorTorso extends Armor {
 		piece.setyOffset(0.6f);
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.VAMBRACE_RIGHT, piece);
+		metalMap = ForgeRecipe.drawMap(new String[]{
+				" ", " ", "    .", "    .. .", "    ....", "    ..",
+				"    ..", "    . .", " ", " "
+			});
+		recipe = new ArmorPieceRecipe(piece);
+		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
+				metalMap, recipe
+				));
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.05f);
@@ -297,6 +382,14 @@ public class ArmorTorso extends Armor {
 //		piece.setyOffset(0.0f);
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.PAULDRON_LEFT, piece);
+		metalMap = ForgeRecipe.drawMap(new String[]{
+				" ", "   .", " ...", " . ...", "   ....", "   ...",
+				" ", " ", " ", " "
+			});
+		recipe = new ArmorPieceRecipe(piece);
+		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
+				metalMap, recipe
+				));
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.05f);
@@ -309,6 +402,14 @@ public class ArmorTorso extends Armor {
 //		piece.setyOffset(0.0f);
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.PAULDRON_RIGHT, piece);
+		metalMap = ForgeRecipe.drawMap(new String[]{
+				" ", "      .", "      ...", "    ... .", "   ....", "    ...",
+				" ", " ", " ", " "
+			});
+		recipe = new ArmorPieceRecipe(piece);
+		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
+				metalMap, recipe
+				));
 		
 		pieceContribution = DamageType.freshMap();
 			pieceContribution.put(DamageType.SLASH, 0.0f);
@@ -321,6 +422,14 @@ public class ArmorTorso extends Armor {
 		piece.setyOffset(0.0f);
 		piece.setzOffset(0.0f);
 		pieces.put(Slot.CAPE, piece);
+		
+		
+	}
+	
+	@Override
+	public void init() {
+		GameRegistry.addShapedRecipe(new ItemStack(this), "S S", "SSS", "SSS",
+				'S', MiscItems.getItem(MiscItems.Items.STUDDED_LEATHER));
 	}
 	
 	public ArmorPiece getComponentItem(Slot slot) {
@@ -398,25 +507,65 @@ public class ArmorTorso extends Armor {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void clientInit() {
 		super.clientInit();
+		armorModel = new ArmorPlayerModel(this);
 		; //nothing else to do
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	protected ISmartItemModel getSmartModel() {
-		return new ArmorSmartModel(this, null);
+		return new ArmorSmartModel(this, 
+				new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "base")
+				);
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public String getBaseArmorTexture() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	protected ModelBiped getModelBiped() {
 		return armorModel;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void decorateGui(StandGui gui, ItemStack stack, int xoffset, int yoffset, int width, int height) {
+		GlStateManager.color(1.0F,  1.0F, 1.0F, 1.0F);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TEXT);
+		
+		Gui.drawModalRectWithCustomSizedTexture(xoffset, yoffset, 0,0, GUI_WIDTH, GUI_HEIGHT, GUI_WIDTH, GUI_HEIGHT);
+	}
+
+	@Override
+	public void setupContainer(StandContainer gui, ItemStack stack, int xoffset, int yoffset, int width, int height) {
+		TorsoComponents inv = new TorsoComponents(stack);
+		net.minecraft.inventory.Slot invSlot;
+		for (Slot slot : Slot.values()) {
+			final Slot ins = slot;
+			invSlot = new net.minecraft.inventory.Slot(inv, slot.getInventoryPosition(), xoffset + SUB_COMPONENT_HOFFSET[slot.getGuix()], yoffset + SUB_COMPONENT_VOFFSET[slot.getGuiy()]){
+				
+				@Override
+				public boolean isItemValid(ItemStack item) {
+					return (item != null && item.getItem().equals(pieces.get(ins)));
+				}
+				
+			};
+			gui.registerSlot(invSlot);
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Location getGuiLocation() {
+		return ArmorerStandGui.Location.CENTER_LEFT;
 	}
 
 }

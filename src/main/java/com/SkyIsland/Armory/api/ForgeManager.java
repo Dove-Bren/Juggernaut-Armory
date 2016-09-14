@@ -9,6 +9,8 @@ import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
+import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -68,17 +70,20 @@ public class ForgeManager {
 		
 		private Item metal;
 		
+		private ExtendedMaterial material;
+		
 		private int meta;
 		
-		public MetalRecord(Item metal, int burnTime, float requiredHeat) {
-			this(metal, burnTime, requiredHeat, -1);
+		public MetalRecord(Item metal, ExtendedMaterial material, int burnTime, float requiredHeat) {
+			this(metal, material, burnTime, requiredHeat, -1);
 		}
 		
-		public MetalRecord(Item metal, int burnTime, float requiredHeat, int requiredMeta) {
+		public MetalRecord(Item metal, ExtendedMaterial material, int burnTime, float requiredHeat, int requiredMeta) {
 			this.metal = metal;
 			this.burnTime = burnTime;
 			this.requiredHeat = requiredHeat;
 			this.meta = requiredMeta;
+			this.material = material;
 		}
 		
 		protected boolean accepts(ItemStack stack) {
@@ -101,6 +106,10 @@ public class ForgeManager {
 
 		public int getMeta() {
 			return meta;
+		}
+		
+		public ExtendedMaterial getMaterial() {
+			return material;
 		}
 	}
 	
@@ -276,6 +285,7 @@ public class ForgeManager {
 							if (row[j]) fullCache++;
 						}
 					}
+					i++;
 				}
 				
 				if (i < 10) {
@@ -313,14 +323,49 @@ public class ForgeManager {
 			//misses now has the number of cells that didn't match
 			int maxMisses = Math.max(0, Math.round(
 					ModConfig.config.getRecipeTolerance() * (float) fullCache));
+			System.out.println("Recipe check. Misses: " + misses + " (max " + maxMisses + ")");
+			
 			if (misses > maxMisses)
 				return -1f;
 			
-			return ((float) misses / (float) maxMisses);
+			return 1 - ((float) misses / (float) maxMisses);
 		}
 		
 		public ItemStack produce(MetalRecord baseMetal, float performance) {
 			return template.produce(baseMetal, performance);
+		}
+		
+		/**
+		 * Makes a 10x10 grid of booleans based on the passed rows. spaces
+		 * represent false's, and anything else represents a true. Example:
+		 * ".. . ...  " is [true,true,false,true,false,true,true,true,false,false]
+		 * @return
+		 */
+		public static final boolean[][] drawMap(String[] rows) {
+			boolean[][] map = new boolean[10][10];
+			
+			int i, pos;
+			for (i = 0; i < rows.length; i++) {
+				if (i >= 10)
+					break;
+				
+				boolean[] row = new boolean[10];
+				pos = 0;
+				for (char c :rows[i].toCharArray()) {
+					if (c == ' ')
+						;
+					else
+						row[pos] = true;
+					
+					pos++;
+				}
+				map[i] = row;
+			}
+			
+			// if (i < 10)
+			// dont' need to insert blanks, as they default to false
+			
+			return map;
 		}
 	}
 	
@@ -342,9 +387,35 @@ public class ForgeManager {
 		instance.registerFuel(Items.blaze_powder, new FuelRecord(4000, 2500, 1f));
 		
 		//register metals
-		instance.registerInputMetal(new MetalRecord(Items.iron_ingot, 200, 1500));
-		instance.registerInputMetal(new MetalRecord(Items.gold_ingot, 160, 900));
-		instance.registerInputMetal(new MetalRecord(Items.coal, 400, 1800));
+		Map<DamageType, Float> map = DamageType.freshMap();
+		map.put(DamageType.SLASH, 14.0f);
+		map.put(DamageType.PIERCE, 12.0f);
+		map.put(DamageType.CRUSH, 10.0f);
+		map.put(DamageType.MAGIC, 0.0f);
+		map.put(DamageType.OTHER, 0.0f);
+		Map<DamageType, Float> damageMap = DamageType.freshMap();
+		map.put(DamageType.SLASH, 5.0f);
+		map.put(DamageType.PIERCE, 2.0f);
+		map.put(DamageType.CRUSH, 2.0f);
+		map.put(DamageType.MAGIC, 0.0f);
+		map.put(DamageType.OTHER, 0.0f);
+	    
+		ExtendedMaterial material;
+		material = new ExtendedMaterial(
+				"Iron",
+				"iron",
+				100,
+				new float[]{.15f, .4f, .3f, .15f},
+				map,
+				damageMap,
+				25,
+				Items.iron_ingot
+				);
+		
+		
+		instance.registerInputMetal(new MetalRecord(Items.iron_ingot, material, 200, 1500));
+		instance.registerInputMetal(new MetalRecord(Items.gold_ingot, null, 160, 900));
+		instance.registerInputMetal(new MetalRecord(Items.coal, null, 400, 1800));
 		
 		//register coolants
 		instance.registerCoolant(FluidRegistry.WATER, new CoolantRecord(2.0f));

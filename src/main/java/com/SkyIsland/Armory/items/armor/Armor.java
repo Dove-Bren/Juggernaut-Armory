@@ -4,11 +4,14 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.gui.ArmorerStandGui;
+import com.SkyIsland.Armory.gui.ArmorerStandGui.StandContainer;
 import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,9 +35,11 @@ public abstract class Armor extends ItemArmor {
 	
 	protected static final String COMPONENT_LIST_KEY = "Components";
 	
+	protected static final String BASE_SUFFIX = "_base";
+	
 	private static final ArmorMaterial material = EnumHelper.addArmorMaterial("armor_null_material", "none", 1, new int[] {1, 1, 1, 1}, 1);
 	
-	private String registryName;
+	protected String registryName;
 	
 	private ArmorSlot slot;
 	
@@ -50,18 +55,26 @@ public abstract class Armor extends ItemArmor {
 //			protectionMap.put(key, 0.0f);
 	}
     
+	@SideOnly(Side.CLIENT)
     public void clientInit() {
     	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
     	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"));
     	
+    	ModelBakery.registerItemVariants(this, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "base"));
+    	
     	if (getSmartModel() != null)
     		ModelRegistry.instance.register(Armory.MODID, this.registryName, this.getSmartModel());
+    }
+    
+    public void init() {
+    	;
     }
     
     /**
      * Return a smart model that can be used to render this armor piece.
      * @return
      */
+    @SideOnly(Side.CLIENT)
     protected abstract ISmartItemModel getSmartModel();
     
 	/**
@@ -102,7 +115,29 @@ public abstract class Armor extends ItemArmor {
 	 * Returns a ModelBiped that will render the armor on a player
 	 * @return
 	 */
+	@SideOnly(Side.CLIENT)
 	protected abstract ModelBiped getModelBiped();
+	
+	/**
+	 * Add gui overlay and buttons to the containing gui at the given location.
+	 * @param gui
+	 * @param xoffset
+	 * @param yoffset
+	 * @param width
+	 * @param height
+	 */
+	@SideOnly(Side.CLIENT)
+	public abstract void decorateGui(ArmorerStandGui.StandGui gui, ItemStack stack, int xoffset, int yoffset, int width, int height);
+	
+	public abstract void setupContainer(StandContainer gui, ItemStack stack, int xoffset, int yoffset, int width, int height);
+	
+	/**
+	 * Where this gui element should be located. Governs where the gui offsets given
+	 * in the decorateGui method point to
+	 * @return
+	 */
+	@SideOnly(Side.CLIENT)
+	public abstract ArmorerStandGui.Location getGuiLocation();
 	
 	@Override
 	public void setDamage(ItemStack stack, int damage) {

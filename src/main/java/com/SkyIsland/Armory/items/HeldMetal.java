@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.items;
 
+import java.awt.Color;
+
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.MetalRecord;
@@ -59,8 +61,20 @@ public class HeldMetal extends ItemBase {
 	
 	@Override
 	public int getColorFromItemStack(ItemStack stack, int tintIndex) {
+		int maxdisplay = 2000;
 		
-		return 0;
+		int red = 255;
+		float heat = getHeat(stack);
+		heat -= ModConfig.config.getMinimumHeat();
+		if (heat < maxdisplay) {
+			if (heat < 1)
+				red = 64;
+			else
+				red = 64 + Math.round(190 * (heat / (float) maxdisplay));
+		}
+		
+		return new Color(red,
+				48, 48).getRGB();
 	}
 	
 //	@Override
@@ -322,10 +336,13 @@ public class HeldMetal extends ItemBase {
 		ItemStack held = getMetal(containerMetal);
 		if (held == null)
 			return null;
+		
+		System.out.println("Held item found. Fetching metal record....");
 		MetalRecord record = ForgeManager.instance().getMetalRecord(held);
 		if (record == null)
 			return null;
 		
+		System.out.println("Found metal record! Fetching results!");
 		return ForgeManager.instance().getForgeResult(record, getMetalMap(containerMetal));
 	}
 	
@@ -344,7 +361,8 @@ public class HeldMetal extends ItemBase {
 			((ScrapMetal) metal.getItem()).setReturn(metal, 
 					ret
 					);
-			owner.playSound(Armory.MODID + ":item.metal.cool", 1.0f, 1.0f);
+			if (owner != null)
+				owner.playSound(Armory.MODID + ":item.metal.cool", 1.0f, 1.0f);
 			return;
 		}
 		
@@ -369,23 +387,23 @@ public class HeldMetal extends ItemBase {
 		return scrap;
 	}
 	
-//	private static final void printArray(boolean[][] map) {
-//		String out;
-//		for (boolean[] row : map) {
-//			out = "[ ";
-//			
-//			for (boolean b : row) {
-//				out += (b + " ");
-//			}
-//			
-//			System.out.println(out + "]");
-//		}
-//	}
-//	
-//	private static final void printArray(int[] ints) {
-//		String out = "[ ";
-//		for (int i : ints)
-//			out += (i + " ");
-//		System.out.println(out + "]");
-//	}
+	public static final void printArray(boolean[][] map) {
+		String out;
+		for (boolean[] row : map) {
+			out = "[ ";
+			
+			for (boolean b : row) {
+				out += (b + " ");
+			}
+			
+			System.out.println(out + "]");
+		}
+	}
+	
+	public static final void printArray(int[] ints) {
+		String out = "[ ";
+		for (int i : ints)
+			out += (i + " ");
+		System.out.println(out + "]");
+	}
 }

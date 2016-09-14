@@ -6,6 +6,7 @@ import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.gui.table.TableGui;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
+import com.SkyIsland.Armory.items.tools.Tongs;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -38,7 +39,7 @@ public class ForgeAnvil extends BlockBase implements ITileEntityProvider {
 	
 	public void clientInit() {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "inventory"));
+		.register(Item.getItemFromBlock(this), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
 	}
 	
 	public static void preInit() {
@@ -70,6 +71,10 @@ public class ForgeAnvil extends BlockBase implements ITileEntityProvider {
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state,
 			EntityPlayer playerIn, EnumFacing side, float hitX,float hitY, float hitZ) {
+		
+		ItemStack inhand = playerIn.getHeldItem();
+		if (inhand == null || !(inhand.getItem() instanceof Tongs))
+			return false;
 		
 		TileEntity ent = worldIn.getTileEntity(pos);
 		if (ent == null || !(ent instanceof AnvilTileEntity))

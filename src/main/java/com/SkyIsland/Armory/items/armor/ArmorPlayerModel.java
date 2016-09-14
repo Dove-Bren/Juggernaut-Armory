@@ -14,8 +14,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SuppressWarnings("deprecation")
+@SideOnly(Side.CLIENT)
 public class ArmorPlayerModel extends ModelBiped {
 
 	//private Collection<IBakedModel> models;

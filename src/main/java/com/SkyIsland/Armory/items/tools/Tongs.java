@@ -16,7 +16,6 @@ import com.SkyIsland.Armory.forge.Trough.TroughTileEntity;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.ItemBase;
 import com.SkyIsland.Armory.items.MiscItems;
-import com.SkyIsland.Armory.items.ScrapMetal;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.block.Block;
@@ -39,6 +38,8 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Tongs extends ItemBase {
 	
@@ -175,6 +176,7 @@ public class Tongs extends ItemBase {
 		GameRegistry.addShapedRecipe(new ItemStack(this), new Object[]{" I ", "ILI", "II ", 'I', Items.iron_ingot, 'L', Items.leather});
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public void clientInit() {
 		ModelBakery.registerItemVariants(this, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"),
 				new ModelResourceLocation(Armory.MODID + ":" + this.registryName + "_full" , "inventory"));
@@ -353,7 +355,8 @@ public class Tongs extends ItemBase {
     		//try to collect from the brazier
     		held = ent.takeItem();//ent.collectHeatingElement();
     		if (held != null) {
-    			if (held.getItem() instanceof ScrapMetal) {
+    			//if (held.getItem() instanceof ScrapMetal) {
+    			if (!(held.getItem() instanceof HeldMetal)) {
     				//give as item instead
     				player.inventory.addItemStackToInventory(held);
     				return true;
@@ -384,6 +387,12 @@ public class Tongs extends ItemBase {
     }
     
     @Override
+    public boolean onEntityItemUpdate(EntityItem entityItem) {
+    	onUpdate(entityItem.getEntityItem(), entityItem.worldObj, null, -1, false);
+    	return false;
+    }
+    
+    @Override
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
     	
     	if (worldIn.isRemote)
@@ -408,7 +417,7 @@ public class Tongs extends ItemBase {
     		
     		if (!(held.getItem() instanceof HeldMetal)) {
     			
-    			if (entityIn instanceof EntityPlayer) {
+    			if (entityIn != null && entityIn instanceof EntityPlayer) {
     				((EntityPlayer) entityIn).inventory.addItemStackToInventory(held);
     			} else {
     				worldIn.spawnEntityInWorld(new EntityItem(worldIn, entityIn.posX, entityIn.posY, entityIn.posZ, held));

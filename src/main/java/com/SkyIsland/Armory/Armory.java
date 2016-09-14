@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.SkyIsland.Armory.api.ArmorManager;
 import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.WeaponManager;
+import com.SkyIsland.Armory.blocks.CopperOreBlock;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.config.ModConfig;
@@ -70,7 +71,8 @@ public class Armory {
 	public enum Gui_Type {
 		BRAZIER,
 		FORGE,
-		ANVIL;
+		ANVIL,
+		ARMORY_STAND;
 	}
 	
 	public static int genModID() {
@@ -98,8 +100,6 @@ public class Armory {
 	    ArmorModificationManager.init();
 	    
 	    Armory.itemLister = new ItemListener();
-	    
-	    ModelRegistry.instance.performInjection();
     }
     
 	@EventHandler
@@ -125,8 +125,12 @@ public class Armory {
 	  	
 	    proxy.preInit();
 	    
+
+	    
+	    CopperOreBlock.preInit();
+	    
 	    new ModConfig(new Configuration(event.getSuggestedConfigurationFile()));
-	    new ModelRegistry();
+	    
 	    
 	    Map<DamageType, Float> map = DamageType.freshMap();
 		map.put(DamageType.SLASH, 14.0f);
@@ -141,27 +145,16 @@ public class Armory {
 		map.put(DamageType.MAGIC, 0.0f);
 		map.put(DamageType.OTHER, 0.0f);
 	    
-		material = new ExtendedMaterial(
-				"iron",
-				"iron",
-				100,
-				new float[]{.15f, .4f, .3f, .15f},
-				map,
-				damageMap,
-				25,
-				Items.iron_ingot
-				);
-		
-	    material = new ExtendedMaterial(
-				"void",
-				"void",
-				100,
-				new float[]{.15f, .4f, .3f, .15f},
-				map,
-				damageMap,
-				25,
-				Items.iron_ingot
-				);
+//	    material = new ExtendedMaterial(
+//				"void",
+//				"void",
+//				100,
+//				new float[]{.15f, .4f, .3f, .15f},
+//				map,
+//				damageMap,
+//				25,
+//				Items.iron_ingot
+//				);
 	    
 	}
 	

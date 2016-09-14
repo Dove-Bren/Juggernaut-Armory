@@ -28,6 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Skyler
  *
  */
+@SideOnly(Side.CLIENT)
 public class ModelRegistry {
 
 	public static ModelRegistry instance;
@@ -126,7 +127,6 @@ public class ModelRegistry {
 		Armory.logger.info("Injecting model overrides for " + (componentMap.size() + wholeMap.size())
 				+ " entries (" + componentMap.size() + " components)");
 		for (Entry<String, Pair<Item, ISmartItemModel>> registered : componentMap.entrySet()) {
-			System.out.println("Registering: " + Armory.MODID + ":" + registered.getKey());
 			event.modelRegistry.putObject(new ModelResourceLocation(Armory.MODID + ":" + registered.getKey(), "inventory"),
 					registered.getValue().getRight());
 //			event.modelRegistry.putObject(new ModelResourceLocation(Armory.MODID + ":" + registered.getKey(), "body"),

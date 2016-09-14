@@ -292,10 +292,25 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 					if (heat > -1) {
 						//lookup metal record for input
 						MetalRecord record = ForgeManager.instance().getMetalRecord(input);
-						if (record == null)
-							return; //don't accept, since it doens't appear to be
-								    //valid input
-						//System.out.println("got metal record [" + record.getRequiredHeat() + "]");
+						if (record == null) {
+							
+							//last chance, see if it's scrap and has metal that does
+							//have a metal record
+							if (input.getItem() instanceof ScrapMetal) {
+								ScrapMetal inst = (ScrapMetal) MiscItems.getItem(MiscItems.Items.SCRAP);
+								ItemStack ret = inst.getReturn(input);
+								if (ret != null) {
+									record = ForgeManager.instance().getMetalRecord(ret);
+									if (record == null)
+										return;
+									//else don't return, record is now set
+								} else
+									return;
+							} else
+								return; //don't accept, since it doens't appear to be
+									    //valid input
+						}
+						
 						if (record.getRequiredHeat() <= heat) {
 							//process the input
 							//System.out.println("on to consume");

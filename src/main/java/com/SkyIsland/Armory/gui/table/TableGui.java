@@ -155,10 +155,16 @@ public class TableGui extends GuiScreen {
 		int cellid = 0;
 		for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++) {
+//			cell = new TableCell(cellid++, this, i, j,
+//					leftOffset + CELL_HOFFSET + (i * CELL_HSIZE),
+//					topOffset + CELL_VOFFSET + (j * CELL_VSIZE));
+//			cells[i][j] = cell;
+			//swap i, j
 			cell = new TableCell(cellid++, this, i, j,
-					leftOffset + CELL_HOFFSET + (i * CELL_HSIZE),
-					topOffset + CELL_VOFFSET + (j * CELL_VSIZE));
-			cells[i][j] = cell;
+					leftOffset + CELL_HOFFSET + (j * CELL_HSIZE),
+					topOffset + CELL_VOFFSET + (i * CELL_VSIZE));
+			cells[j][i] = cell;
+			
 			this.buttonList.add(cell);
 			cell.visible = true;
 		}
@@ -261,8 +267,6 @@ public class TableGui extends GuiScreen {
 		if (!metalMap[x][y])
 			return false;
 		
-		System.out.println("POUND CLICK");
-		
 		//try to spread the metal.
 		if (x < 9)
 		if (!metalMap[x+1][y] && cellsLeft > 0) {
@@ -326,7 +330,6 @@ public class TableGui extends GuiScreen {
 		if (gui == null)
 			return false;
 		
-		System.out.println("static doPound call");
 		return gui.onPound(x, y);
 	}
 	

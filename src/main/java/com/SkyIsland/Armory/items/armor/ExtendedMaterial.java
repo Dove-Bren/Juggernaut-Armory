@@ -6,13 +6,11 @@ import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
-import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Extended armor/weapon material that breaks down protection and damage
@@ -22,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ExtendedMaterial {
 	
-	private static final String textureLocation = "";
+	public static final String textureLocation = "";
 	
 	private String name;
 	
@@ -108,7 +106,8 @@ public class ExtendedMaterial {
         Armory.proxy.registerMaterial(this);
         
         registeredMaterials.put(name, this);
-        ModelRegistry.instance.registerTexture(new ResourceLocation(Armory.MODID + ":" + textureLocation + texturePrefix));
+        //ModelRegistry.instance.registerTexture(new ResourceLocation(Armory.MODID + ":" + textureLocation + texturePrefix));
+        //moved into client proxy
     }
     
     private static float[] defaultRatios() {
@@ -291,6 +290,25 @@ public class ExtendedMaterial {
 	 */
 	public static ExtendedMaterial lookupMaterial(String name) {
 		return registeredMaterials.get(name);
+	}
+	
+	/**
+	 * Finds a registered material by the material registered as it's repair
+	 * item. If multiple exist, the first is returned.
+	 * @param baseMaterial
+	 * @return null if none found, else first ExtendedMaterial such
+	 * that baseMaterial.equals(material.getRepairItem())
+	 */
+	public static ExtendedMaterial lookupMaterial(Item baseMaterial) {
+		if (registeredMaterials.isEmpty())
+			return null;
+		
+		for (ExtendedMaterial material : registeredMaterials.values()) {
+			if (baseMaterial.equals(material.getRepairItem()))
+				return material;
+		}
+		
+		return null;
 	}
 	
 	
