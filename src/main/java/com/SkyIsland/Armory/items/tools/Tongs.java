@@ -386,7 +386,7 @@ public class Tongs extends ItemBase {
     
     @Override
     public boolean onEntityItemUpdate(EntityItem entityItem) {
-    	onUpdate(entityItem.getEntityItem(), entityItem.worldObj, null, -1, false);
+    	onUpdate(entityItem.getEntityItem(), entityItem.worldObj, entityItem, -1, false);
     	return false;
     }
     
@@ -417,9 +417,9 @@ public class Tongs extends ItemBase {
     			
     			if (entityIn != null && entityIn instanceof EntityPlayer) {
     				((EntityPlayer) entityIn).inventory.addItemStackToInventory(held);
-    			} else {
+    			} else if (entityIn != null) {
     				worldIn.spawnEntityInWorld(new EntityItem(worldIn, entityIn.posX, entityIn.posY, entityIn.posZ, held));
-    			}
+    			} //else do nothing
     			
     			stack.setItemDamage(0);
     			held = null;

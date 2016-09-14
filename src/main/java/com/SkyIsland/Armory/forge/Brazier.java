@@ -427,6 +427,12 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			this.isStandalone = false;
 			this.face = direction;
 			
+			//look at new fuels to get a forge fuel, if we don't already have one
+			if (this.currentHeatRate <= 0) {
+				this.burnTime = 0; //take new fuel next tick
+			}
+				
+			
 			//hook into Forge entity, update it's brazier to us
 			//Forge forge = (Forge) ForgeBlocks.getBlock(ArmoryBlocks.FORGE);
 			Forge.setBrazier(getWorld(), getPos().offset(direction),
@@ -441,6 +447,9 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			this.isStandalone = true;
 			this.heat = 0;
 			this.heatMax = 0;
+			this.currentHeatRate = 0;
+			
+			//added to start burning new stack immediately
 			this.currentHeatRate = 0;
 			
 			if (heatingElement != null) {
