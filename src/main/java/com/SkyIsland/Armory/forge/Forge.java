@@ -81,6 +81,11 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
+	public boolean isOpaqueCube() {
+		return false;		
+	}
+	
+	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new ForgeTileEntity();
 	}
