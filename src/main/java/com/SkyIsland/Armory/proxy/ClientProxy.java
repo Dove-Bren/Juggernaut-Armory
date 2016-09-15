@@ -91,7 +91,7 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	@Override
-	public void openArmoryBook() {
-		Minecraft.getMinecraft().displayGuiScreen(ArmoryBook.getScreen());
+	public void openArmoryBook(ArmoryBook book) {
+		Minecraft.getMinecraft().displayGuiScreen(book.getScreen());
 	}
 }

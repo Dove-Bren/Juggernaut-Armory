@@ -37,47 +37,41 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class ArmoryBook extends ItemBase {
+public class ForgeRecipeBook extends ArmoryBook {
 
-	private static final float DAMAGE = 1.0f;
-	
-	private static ArmoryBookScreen screen = null;
-	
-	protected String registryName;
-	
-	public ArmoryBook(String unlocalizedName) {
-		super();
-		
-		registryName = unlocalizedName;
-		
-		this.setMaxStackSize(1);
-		this.setUnlocalizedName(unlocalizedName);
-		this.setCreativeTab(Armory.creativeTab);
-		
-		Map<DamageType, Float> map = DamageType.freshMap();
-		map.put(DamageType.CRUSH, DAMAGE);
-		WeaponManager.instance().registerWeapon(this, 
-				map
-				);
+	public ForgeRecipeBook(String unlocalizedName) {
+		super(unlocalizedName);
 	}
 
-	@Override
-	public boolean isDamageable() {
-		return false;
-	}
-	
 	@Override
 	public void init() {
-		GameRegistry.addShapelessRecipe(new ItemStack(this), Items.iron_ingot, Items.book, ToolItems.getItem(Tools.ARMORER_HAMMER));
+		GameRegistry.addShapelessRecipe(new ItemStack(this), Items.iron_ingot, Items.book, ToolItems.getItem(Tools.TONGS));
 	}
 	
-	public void clientInit() {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-    	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"));
-		
+	private static final IBookPage generateFuelPage(Item item, FuelRecord record) {
+		return new VDynamicSplitPage(
+				new ItemPage(new ItemStack(item)),
+				new LinedTextPage(Lists.newArrayList("", "", "Max Heat: " + (int) record.getMaxHeat(), "Heat Rate: " + String.format("%.2f", record.getHeatRate()), "Burn Time: " + record.getBurnTicks())),
+				30
+				);
+	}
+	
+	private static final IBookPage generateMetalPage(MetalRecord record) {
+		return new VDynamicSplitPage(
+				new ItemPage(new ItemStack(record.getMetal())),
+				new LinedTextPage(Lists.newArrayList("", "", "", "Heat: " + (int) record.getRequiredHeat())),
+				30
+				);
+	}
+	
+	public ArmoryBookScreen getScreen() {
+		return generateGui();
+	}
+	
+	private ArmoryBookScreen generateGui() {
 		List<IBookPage> pages = new LinkedList<IBookPage>();
 		pages.add(new PlainTextPage(""));
-		pages.add(new HSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/armory_book_front.png"), 75, 75, 0, 0, 75, 75, null), new PlainTextPage("A Smith's Guide")));
+		pages.add(new HSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/recipe_book_front.png"), 75, 75, 0, 0, 75, 75, null), new PlainTextPage("A Smith's Guide")));
 		
 		pages.add(new PlainTextPage("The Armory is a structure that allows you to melt down metals and shape them into complex weapons and armor. From the left pauldron on your chestplate to the visor on your helm to the head on your mace, each piece is picked and crafted by you. Everything starts with a forge. To construct it,"));
 		pages.add(new HSplitPage(new PlainTextPage("you'll need both a forge block and a brazier. Once you have crafted each block, place them next to eachother and add some fuel to the brazier."),
@@ -140,34 +134,6 @@ public class ArmoryBook extends ItemBase {
 //		pages.add(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50, Lists.asList("Cool image tooltip", new String[0])));
 //		pages.add(new HSplitPage(new PlainTextPage("This page is nearly identical to page 2"), new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/image1.png"), 50, 50, 0, 0, 50, 50, null), false));
 //		pages.add(new ItemPage(new ItemStack(Items.iron_axe, 2)));
-		ArmoryBook.screen = new ArmoryBookScreen(pages);
+		return new ArmoryBookScreen(pages);
 	}
-	
-	private static final IBookPage generateFuelPage(Item item, FuelRecord record) {
-		return new VDynamicSplitPage(
-				new ItemPage(new ItemStack(item)),
-				new LinedTextPage(Lists.newArrayList("", "", "Max Heat: " + (int) record.getMaxHeat(), "Heat Rate: " + String.format("%.2f", record.getHeatRate()), "Burn Time: " + record.getBurnTicks())),
-				30
-				);
-	}
-	
-	private static final IBookPage generateMetalPage(MetalRecord record) {
-		return new VDynamicSplitPage(
-				new ItemPage(new ItemStack(record.getMetal())),
-				new LinedTextPage(Lists.newArrayList("", "", "", "Heat: " + (int) record.getRequiredHeat())),
-				30
-				);
-	}
-	
-	@Override
-	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
-		Armory.proxy.openArmoryBook(this);
-		
-		return itemStackIn;
-	}
-	
-	public ArmoryBookScreen getScreen() {
-		return screen;
-	}
-	
 }
