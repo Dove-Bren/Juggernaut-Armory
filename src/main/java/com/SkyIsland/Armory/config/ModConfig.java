@@ -34,7 +34,8 @@ public class ModConfig {
 		SHOW_PIECE_VALUES(Category.DISPLAY, "show_piece_values", false, "Display an armor piece's protection values by default (without shift)"),
 		TONG_TABLE_SIZE(Category.SERVER, "tong_table_size", new Integer(200), true, "How many tong entries to keep in memory. Smaller sizes means tongs may overlap"),
 		FORGE_RECIPE_TOLERANCE(Category.SERVER, "forge_recipe_tolerance", new Float(.2), true, "Factor used to determine what the cutoff for a recipe is. This is multiplied by the number of full cells to get maximum allowable errors."),
-		FORGE_TILES_PER_INGOT(Category.SERVER, "forge_tiles_per", new Integer(10), true, "How many tiles are given per input ingot. This sets how big a metal work can get.");
+		FORGE_TILES_PER_INGOT(Category.SERVER, "forge_tiles_per", new Integer(10), true, "How many tiles are given per input ingot. This sets how big a metal work can get."),
+		SMITH_XP_RATE(Category.SERVER, "xp_rate", new Float(1.2), true, "Rate that xp needed to achieve next level increases per level. 1.2 means that lvl 1->2 takes 120% the effort of lvl 0->1.");
 		
 //		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
 //		DEPTH_N(Category.TEST, "depth_n", new Float(0.1f), false, "north depth"),
@@ -381,6 +382,10 @@ public class ModConfig {
 	
 	public int getTileRate() {
 		return getIntValue(Key.FORGE_TILES_PER_INGOT, false);
+	}
+	
+	public float getSmithXpRate() {
+		return getFloatValue(Key.SMITH_XP_RATE, false);
 	}
 	
 	public float getTestValue(Key key) {

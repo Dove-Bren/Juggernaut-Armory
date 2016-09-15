@@ -161,12 +161,12 @@ public class ArmoryBook extends ItemBase {
 	
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
-		Armory.proxy.openArmoryBook(this);
+		Armory.proxy.openArmoryBook(playerIn, this);
 		
 		return itemStackIn;
 	}
 	
-	public ArmoryBookScreen getScreen() {
+	public ArmoryBookScreen getScreen(EntityPlayer player) {
 		return screen;
 	}
 	

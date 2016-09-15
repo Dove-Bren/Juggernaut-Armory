@@ -136,16 +136,11 @@ public class ArmorModificationManager {
 		/////////////////////////////////////////
 	
 	@SubscribeEvent
-	public void onEntityConstructing(EntityConstructing event)
-	{
-		/*
-		Be sure to check if the entity being constructed is the correct type for the extended properties you're about to add! The null check may not be necessary - I only use it to make sure properties are only registered once per entity
-		*/
+	public void onEntityConstructing(EntityConstructing event) {
 		if (event.entity instanceof EntityLivingBase && ExtendedArmor.get((EntityLivingBase) event.entity, false) == null)
-		// This is how extended properties are registered using our convenient method from earlier
 			ExtendedArmor.register((EntityLivingBase) event.entity);
-		// That will call the constructor as well as cause the init() method
-		// to be called automatically
+		if (event.entity instanceof EntityLivingBase && ExtendedSmith.get((EntityLivingBase) event.entity, false) == null)
+			ExtendedSmith.register((EntityLivingBase) event.entity);
 	}
 	
 	

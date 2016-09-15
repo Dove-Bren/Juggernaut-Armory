@@ -252,6 +252,10 @@ public class ForgeManager {
 	 */
 	public static class ForgeRecipe {
 		
+		private static int seedOffsetIndex = 0;
+		
+		private long seedOffset;
+		
 		private boolean[][] metalMap;
 		
 		private IForgeTemplate template;
@@ -260,6 +264,7 @@ public class ForgeManager {
 		
 		public ForgeRecipe(boolean[][] metalMap, IForgeTemplate template) {
 			fullCache = 0;
+			seedOffset = seedOffsetIndex++ * 1702;
 			if (metalMap != null) {
 				this.metalMap = new boolean[10][10];
 				int i = 0;
@@ -300,6 +305,10 @@ public class ForgeManager {
 			this.template = template;
 		}
 		
+		public boolean[][] getRawMap() {
+			return metalMap;
+		}
+		
 		/**
 		 * Runs and checks whether the given metal map matches this recipe.
 		 * If it does, returns the user's relative performance. (ranges from 0 to 1).
@@ -333,6 +342,10 @@ public class ForgeManager {
 		
 		public ItemStack produce(MetalRecord baseMetal, float performance) {
 			return template.produce(baseMetal, performance);
+		}
+		
+		public long getSeedOffset() {
+			return seedOffset;
 		}
 		
 		/**

@@ -13,6 +13,7 @@ import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 import com.SkyIsland.Armory.items.tools.ArmoryBook;
 import com.SkyIsland.Armory.world.ArmoryOreGenerator;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -68,7 +69,7 @@ public class CommonProxy  {
 		; //nothing really to do
 	}
 	
-	public void openArmoryBook(ArmoryBook book) {
+	public void openArmoryBook(EntityPlayer player, ArmoryBook book) {
 		;
 	}
 }

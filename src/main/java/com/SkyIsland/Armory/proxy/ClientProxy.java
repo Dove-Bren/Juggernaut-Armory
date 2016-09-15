@@ -19,6 +19,7 @@ import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 import com.SkyIsland.Armory.items.tools.ArmoryBook;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 
@@ -91,7 +92,7 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	@Override
-	public void openArmoryBook(ArmoryBook book) {
-		Minecraft.getMinecraft().displayGuiScreen(book.getScreen());
+	public void openArmoryBook(EntityPlayer player, ArmoryBook book) {
+		Minecraft.getMinecraft().displayGuiScreen(book.getScreen(player));
 	}
 }
