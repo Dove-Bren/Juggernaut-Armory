@@ -5,6 +5,7 @@ item.tongs.name=Tongs
 item.scrap_metal.name=Scrap Metal
 item.held_metal.name=Molten Metal
 item.armory_book.name=A Smith's Guide
+item.recipe_book.name=Forge Recipes
 item.studded_leather.name=Studded Leather
 item.copper_ingot.name=Copper Ingot
 

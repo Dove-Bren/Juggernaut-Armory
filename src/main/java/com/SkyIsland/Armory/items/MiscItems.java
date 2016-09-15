@@ -6,6 +6,7 @@ import java.util.Map;
 import com.SkyIsland.Armory.items.materials.IngotCopper;
 import com.SkyIsland.Armory.items.materials.StuddedLeather;
 import com.SkyIsland.Armory.items.tools.ArmoryBook;
+import com.SkyIsland.Armory.items.tools.ForgeRecipeBook;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -15,6 +16,7 @@ public final class MiscItems {
 		SCRAP,
 		HELD_METAL,
 		ARMORY_BOOK,
+		RECIPE_BOOK,
 		STUDDED_LEATHER,
 		COPPER_INGOT;
 	}
@@ -40,6 +42,10 @@ public final class MiscItems {
 		itemMap.put(Items.ARMORY_BOOK, new ArmoryBook("armory_book"));
 		GameRegistry.registerItem(itemMap.get(Items.ARMORY_BOOK), "armory_book");
 		itemMap.get(Items.ARMORY_BOOK).init();
+		
+		itemMap.put(Items.RECIPE_BOOK, new ForgeRecipeBook("recipe_book"));
+		GameRegistry.registerItem(itemMap.get(Items.RECIPE_BOOK), "recipe_book");
+		itemMap.get(Items.RECIPE_BOOK).init();
 		
 		itemMap.put(Items.COPPER_INGOT, new IngotCopper("copper_ingot"));
 		GameRegistry.registerItem(itemMap.get(Items.COPPER_INGOT), "copper_ingot");
