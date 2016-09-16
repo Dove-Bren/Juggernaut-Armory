@@ -29,6 +29,7 @@ public class ModConfig {
 		DEFAULT_RATIO(Category.SERVER, "default_rate", new Float(0.70f), true, "How many armor points to preserve on armor pieces that aren't defined. For example, vanilla diamond helmets (3.0 defense) receive (3.0 * default_rate) protection in all base areas. Default is 0.7"),
 		METAL_MIN_HEAT(Category.SERVER, "min_heat", new Float(400f), true, "Minimum heat a metal mixture can have before it solidifies"),
 		HEAT_LOSS(Category.SERVER, "heat_loss", new Float(0.2f), true, "Heat lost per tick when a forge's brazier is not lit"),
+		COOLANT_LOSS(Category.SERVER, "coolant_loss", new Integer(1), true, "Coolant drained per tick used to cool an item"),
 		SHOW_ZEROS(Category.DISPLAY, "show_zeros", false, "When displaying damage or protection properties, should 0's be displayed? Default is false"),
 		SHOW_COMPONENTS(Category.DISPLAY, "show_components", false, "Show weapon components by default (without pressing shift)"),
 		SHOW_PIECE_VALUES(Category.DISPLAY, "show_piece_values", false, "Display an armor piece's protection values by default (without shift)"),
@@ -386,6 +387,10 @@ public class ModConfig {
 	
 	public float getSmithXpRate() {
 		return getFloatValue(Key.SMITH_XP_RATE, false);
+	}
+	
+	public int getCoolantLossAmount() {
+		return getIntValue(Key.COOLANT_LOSS, false);
 	}
 	
 	public float getTestValue(Key key) {

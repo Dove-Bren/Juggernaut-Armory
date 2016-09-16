@@ -4,12 +4,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.ForgeManager;
-import com.SkyIsland.Armory.api.ForgeManager.CoolantRecord;
 import com.SkyIsland.Armory.blocks.BlockBase;
 import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
-import com.SkyIsland.Armory.items.HeldMetal;
-import com.SkyIsland.Armory.items.MiscItems;
-import com.SkyIsland.Armory.items.ScrapMetal;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -17,10 +13,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -35,7 +29,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidEvent;
 import net.minecraftforge.fluids.FluidStack;
@@ -48,7 +41,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SuppressWarnings("deprecation")
 public class Trough extends BlockBase implements ITileEntityProvider {
 	
 	public static Block block;
@@ -85,6 +77,7 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 		this.setStepSound(Block.soundTypeStone);
 		this.setUnlocalizedName(Armory.MODID + "_" + unlocalizedName);
         this.setCreativeTab(Armory.creativeTab);
+        block = this;
 	}
 
 	@Override
@@ -106,19 +99,19 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 		return te.getFluidStack(empty);
 	}
 	
-	public static ItemStack takeHeldItem(World worldIn, BlockPos pos, IBlockState blockState) {
-		if (!(blockState.getBlock() instanceof Trough)) {
-			return null;
-		}
-		
-		TileEntity tent = worldIn.getTileEntity(pos);
-		if (tent == null || !(tent instanceof TroughTileEntity)) {
-			return null;
-		}
-		
-		TroughTileEntity te = (TroughTileEntity) tent;
-		return te.takeItem();
-	}
+//	public static ItemStack takeHeldItem(World worldIn, BlockPos pos, IBlockState blockState) {
+//		if (!(blockState.getBlock() instanceof Trough)) {
+//			return null;
+//		}
+//		
+//		TileEntity tent = worldIn.getTileEntity(pos);
+//		if (tent == null || !(tent instanceof TroughTileEntity)) {
+//			return null;
+//		}
+//		
+//		TroughTileEntity te = (TroughTileEntity) tent;
+//		return te.takeItem();
+//	}
 	
 	@Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
@@ -126,10 +119,15 @@ public class Trough extends BlockBase implements ITileEntityProvider {
     	
 		TroughTileEntity entity = (TroughTileEntity) worldIn.getTileEntity(pos);
         if (entity != null) {
-        	ItemStack contained = entity.takeItem();
-        	if (contained != null) {
-        		EntityItem ent = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), contained);
-        		worldIn.spawnEntityInWorld(ent);
+//        	ItemStack contained = entity.takeItem();
+//        	if (contained != null) {
+//        		EntityItem ent = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), contained);
+//        		worldIn.spawnEntityInWorld(ent);
+//        	}
+        	FluidStack fluid = entity.getFluid();
+        	if (fluid != null) {
+        		worldIn.setBlockState(pos, fluid.getFluid().getBlock().getDefaultState());
+        		entity.fluid = null;
         	}
         	
         }
@@ -163,13 +161,13 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 		
 		protected FluidStack fluid;
 		
-		protected ItemStack heldItem;
+//		protected ItemStack heldItem;
 		
 		private static final int capacity = 1000;
 		
 		public TroughTileEntity() {
 			this.fluid = null;
-			heldItem = null;
+//			heldItem = null;
 		}
 		
 		
@@ -182,11 +180,11 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 	            tag.setString("Empty", "");
 	        }
 			
-			if (heldItem != null) {
-				NBTTagCompound nbt = new NBTTagCompound();
-				heldItem.writeToNBT(nbt);
-				tag.setTag("held", nbt);
-			}
+//			if (heldItem != null) {
+//				NBTTagCompound nbt = new NBTTagCompound();
+//				heldItem.writeToNBT(nbt);
+//				tag.setTag("held", nbt);
+//			}
 				
 			
 			super.writeToNBT(tag);
@@ -200,8 +198,8 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 	        else
 	        	fluid = null;
 	        
-	        if (tag.hasKey("held", NBT.TAG_COMPOUND))
-	        	heldItem = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("held"));
+//	        if (tag.hasKey("held", NBT.TAG_COMPOUND))
+//	        	heldItem = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("held"));
 			
 			super.readFromNBT(tag);
 		}
@@ -239,56 +237,56 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 		@Override
 		public void update() {
 			//if holding an item (and have coolant left), cool it off
-			if (heldItem != null && fluid != null && fluid.amount > 0) {
-
-				if (!(heldItem.getItem() instanceof HeldMetal))
-					return;
-				
-				CoolantRecord record = ForgeManager.instance().getCoolant(fluid.getFluid());
-				if (record == null)
-					return;
-				
-				HeldMetal inst = ((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL));
-				inst.setHeat(heldItem, inst.getHeat(heldItem) - record.getCoolingRate());
-				
-				if (inst.getHeat(heldItem) <= 0) {
-					ItemStack newItem = inst.cast(heldItem);
-					if (newItem == null) {
-						//make it scrap
-						ScrapMetal scrap = (ScrapMetal) MiscItems.getItem(MiscItems.Items.SCRAP);
-						newItem = new ItemStack(scrap);
-						ItemStack ret = inst.getMetal(heldItem);
-						ret.stackSize = 1;
-						scrap.setReturn(newItem, 
-								ret
-								);
-						
-						getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(),
-							Armory.MODID + ":item.metal.cool", 1.0f, 1.0f, false);
-					}
-					
-					this.heldItem = newItem;
-				}
-			}
+//			if (heldItem != null && fluid != null && fluid.amount > 0) {
+//
+//				if (!(heldItem.getItem() instanceof HeldMetal))
+//					return;
+//				
+//				CoolantRecord record = ForgeManager.instance().getCoolant(fluid.getFluid());
+//				if (record == null)
+//					return;
+//				
+//				HeldMetal inst = ((HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL));
+//				inst.setHeat(heldItem, inst.getHeat(heldItem) - record.getCoolingRate());
+//				
+//				if (inst.getHeat(heldItem) <= 0) {
+//					ItemStack newItem = inst.cast(heldItem);
+//					if (newItem == null) {
+//						//make it scrap
+//						ScrapMetal scrap = (ScrapMetal) MiscItems.getItem(MiscItems.Items.SCRAP);
+//						newItem = new ItemStack(scrap);
+//						ItemStack ret = inst.getMetal(heldItem);
+//						ret.stackSize = 1;
+//						scrap.setReturn(newItem, 
+//								ret
+//								);
+//						
+//						getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(),
+//							Armory.MODID + ":item.metal.cool", 1.0f, 1.0f, false);
+//					}
+//					
+//					this.heldItem = newItem;
+//				}
+//			}
 		}
 		
-		public ItemStack takeItem() {
-			ItemStack ret = heldItem;
-			heldItem = null;
-			
-			getWorld().markBlockForUpdate(pos);
-			markDirty();
-			return ret;
-		}
-		
-		public boolean offerItem(ItemStack item) {
-			if (heldItem != null)
-				return false;
-			heldItem = item;
-			getWorld().markBlockForUpdate(pos);
-			markDirty();
-			return true;
-		}
+//		public ItemStack takeItem() {
+//			ItemStack ret = heldItem;
+//			heldItem = null;
+//			
+//			getWorld().markBlockForUpdate(pos);
+//			markDirty();
+//			return ret;
+//		}
+//		
+//		public boolean offerItem(ItemStack item) {
+//			if (heldItem != null)
+//				return false;
+//			heldItem = item;
+//			getWorld().markBlockForUpdate(pos);
+//			markDirty();
+//			return true;
+//		}
 		
 		@SideOnly(Side.CLIENT)
 		public static class Renderer extends TileEntitySpecialRenderer<TroughTileEntity> {
@@ -331,7 +329,8 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 				GlStateManager.enableRescaleNormal();
 				GlStateManager.scale(1.0, 1.0, 1.0); //tweak for making smaller!
 				
-				Minecraft.getMinecraft().getRenderItem().renderItem(te.heldItem, TransformType.GROUND);
+				//TODO render fluid!
+//				Minecraft.getMinecraft().getRenderItem().renderItem(te.heldItem, TransformType.GROUND);
 				GlStateManager.disableRescaleNormal();
 				
 				GL11.glPopMatrix();

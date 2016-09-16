@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.api.ForgeManager;
+import com.SkyIsland.Armory.api.ForgeManager.CoolantRecord;
 import com.SkyIsland.Armory.api.WeaponManager;
+import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.forge.Brazier;
 import com.SkyIsland.Armory.forge.Brazier.BrazierTileEntity;
 import com.SkyIsland.Armory.forge.Forge;
@@ -16,6 +19,7 @@ import com.SkyIsland.Armory.forge.Trough.TroughTileEntity;
 import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.ItemBase;
 import com.SkyIsland.Armory.items.MiscItems;
+import com.SkyIsland.Armory.items.ScrapMetal;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.block.Block;
@@ -28,11 +32,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -84,6 +92,20 @@ public class Tongs extends ItemBase {
 		
 		setID(stack, id++);
 	}
+	
+	/**
+     * returns the action that specifies what animation to play when the items is being used
+     */
+    public EnumAction getItemUseAction(ItemStack stack) {
+        return EnumAction.BLOCK;
+    }
+
+    /**
+     * How long it takes to use or consume an item
+     */
+    public int getMaxItemUseDuration(ItemStack stack) {
+        return 72000; //taken from ItemSword. they probs know what they're doing
+    }
 	
 	/**
 	 * Fetches the item stack stored in the provided pair of tongs.
@@ -239,10 +261,8 @@ public class Tongs extends ItemBase {
 		} else if (block instanceof BlockCauldron) {
 			if (onCauldron(playerIn, stack, state))
 				event.setCanceled(false);
-		} else if (block instanceof Trough) {
-			if (onTrough(playerIn, stack, state, event.pos))
-				event.setCanceled(false);
-		}
+		} else if (block instanceof Trough)
+			event.setCanceled(true);
 		
 		//handled in cutting machine
 //		else if (block instanceof CuttingMachine)
@@ -250,6 +270,71 @@ public class Tongs extends ItemBase {
 		
 //		else if (block instanceof ConstructPedestal)
 //			return onCauldron(playerIn, stack, state);
+	}
+	
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
+		
+        playerIn.setItemInUse(itemStackIn, this.getMaxItemUseDuration(itemStackIn));
+		
+		return itemStackIn;
+	}
+	
+	private void onTrough(ItemStack tongs, EntityPlayer player, TroughTileEntity te) {
+		//cool in the trough tick. 
+		/*
+		 * Things to do:
+		 *    Create particles, depending on heat
+		 *    Cool down held item
+		 *    	-> perform check on how cold it is, potentially cast it
+		 *    reduce coolant in trough
+		 */
+		ItemStack heldItem = getHeldItem(tongs);
+		if (heldItem == null || !(heldItem.getItem() instanceof HeldMetal))
+			return;
+		
+		HeldMetal inst = (HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL);
+
+		if (te.getFluidAmount() <= 0)
+			return;
+		
+		CoolantRecord record = ForgeManager.instance().getCoolant(te.getFluid().getFluid());
+		if (record == null)
+			return;
+		
+		float heldHeat = inst.getHeat(heldItem);
+		int partChance = Math.min(9, (int) heldHeat / 200);
+		te.getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL,
+				te.getPos().getX() + .5, te.getPos().getY() + 1.2, te.getPos().getZ() + .5,
+				0, 0, 0,//Armory.random.nextDouble() - .5, .2, Armory.random.nextDouble() - .5,
+				new int[0]);
+		
+		inst.setHeat(heldItem, heldHeat - record.getCoolingRate());
+		
+		if (inst.getHeat(heldItem) <= 0) {
+			ItemStack newItem = inst.cast(heldItem);
+			if (newItem == null) {
+				//make it scrap
+				ScrapMetal scrap = (ScrapMetal) MiscItems.getItem(MiscItems.Items.SCRAP);
+				newItem = new ItemStack(scrap);
+				ItemStack ret = inst.getMetal(heldItem);
+				ret.stackSize = 1;
+				scrap.setReturn(newItem, 
+						ret
+						);
+				
+				player.worldObj.playSound(player.posX, player.posY, player.posZ,
+					Armory.MODID + ":item.metal.cool", 1.0f, 1.0f, false);
+			}
+			
+			if (newItem != null)
+				player.inventory.addItemStackToInventory(newItem);
+			setHeldItem(tongs, null);
+		}
+		
+		//reduce fluid in tank
+		te.drain(ModConfig.config.getCoolantLossAmount(), true); //discard returned
+		
 	}
     
     private boolean onBrazier(EntityPlayer player, ItemStack tongs, IBlockState brazierBlock, BlockPos pos) {
@@ -346,39 +431,6 @@ public class Tongs extends ItemBase {
     	return false;
     }
     
-    private boolean onTrough(EntityPlayer player, ItemStack tongs, IBlockState troughBlock, BlockPos pos) {
-    	TileEntity te = player.getEntityWorld().getTileEntity(pos);
-    	if (te == null || !(te instanceof TroughTileEntity)) {
-    		return false;
-    	}
-    	
-    	TroughTileEntity ent = (TroughTileEntity) te;
-    	ItemStack held = getHeldItem(tongs);
-    	if (held == null) {
-    		//try to collect from the brazier
-    		held = ent.takeItem();//ent.collectHeatingElement();
-    		if (held != null) {
-    			//if (held.getItem() instanceof ScrapMetal) {
-    			if (!(held.getItem() instanceof HeldMetal)) {
-    				//give as item instead
-    				player.inventory.addItemStackToInventory(held);
-    				return true;
-    			}
-    			
-    			setHeldItem(tongs, held);
-    			return true;
-    		}
-    	} else {
-    		//try to put our element in the brazier
-    		if (ent.offerItem(held)) {
-    			setHeldItem(tongs, null);
-    			return true;
-    		}
-    	}
-    	
-    	return false;
-    }
-    
     private boolean onPedestal(EntityPlayer player, ItemStack tongs, IBlockState pedestalBlock) {
     	System.out.println("Unimplemented method: Tongs#onPedestal()!!!!!");
     	return false;
@@ -390,8 +442,41 @@ public class Tongs extends ItemBase {
     	return false;
     }
     
+    private void onUseTick(ItemStack tongs, World worldIn, EntityPlayer playerIn) {
+    	
+    	//I struggled with this for a LONG TIME! I was assuming world.rayTraceBlocks
+    	//had the params:
+    	// vec1 : origin vector
+    	// vec2 : relative look vector
+    	//Instead, vec2 is the END VECTOR! IT IS THE ABSOLUTE POS FOR WHERE
+    	//TO STOP DOING IT AT!!!!!!  * explodes *
+    	
+    	MovingObjectPosition mop = ForgeHooks.rayTraceEyes(playerIn, 4.0F);
+		if (mop != null) {
+			//hitting something. is it a trough?
+			if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+				if (worldIn.getBlockState(mop.getBlockPos()).getBlock() == Trough.block) {
+					//is a trough. Cool our item down
+					TileEntity ent = worldIn.getTileEntity(mop.getBlockPos());
+					if (ent != null && ent instanceof TroughTileEntity) {
+						onTrough(tongs, playerIn, (TroughTileEntity) ent);
+						return;
+					}
+				}
+			}
+		}
+		playerIn.clearItemInUse();
+    }
+    
     @Override
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    	
+    	if (isSelected && entityIn instanceof EntityPlayer) {
+    		if (((EntityPlayer) entityIn).isUsingItem()) {
+    			onUseTick(stack, worldIn, (EntityPlayer) entityIn);
+    			return;
+    		}
+    	}
     	
     	if (worldIn.isRemote)
     		return;
