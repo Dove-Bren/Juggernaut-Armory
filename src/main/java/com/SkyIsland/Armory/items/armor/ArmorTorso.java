@@ -328,7 +328,7 @@ public class ArmorTorso extends Armor {
 		
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
-				metalMap, recipe
+				-5, metalMap, recipe
 				));
 		
 		pieceContribution = DamageType.freshMap();
@@ -348,7 +348,7 @@ public class ArmorTorso extends Armor {
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
-				metalMap, recipe
+				-4, metalMap, recipe
 				));
 		
 		pieceContribution = DamageType.freshMap();
@@ -368,7 +368,7 @@ public class ArmorTorso extends Armor {
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
-				metalMap, recipe
+				-3, metalMap, recipe
 				));
 		
 		pieceContribution = DamageType.freshMap();
@@ -388,7 +388,7 @@ public class ArmorTorso extends Armor {
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
-				metalMap, recipe
+				-2, metalMap, recipe
 				));
 		
 		pieceContribution = DamageType.freshMap();
@@ -408,7 +408,7 @@ public class ArmorTorso extends Armor {
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
-				metalMap, recipe
+				-1, metalMap, recipe
 				));
 		
 		pieceContribution = DamageType.freshMap();

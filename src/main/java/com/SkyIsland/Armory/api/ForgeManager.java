@@ -256,14 +256,17 @@ public class ForgeManager {
 		
 		private long seedOffset;
 		
+		private int requiredLevel;
+		
 		private boolean[][] metalMap;
 		
 		private IForgeTemplate template;
 		
 		private int fullCache;
 		
-		public ForgeRecipe(boolean[][] metalMap, IForgeTemplate template) {
+		public ForgeRecipe(int requiredLevel, boolean[][] metalMap, IForgeTemplate template) {
 			fullCache = 0;
+			this.requiredLevel = requiredLevel;
 			seedOffset = seedOffsetIndex++ * 1702;
 			if (metalMap != null) {
 				this.metalMap = new boolean[10][10];
@@ -346,6 +349,10 @@ public class ForgeManager {
 		
 		public long getSeedOffset() {
 			return seedOffset;
+		}
+		
+		public int getRequiredLevel() {
+			return requiredLevel;
 		}
 		
 		/**

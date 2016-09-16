@@ -303,11 +303,15 @@ public class Tongs extends ItemBase {
 			return;
 		
 		float heldHeat = inst.getHeat(heldItem);
-		int partChance = Math.min(9, (int) heldHeat / 200);
-		te.getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL,
-				te.getPos().getX() + .5, te.getPos().getY() + 1.2, te.getPos().getZ() + .5,
-				0, 0, 0,//Armory.random.nextDouble() - .5, .2, Armory.random.nextDouble() - .5,
-				new int[0]);
+		int partChance = Math.max(1, Math.min(9, (int) heldHeat / 200));
+		
+		
+		for (int i = 0; i < partChance; i++) {
+			te.getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL,
+					te.getPos().getX() + Armory.random.nextDouble(), te.getPos().getY() + 1.2, te.getPos().getZ() + Armory.random.nextDouble(),
+					0, 0, 0,//Armory.random.nextDouble() - .5, .2, Armory.random.nextDouble() - .5,
+					new int[0]);
+		}
 		
 		inst.setHeat(heldItem, heldHeat - record.getCoolingRate());
 		
