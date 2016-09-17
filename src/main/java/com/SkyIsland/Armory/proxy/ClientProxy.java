@@ -5,6 +5,7 @@ import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.forge.ForgeBlocks;
 import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
+import com.SkyIsland.Armory.gui.OverlayHandler;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ArmorItems.Armors;
 import com.SkyIsland.Armory.items.MiscItems;
@@ -69,7 +70,7 @@ public class ClientProxy extends CommonProxy {
 	 * Handle interaction with other mods, complete your setup based on this.
 	 */
 	public void postInit() {
-	
+		new OverlayHandler();
 	}
 	
 	@Override
