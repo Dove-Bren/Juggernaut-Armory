@@ -85,7 +85,8 @@ public class TongsOverlay implements IOverlay, IConfigWatcher {
 		
 //		GlStateManager.pushMatrix();
 		
-//		GlStateManager.pushAttrib();
+//		if (ModConfig.config.usePushpop())
+//			GlStateManager.pushAttrib();
 		GlStateManager.color(1f, 1f, 1f, 1f);
 		
 		if (showTongs) {
@@ -95,22 +96,15 @@ public class TongsOverlay implements IOverlay, IConfigWatcher {
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TONGS_FULL_TEXT);
 			
 
-			if (ModConfig.config.useGl()) {
-				GlStateManager.enableAlpha();
-				GlStateManager.enableBlend();
-			} else {
-			}
+			GlStateManager.enableAlpha();
+			GlStateManager.enableBlend();
 			
 			Gui.drawModalRectWithCustomSizedTexture(
 					width - (TONGS_TEXT_WIDTH + 10), height - (TONGS_TEXT_HEIGHT + 10), 0, 0,
 					TONGS_TEXT_WIDTH, TONGS_TEXT_HEIGHT, TONGS_TEXT_WIDTH, TONGS_TEXT_HEIGHT);
 			
-
-			if (ModConfig.config.useGl()) {
-				GlStateManager.disableAlpha();
-				GlStateManager.disableBlend();
-			} else {
-			}
+			
+			GlStateManager.disableAlpha();
 			
 			if (held != null && held.getItem() instanceof HeldMetal) {
 				//draw rectangle and details on tectangle
@@ -154,8 +148,8 @@ public class TongsOverlay implements IOverlay, IConfigWatcher {
 					0xFFA0A0A0, true);
 		}
 		
-		
-//		GlStateManager.popAttrib();
+		if (ModConfig.config.usePushpop())
+			GlStateManager.popAttrib();
 //		GlStateManager.popMatrix();
 	}
 
@@ -171,7 +165,8 @@ public class TongsOverlay implements IOverlay, IConfigWatcher {
      * Adopted from Gui class
      */
     protected void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-//    	GlStateManager.pushAttrib();
+//    	if (ModConfig.config.usePushpop())
+//    		GlStateManager.pushAttrib();
         float f = (float)(startColor >> 24 & 255) / 255.0F;
         float f1 = (float)(startColor >> 16 & 255) / 255.0F;
         float f2 = (float)(startColor >> 8 & 255) / 255.0F;
@@ -195,8 +190,13 @@ public class TongsOverlay implements IOverlay, IConfigWatcher {
         tessellator.draw();
 //        GlStateManager.shadeModel(7424);
 //        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
+//        if (ModConfig.config.usePushpop()) {
+//        	GlStateManager.popAttrib();
+//        } else {
+        	GlStateManager.enableAlpha();
+        	GlStateManager.enableTexture2D();
+//        }
+        	
 //        GlStateManager.popAttrib();
     }
     

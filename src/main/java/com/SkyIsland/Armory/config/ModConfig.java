@@ -40,7 +40,8 @@ public class ModConfig {
 		SMITH_LEVEL_TOLERANCE(Category.SERVER, "smith_tolerance", new Integer(5), true, "How many levels past recipe level until the player gets full recipe"),
 		DISPLAY_TONGS(Category.DISPLAY, "display_tongs", true, false, "Display the tong overlay when tongs are held"),
 		DISPLAY_SMITH_LEVEL(Category.DISPLAY, "display_level", true, false, "Display your smith level when holding tongs"),
-		USE_GL(Category.TEST, "use_gl", false, false, "use gl");
+		USE_GL(Category.TEST, "use_gl", false, false, "use gl"),
+		USE_PUSH(Category.TEST, "use_pushpop", false, false, "use pushpop");
 		
 //		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
 //		DEPTH_N(Category.TEST, "depth_n", new Float(0.1f), false, "north depth"),
@@ -424,6 +425,10 @@ public class ModConfig {
 	
 	public boolean useGl() {
 		return getBooleanValue(Key.USE_GL, false);
+	}
+	
+	public boolean usePushpop() {
+		return getBooleanValue(Key.USE_PUSH, false);
 	}
 	
 }
