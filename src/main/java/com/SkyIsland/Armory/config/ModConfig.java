@@ -37,7 +37,9 @@ public class ModConfig {
 		FORGE_RECIPE_TOLERANCE(Category.SERVER, "forge_recipe_tolerance", new Float(.2), true, "Factor used to determine what the cutoff for a recipe is. This is multiplied by the number of full cells to get maximum allowable errors."),
 		FORGE_TILES_PER_INGOT(Category.SERVER, "forge_tiles_per", new Integer(10), true, "How many tiles are given per input ingot. This sets how big a metal work can get."),
 		SMITH_XP_RATE(Category.SERVER, "xp_rate", new Float(1.2), true, "Rate that xp needed to achieve next level increases per level. 1.2 means that lvl 1->2 takes 120% the effort of lvl 0->1."),
-		SMITH_LEVEL_TOLERANCE(Category.SERVER, "smith_tolerance", new Integer(5), true, "How many levels past recipe level until the player gets full recipe");
+		SMITH_LEVEL_TOLERANCE(Category.SERVER, "smith_tolerance", new Integer(5), true, "How many levels past recipe level until the player gets full recipe"),
+		DISPLAY_TONGS(Category.DISPLAY, "display_tongs", true, false, "Display the tong overlay when tongs are held"),
+		DISPLAY_SMITH_LEVEL(Category.DISPLAY, "display_level", true, false, "Display your smith level when holding tongs");
 		
 //		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
 //		DEPTH_N(Category.TEST, "depth_n", new Float(0.1f), false, "north depth"),
@@ -195,8 +197,11 @@ public class ModConfig {
 	
 	private Map<Key, Object> localValues;
 	
+	private Set<IConfigWatcher> watchers;
+	
 	public ModConfig(Configuration config) {
 		this.base = config;
+		this.watchers = new HashSet<IConfigWatcher>();
 		localValues = new HashMap<Key, Object>();
 		ModConfig.config = this;
 		
@@ -251,10 +256,12 @@ public class ModConfig {
 	@SubscribeEvent
 	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
 		if(eventArgs.modID.equals(Armory.MODID)) {
-			//nothing to do now. This is where the hook happens
-			//used when something isn't constantly polling this config and needs
-			//to be alerted of a potential change
-			//TODO
+
+			//tell each watcher the c onfig has been updated
+			if (watchers != null)
+			for (IConfigWatcher watcher : watchers) {
+				watcher.onConfigUpdate(this);
+			}
 		}
 	}
 	
@@ -289,6 +296,10 @@ public class ModConfig {
 		}
 		
 		return false;
+	}
+	
+	public void registerWatcher(IConfigWatcher watcher) {
+		this.watchers.add(watcher);
 	}
 	
 	///////////////////////////////////////ENUM FILLING/////////
@@ -396,6 +407,14 @@ public class ModConfig {
 	
 	public int getCoolantLossAmount() {
 		return getIntValue(Key.COOLANT_LOSS, false);
+	}
+	
+	public boolean showLevel() {
+		return getBooleanValue(Key.DISPLAY_SMITH_LEVEL, false);
+	}
+	
+	public boolean showTongs() {
+		return getBooleanValue(Key.DISPLAY_TONGS, false);
 	}
 	
 	public float getTestValue(Key key) {
