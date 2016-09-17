@@ -39,7 +39,8 @@ public class ModConfig {
 		SMITH_XP_RATE(Category.SERVER, "xp_rate", new Float(1.2), true, "Rate that xp needed to achieve next level increases per level. 1.2 means that lvl 1->2 takes 120% the effort of lvl 0->1."),
 		SMITH_LEVEL_TOLERANCE(Category.SERVER, "smith_tolerance", new Integer(5), true, "How many levels past recipe level until the player gets full recipe"),
 		DISPLAY_TONGS(Category.DISPLAY, "display_tongs", true, false, "Display the tong overlay when tongs are held"),
-		DISPLAY_SMITH_LEVEL(Category.DISPLAY, "display_level", true, false, "Display your smith level when holding tongs");
+		DISPLAY_SMITH_LEVEL(Category.DISPLAY, "display_level", true, false, "Display your smith level when holding tongs"),
+		USE_GL(Category.TEST, "use_gl", false, false, "use gl");
 		
 //		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
 //		DEPTH_N(Category.TEST, "depth_n", new Float(0.1f), false, "north depth"),
@@ -419,6 +420,10 @@ public class ModConfig {
 	
 	public float getTestValue(Key key) {
 		return getFloatValue(key, false);
+	}
+	
+	public boolean useGl() {
+		return getBooleanValue(Key.USE_GL, false);
 	}
 	
 }

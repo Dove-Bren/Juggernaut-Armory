@@ -77,6 +77,8 @@ public class ArmorModificationManager {
 				inst.setHeldItem(tongs, metal);
 				
 				event.entityPlayer.inventory.addItemStackToInventory(tongs);
+				
+				ExtendedSmith.get(event.entityPlayer, true).addAbsoluteProgress(.2f);
 //				ItemStack stack;
 //				HeldMetal.test();
 				
