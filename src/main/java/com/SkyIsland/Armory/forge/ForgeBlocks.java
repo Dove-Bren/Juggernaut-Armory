@@ -32,7 +32,7 @@ public class ForgeBlocks {
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.FORGE), "forge_block");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.BRAZIER), "brazier_block");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.BRAZIER_LIT), "brazier_block_lit");
-		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.TROUGH), "trough_block");
+		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.TROUGH), "forge_trough");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.ANVIL), "forge_anvil");
 		GameRegistry.registerBlock(blockMap.get(ArmoryBlocks.CUTTING), "cutting_table_block");
 	}

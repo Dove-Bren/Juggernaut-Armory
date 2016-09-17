@@ -1,5 +1,9 @@
 {
     "variants": {
-        "normal": { "model": "skylander_armory:forge_block" }
+        "normal": { "model": "skylander_armory:forge_block" },
+	"facing=north": { "model": "skylander_armory:forge_block" },
+        "facing=south": { "model": "skylander_armory:forge_block", "y": 180 },
+        "facing=west":  { "model": "skylander_armory:forge_block", "y": 270 },
+        "facing=east":  { "model": "skylander_armory:forge_block", "y": 90 }
     }
 }
