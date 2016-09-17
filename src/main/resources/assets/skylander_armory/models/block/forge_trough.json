@@ -1,0 +1,83 @@
+{
+"__comment": "Designed by Trigition with BDcraft Cubik PRO 0.96 Beta - http://bdcraft.net",
+"textures": {
+    "trough_base_side": "skylander_armory:blocks/forge_trough_side",
+    "trough_base_bottom": "skylander_armory:blocks/forge_trough_bottom"
+},
+"elements": [ 
+{
+    "__comment": "Trough_block",
+    "from": [ 0, 0.5, 0 ],
+    "to": [ 16, 2, 16 ],
+    "faces": {
+        "down":  { "uv": [ 16, 16, 0, 0 ], "texture": "#trough_base_bottom" },
+        "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#trough_base_bottom" },
+        "north": { "uv": [ 0, 14, 16, 15.5 ], "texture": "#trough_base_bottom" },
+        "south": { "uv": [ 0, 14, 16, 15.5 ], "texture": "#trough_base_bottom" },
+        "west":  { "uv": [ 0, 14, 16, 15.5 ], "texture": "#trough_base_bottom" },
+        "east":  { "uv": [ 0, 14, 16, 15.5 ], "texture": "#trough_base_bottom" }
+    }
+},
+{
+    "__comment": "Trough_block",
+    "from": [ 0.5, 2, 0.5 ],
+    "to": [ 1.5, 15.5, 15.5 ],
+    "faces": {
+        "down":  { "uv": [ 15.5, 15.5, 14.5, 0.5 ], "texture": "#trough_base_side" },
+        "up":    { "uv": [ 0.5, 0.5, 1.5, 15.5 ], "texture": "#trough_base_side" },
+        "north": { "uv": [ 14.5, 0.5, 15.5, 14 ], "texture": "#trough_base_side" },
+        "south": { "uv": [ 0.5, 0.5, 1.5, 14 ], "texture": "#trough_base_side" },
+        "west":  { "uv": [ 0.5, 0.5, 15.5, 14 ], "texture": "#trough_base_side" },
+        "east":  { "uv": [ 0.5, 0.5, 15.5, 14 ], "texture": "#trough_base_side" }
+    }
+},
+{
+    "__comment": "Trough_block",
+    "from": [ 1.5, 2, 0.5 ],
+    "to": [ 15.5, 15.5, 1.5 ],
+    "faces": {
+        "down":  { "uv": [ 14.5, 1.5, 0.5, 0.5 ], "texture": "#trough_base_side" },
+        "up":    { "uv": [ 1.5, 0.5, 15.5, 1.5 ], "texture": "#trough_base_side" },
+        "north": { "uv": [ 0.5, 0.5, 14.5, 14 ], "texture": "#trough_base_side" },
+        "south": { "uv": [ 1.5, 0.5, 15.5, 14 ], "texture": "#trough_base_side" },
+        "west":  { "uv": [ 0.5, 0.5, 1.5, 14 ], "texture": "#trough_base_side" },
+        "east":  { "uv": [ 14.5, 0.5, 15.5, 14 ], "texture": "#trough_base_side" }
+    }
+},
+{
+    "__comment": "Trough_block",
+    "from": [ 1.5, 2, 14.5 ],
+    "to": [ 15.5, 15.5, 15.5 ],
+    "faces": {
+        "down":  { "uv": [ 14.5, 15.5, 0.5, 14.5 ], "texture": "#trough_base_side" },
+        "up":    { "uv": [ 1.5, 14.5, 15.5, 15.5 ], "texture": "#trough_base_side" },
+        "north": { "uv": [ 0.5, 0.5, 14.5, 14 ], "texture": "#trough_base_side" },
+        "south": { "uv": [ 1.5, 0.5, 15.5, 14 ], "texture": "#trough_base_side" },
+        "west":  { "uv": [ 14.5, 0.5, 15.5, 14 ], "texture": "#trough_base_side" },
+        "east":  { "uv": [ 0.5, 0.5, 1.5, 14 ], "texture": "#trough_base_side" }
+    }
+},
+{
+    "__comment": "Trough_block",
+    "from": [ 14.5, 2, 1.5 ],
+    "to": [ 15.5, 15.5, 14.5 ],
+    "faces": {
+        "down":  { "uv": [ 1.5, 14.5, 0.5, 1.5 ], "texture": "#trough_base_side" },
+        "up":    { "uv": [ 14.5, 1.5, 15.5, 14.5 ], "texture": "#trough_base_side" },
+        "north": { "uv": [ 0.5, 0.5, 1.5, 14 ], "texture": "#trough_base_side" },
+        "south": { "uv": [ 14.5, 0.5, 15.5, 14 ], "texture": "#trough_base_side" },
+        "west":  { "uv": [ 1.5, 0.5, 14.5, 14 ], "texture": "#trough_base_side" },
+        "east":  { "uv": [ 1.5, 0.5, 14.5, 14 ], "texture": "#trough_base_side" }
+    }
+},
+{
+    "__comment": "FluidLevel",
+    "from": [ 1, 14.49, 1 ],
+    "to": [ 15, 14.5, 15 ],
+    "faces": {
+        "down":  { "uv": [ 15, 15, 1, 1 ], "texture": "#texture" },
+        "up":    { "uv": [ 1, 1, 15, 15 ], "texture": "#texture" }
+    }
+}
+]
+}

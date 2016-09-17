@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "normal": { "model": "skylander_armory:forge_trough" },
+        "inventory": { "model": "skylander_armory:forge_trough" }
+    }
+}
