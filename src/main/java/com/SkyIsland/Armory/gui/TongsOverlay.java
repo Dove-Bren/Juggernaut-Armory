@@ -1,7 +1,5 @@
 package com.SkyIsland.Armory.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.IConfigWatcher;
 import com.SkyIsland.Armory.config.ModConfig;

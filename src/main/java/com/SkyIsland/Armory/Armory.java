@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.SkyIsland.Armory.api.ArmorManager;
 import com.SkyIsland.Armory.api.ForgeManager;
+import com.SkyIsland.Armory.api.WeaponCraftingManager;
 import com.SkyIsland.Armory.api.WeaponManager;
 import com.SkyIsland.Armory.blocks.CopperOreBlock;
 import com.SkyIsland.Armory.blocks.Pedestal;
@@ -88,6 +89,7 @@ public class Armory {
 	    ArmorManager.init();
 	    WeaponManager.init();
 	    ForgeManager.init();
+	    WeaponCraftingManager.init();
     	
 	    WeaponItems.initItems();
 	    ArmorItems.initItems();

@@ -8,13 +8,13 @@ public enum EnumWeaponComponents {
 	GUARD_LARGE,
 	GUARD_WHOLE,
 	POMMEL_TAIL,
-	POMMEL_MID;
-//	BLADE_SHORT,
-//	BLADE_MEDIUM,
-//	BLADE_LARGE,
-//	BLADE_CURVED,
-//	AXE_SINGLE,
-//	AXE_DOUBLE;
+	POMMEL_MID,
+	BLADE_SHORT,
+	BLADE_MEDIUM,
+	BLADE_LARGE,
+	BLADE_CURVED,
+	AXE_SINGLE,
+	AXE_DOUBLE;
 	
 	private WeaponComponent component;
 	
