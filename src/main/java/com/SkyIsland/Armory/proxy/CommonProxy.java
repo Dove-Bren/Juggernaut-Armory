@@ -8,8 +8,8 @@ import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
 import com.SkyIsland.Armory.gui.GuiHandler;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ArmorItems.Armors;
-import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
+import com.SkyIsland.Armory.items.common.AComponent;
 import com.SkyIsland.Armory.items.tools.ArmoryBook;
 import com.SkyIsland.Armory.world.ArmoryOreGenerator;
 
@@ -61,8 +61,8 @@ public class CommonProxy  {
 		ModConfig.channel.sendTo(new ServerConfigMessage(ModConfig.config), player);
 	}
 
-	public void registerArmorPiece(ArmorPiece armorPiece) {
-		GameRegistry.registerItem(armorPiece, armorPiece.getModelSuffix());//armorPiece.getUnlocalizedName());
+	public void registerComponent(AComponent component) {
+		GameRegistry.registerItem(component, component.getModelSuffix());//armorPiece.getUnlocalizedName());
 	}
 
 	public void registerMaterial(ExtendedMaterial extendedArmorMaterial) {

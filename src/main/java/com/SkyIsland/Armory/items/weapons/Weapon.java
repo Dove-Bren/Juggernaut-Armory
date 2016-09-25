@@ -1,12 +1,13 @@
 package com.SkyIsland.Armory.items.weapons;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 import com.SkyIsland.Armory.mechanics.DamageType;
+import com.SkyIsland.Armory.proxy.ClientInitializable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -19,7 +20,6 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -32,11 +32,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Skyler
  *
  */
-public abstract class Weapon extends Item {
+public abstract class Weapon extends Item implements ClientInitializable {
 
 	private static final String DAMAGE_KEY = "DamageComponents";
 	
-	private static final String COMPONENT_KEY = "SubComponents";
+	//private static final String COMPONENT_KEY = "SubComponents";
 	
 	/**
 	 * Number of seconds it takes to swing and be able to swing again. 0.0f results
@@ -54,6 +54,8 @@ public abstract class Weapon extends Item {
 	
 	protected Map<DamageType, Float> weaponModifierMap;
 	
+	protected String registryName;
+	
     protected Weapon(String unlocalizedName) {
     	this(unlocalizedName, null, 1.0f, false, 0.0f);
     }
@@ -68,15 +70,26 @@ public abstract class Weapon extends Item {
         this.canBlock = canBlock;
         this.blockReduction = blockReduction;
         this.setUnlocalizedName(unlocalizedName);
+        this.registryName = unlocalizedName;
         this.weaponModifierMap = DamageType.freshMap();
         if (damageMap != null)
         for (DamageType key : damageMap.keySet())
         	weaponModifierMap.put(key, damageMap.get(key));
     }
     
+    @Override
+    @SideOnly(Side.CLIENT)
     public void clientInit() {
+//    	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+//    	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.registry.getUnlocalizedName(), "inventory"));
+    	
     	Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-    	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.getUnlocalizedName(), "inventory"));
+    	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + this.registryName, "inventory"));
+    	
+//    	if (getSmartModel() != null)
+//    		ModelRegistry.instance.register(Armory.MODID, this.registryName, this.getSmartModel());
+    	ModelRegistry.instance.register(Armory.MODID, this.registryName, new WeaponSmartModel());
+    	
     }
 
     /**

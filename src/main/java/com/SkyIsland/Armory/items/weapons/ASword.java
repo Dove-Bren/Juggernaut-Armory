@@ -1,13 +1,28 @@
 package com.SkyIsland.Armory.items.weapons;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.SkyIsland.Armory.items.common.NestedSlotInventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ASword extends Weapon {
+public abstract class ASword extends Weapon {
+	
+	public static enum Slot {
+		BLADE,
+		CROSSBAR,
+		HANDLE,
+		POMMEL;
+	}
+	
+	public static NestedSlotInventory<Slot> makeWrapper(ItemStack base) {
+		return new NestedSlotInventory<Slot>(Slot.class, base);
+	}
 
 	public static ASword item;
 	
@@ -90,8 +105,7 @@ public class ASword extends Weapon {
 
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack) {
-		// TODO Auto-generated method stub
-		return null;
+		return EnumAction.BLOCK;
 	}
 
 	@Override
@@ -102,8 +116,16 @@ public class ASword extends Weapon {
 
 	@Override
 	public Collection<ItemStack> getWeaponComponents(ItemStack weapon) {
-		// TODO Auto-generated method stub
-		return null;
+		NestedSlotInventory<Slot> components = makeWrapper(weapon);
+		List<ItemStack> parts = new LinkedList<ItemStack>();
+		
+		for (Slot slot : Slot.values()) {
+			ItemStack item = components.getStackInSlot(slot);
+			if (item != null)
+				parts.add(item);
+		}
+		
+		return parts;
 	}
 	
 }

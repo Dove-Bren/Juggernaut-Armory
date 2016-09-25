@@ -4,12 +4,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.SkyIsland.Armory.Armory;
-import com.SkyIsland.Armory.items.ModelRegistry;
+import com.SkyIsland.Armory.items.common.AComponent;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,13 +15,11 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ArmorPiece extends Item {
+public class ArmorPiece extends AComponent {
 	
 	private static final String INTERNAL_DAMAGE = "component_damage";
 	
 	private static final String INTERNAL_MAXDAMAGE = "component_maxdamage";
-	
-	private static final String INTERNAL_MATNAME = "component_material";
 	
 	//protected Map<DamageType, Float> protectionMap;
 	//stored in nbt, not on item
@@ -45,9 +41,6 @@ public class ArmorPiece extends Item {
 	
 	protected float durabilityRate;
 	
-	@SideOnly(Side.CLIENT)
-	protected ArmorPieceSmartModel model;
-	
 	protected float xOffset;
 	
 	protected float yOffset;
@@ -64,6 +57,7 @@ public class ArmorPiece extends Item {
 	 * @param durabilityRate
 	 */
 	public ArmorPiece(String itemKey, ArmorSlot parentSlot, Map<DamageType, Float> ratios, float durabilityRate) {
+		super();
 		this.itemKey = itemKey;
 		this.protectionRatios = ratios;
 		this.parentSlot = parentSlot;
@@ -79,24 +73,6 @@ public class ArmorPiece extends Item {
 		this.setCreativeTab(Armory.creativeTab);
 		this.canRepair = false;
 		this.setUnlocalizedName("armorpiece_" + itemKey);
-		
-		Armory.proxy.registerArmorPiece(this);
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public void clientInit() {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-    	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + getModelSuffix(), "inventory"));
-
-//		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-//    	.register(this, 0, new ModelResourceLocation(Armory.MODID + ":" + getModelSuffix(), "body"));
-		
-		this.model = new ArmorPieceSmartModel(this, 
-				Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-				.getModelManager().getModel(new ModelResourceLocation(Armory.MODID + ":" + getModelSuffix(), "inventory"))
-				, 0.5f);
-		
-		ModelRegistry.instance.registerComponent(this, getModelSuffix(), model);
 	}
 	
 //	@Override
@@ -312,52 +288,6 @@ public class ArmorPiece extends Item {
 		
 		NBTTagCompound nbt = stack.getTagCompound();
 		nbt.setInteger(INTERNAL_MAXDAMAGE, damage);
-	}
-	
-	/**
-	 * Returns nbt-stored material name. This is NOT the texture prefix!
-	 * To get the texture prefix, use #getTexturePrefix
-	 * @param stack
-	 * @return the material name, or "" if no name was found
-	 */
-	public String getUnderlyingMaterial(ItemStack stack) {
-		if (!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-		
-		NBTTagCompound nbt = stack.getTagCompound();
-		if (nbt.hasKey(INTERNAL_MATNAME, NBT.TAG_STRING))
-			return nbt.getString(INTERNAL_MATNAME);
-		
-		return "";
-	}
-	
-	public ExtendedMaterial fetchMaterial(ItemStack stack) {
-		String materialName = getUnderlyingMaterial(stack);
-		if (materialName == null || materialName.isEmpty())
-			return null;
-		
-		return ExtendedMaterial.lookupMaterial(materialName);
-	}
-	
-	public String getTexturePrefix(ItemStack stack) {
-		ExtendedMaterial material = fetchMaterial(stack);
-		if (material == null)
-			return "";
-		
-		return material.getTexturePrefix();
-	}
-	
-	/**
-	 * sets the nbt-stored max damage this weapon has
-	 * @param stack
-	 * @param damage the amount of damage this weapon has
-	 */
-	private void setUnderlyingMaterial(ItemStack stack, String materialName) {
-		if (!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-		
-		NBTTagCompound nbt = stack.getTagCompound();
-		nbt.setString(INTERNAL_MATNAME, materialName);
 	}
 	
 }

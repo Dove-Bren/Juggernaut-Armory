@@ -3,11 +3,12 @@ package com.SkyIsland.Armory.items;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.SkyIsland.Armory.Armory;
-import com.SkyIsland.Armory.items.weapons.ASword;
+import com.SkyIsland.Armory.items.weapons.BroadSword;
 import com.SkyIsland.Armory.items.weapons.Weapon;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class WeaponItems {
 
@@ -21,9 +22,18 @@ public final class WeaponItems {
 		
 		itemMap = new EnumMap<Weapons, Weapon>(Weapons.class);
 		
-		itemMap.put(Weapons.SWORD, new ASword(Armory.MODID + "_sword_base"));
-		GameRegistry.registerItem(itemMap.get(Weapons.SWORD), Armory.MODID + "_sword_base");
+		itemMap.put(Weapons.SWORD, new BroadSword("broadsword_base"));
+		GameRegistry.registerItem(itemMap.get(Weapons.SWORD), "broadsword_base");
 		
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void clientInit() {
+		if (itemMap.isEmpty())
+			return;
+		
+		for (Weapon weapon : itemMap.values())
+			weapon.clientInit();
 	}
 	
 	public static Weapon getWeaponBase(Weapons baseType) {

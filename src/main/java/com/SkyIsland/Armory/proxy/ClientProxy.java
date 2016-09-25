@@ -14,10 +14,10 @@ import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.items.ToolItems;
 import com.SkyIsland.Armory.items.ToolItems.Tools;
 import com.SkyIsland.Armory.items.WeaponItems;
-import com.SkyIsland.Armory.items.WeaponItems.Weapons;
-import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
+import com.SkyIsland.Armory.items.common.AComponent;
 import com.SkyIsland.Armory.items.tools.ArmoryBook;
+import com.SkyIsland.Armory.items.weapons.components.WeaponComponent;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,8 +39,9 @@ public class ClientProxy extends CommonProxy {
 		WhetstoneBlock.clientInit();
 		Pedestal.clientInit();
 		
-		for (Weapons key : Weapons.values())
-			WeaponItems.getWeaponBase(key).clientInit();
+//		for (Weapons key : Weapons.values())
+//			WeaponItems.getWeaponBase(key).clientInit();
+		WeaponItems.clientInit();
 		
 		for (Armors key : Armors.values())
 			ArmorItems.getArmorBase(key).clientInit();
@@ -55,6 +56,7 @@ public class ClientProxy extends CommonProxy {
 			ForgeBlocks.getBlock(key).clientInit();
 		super.init();
 		
+		WeaponComponent.registerComponents();
 		ModelRegistry.instance.performInjection();
 	}
 
@@ -79,9 +81,9 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	@Override
-	public void registerArmorPiece(ArmorPiece armorPiece) {
-		super.registerArmorPiece(armorPiece);
-		armorPiece.clientInit();
+	public void registerComponent(AComponent component) {
+		super.registerComponent(component);
+		component.clientInit();
 	}
 
 	@Override
