@@ -21,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ISmartItemModel;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,8 +31,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  */
 public abstract class Armor extends ItemArmor {
-	
-	protected static final String COMPONENT_LIST_KEY = "Components";
 	
 	protected static final String BASE_SUFFIX = "_base";
 	
@@ -181,9 +178,9 @@ public abstract class Armor extends ItemArmor {
 		if (!stack.hasTagCompound())
 			stack.setTagCompound(new NBTTagCompound());
 		
-		NBTTagCompound tag = stack.getTagCompound();
-		if (!tag.hasKey(COMPONENT_LIST_KEY, NBT.TAG_COMPOUND))
-			tag.setTag(COMPONENT_LIST_KEY, new NBTTagCompound());
+//		NBTTagCompound tag = stack.getTagCompound();
+//		if (!tag.hasKey(COMPONENT_LIST_KEY, NBT.TAG_COMPOUND))
+//			tag.setTag(COMPONENT_LIST_KEY, new NBTTagCompound());
 	}
 	
 	@Override
