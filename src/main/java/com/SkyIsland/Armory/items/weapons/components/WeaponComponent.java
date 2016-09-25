@@ -9,10 +9,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class WeaponComponent extends AComponent {
+public class WeaponComponent extends AComponent {
 	
-	protected WeaponComponent() {
+	protected String modelSuffix;
+	
+	protected WeaponComponent(String modelSuffix) {
 		super();
+		this.modelSuffix = modelSuffix;
+
+		this.maxStackSize = 1;
+		this.setMaxDamage(100);
+		this.setCreativeTab(Armory.creativeTab);
+		this.canRepair = false;
+		this.setUnlocalizedName("weaponcomp_" + modelSuffix);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -22,6 +31,11 @@ public abstract class WeaponComponent extends AComponent {
 		
 		String texturePrefix = getTexturePrefix(stack);//getUnderlyingMaterial(stack);
 		return new ModelResourceLocation(Armory.MODID + ":" + texturePrefix + "_" + getModelSuffix(), variant);
+	}
+
+	@Override
+	public String getModelSuffix() {
+		return modelSuffix;
 	}
 	
 }

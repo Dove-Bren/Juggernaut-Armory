@@ -15,7 +15,6 @@ import com.SkyIsland.Armory.gui.ArmorerStandGui;
 import com.SkyIsland.Armory.gui.ArmorerStandGui.Location;
 import com.SkyIsland.Armory.gui.ArmorerStandGui.StandContainer;
 import com.SkyIsland.Armory.gui.ArmorerStandGui.StandGui;
-import com.SkyIsland.Armory.items.HeldMetal;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.common.NestedSlotInventory;
 import com.SkyIsland.Armory.mechanics.DamageType;
@@ -318,8 +317,6 @@ public class ArmorTorso extends Armor {
 			" ", "  ..  ..", "  ......", "   ....", "   ....", "   ....",
 			"    ..", "   ....", "  ......", " "
 		});
-		System.out.println("Breasplate metal map:");
-		HeldMetal.printArray(metalMap);
 		
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
