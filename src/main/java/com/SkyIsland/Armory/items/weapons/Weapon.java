@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.items.weapons;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
@@ -17,6 +19,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -32,6 +35,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public abstract class Weapon extends Item {
 
 	private static final String DAMAGE_KEY = "DamageComponents";
+	
+	private static final String COMPONENT_KEY = "SubComponents";
 	
 	/**
 	 * Number of seconds it takes to swing and be able to swing again. 0.0f results
@@ -431,5 +436,44 @@ public abstract class Weapon extends Item {
 	public float getDamage(ItemStack stack, DamageType type) {
 		return getDamageMap(stack).get(type);
 	}
+	
+//	public Collection<ItemStack> getWeaponComponents(ItemStack weapon) {
+//		if (weapon == null || !(weapon.getItem() instanceof Weapon))
+//			return null;
+//		
+//		if (!weapon.hasTagCompound())
+//			weapon.setTagCompound(new NBTTagCompound());
+//		NBTTagCompound nbt = weapon.getTagCompound();
+//		
+//		LinkedList<ItemStack> list = new LinkedList<ItemStack>();
+//		if (!nbt.hasKey(COMPONENT_KEY, NBT.TAG_LIST))
+//			return list;
+//		NBTTagList tags = nbt.getTagList(COMPONENT_KEY, NBT.TAG_COMPOUND);
+//		NBTTagCompound sub;
+//		while (!tags.hasNoTags()) {
+//			sub = (NBTTagCompound) tags.removeTag(0);
+//			list.add(ItemStack.loadItemStackFromNBT(sub));
+//		}
+//		
+//		return list;
+//	}
+	
+	public abstract Collection<ItemStack> getWeaponComponents(ItemStack weapon);
+	
+//	public void setWeaponComponents
+	
+//	public Collection<ModelResourceLocation> getWeaponComponentModels(ItemStack weapon) {
+//		if (weapon == null || !(weapon.getItem() instanceof Weapon))
+//			return null;
+//		
+//		Collection<ItemStack> comps = getWeaponComponents(weapon);
+//		List<ModelResourceLocation> models = new LinkedList<ModelResourceLocation>();
+//		
+//		if (comps.isEmpty())
+//			return models;
+//		
+//		
+//		
+//	}
 
 }

@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.items.weapons;
 
+import java.util.Collection;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
@@ -96,6 +98,12 @@ public class ASword extends Weapon {
 	public int getTotalEnchantability() {
 		// TODO Auto-generated method stub
 		return 1;
+	}
+
+	@Override
+	public Collection<ItemStack> getWeaponComponents(ItemStack weapon) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
