@@ -14,8 +14,8 @@ import com.SkyIsland.Armory.items.ModelRegistry;
 import com.SkyIsland.Armory.items.ToolItems;
 import com.SkyIsland.Armory.items.ToolItems.Tools;
 import com.SkyIsland.Armory.items.WeaponItems;
-import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 import com.SkyIsland.Armory.items.common.AComponent;
+import com.SkyIsland.Armory.items.common.ExtendedMaterial;
 import com.SkyIsland.Armory.items.tools.ArmoryBook;
 import com.SkyIsland.Armory.items.weapons.components.WeaponComponent;
 

@@ -1,4 +1,4 @@
-package com.SkyIsland.Armory.items.armor;
+package com.SkyIsland.Armory.items.common;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.config.ModConfig;
+import com.SkyIsland.Armory.items.armor.ArmorSlot;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.item.Item;
@@ -122,6 +123,10 @@ public class ExtendedMaterial {
     public int getDurability(float armorPieceRate)
     {
         return Math.round(baseDurability * armorPieceRate);
+    }
+    
+    public float getRawDurability() {
+    	return baseDurability;
     }
 
     /*

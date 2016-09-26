@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.items.ModelRegistry;
-import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
+import com.SkyIsland.Armory.items.common.ExtendedMaterial;
 import com.SkyIsland.Armory.mechanics.DamageType;
 import com.SkyIsland.Armory.proxy.ClientInitializable;
 
@@ -35,6 +35,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public abstract class Weapon extends Item implements ClientInitializable {
 
 	private static final String DAMAGE_KEY = "DamageComponents";
+	private static final String INTERNAL_DAMAGE = "component_damage";
+	private static final String INTERNAL_MAXDAMAGE = "component_maxdamage";
 	
 	//private static final String COMPONENT_KEY = "SubComponents";
 	
@@ -75,6 +77,9 @@ public abstract class Weapon extends Item implements ClientInitializable {
         if (damageMap != null)
         for (DamageType key : damageMap.keySet())
         	weaponModifierMap.put(key, damageMap.get(key));
+        
+        //set durability to 100 for nice float conversions
+        this.setMaxDamage(100);
     }
     
     @Override
@@ -361,30 +366,57 @@ public abstract class Weapon extends Item implements ClientInitializable {
 		return blockReduction;
 	}
 	
-	public static ItemStack constructWeaponFrom(Weapon base, String name, Map<DamageType, Float> damageMap) {
+	/**
+	 * Used to set in stone the damage values of the weapon. Intended to be
+	 * used from a concrete weapon's creation call.
+	 * @param base
+	 * @param name
+	 * @param damageMap
+	 * @return
+	 */
+	protected static ItemStack constructWeaponFrom(Weapon base, String name, Map<DamageType, Float> damageMap, int durability) {
 		ItemStack stack = new ItemStack(base);
 		
 		stack.setStackDisplayName(name);
-		if (!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
+		setDamageValues(stack, damageMap);
+		setUnderlyingMaxDamage(stack, durability);
+		setUnderlyingDamage(stack, 0);
 		
-		if (!stack.getTagCompound().hasKey(DAMAGE_KEY, NBT.TAG_COMPOUND))
-			stack.getTagCompound().setTag(DAMAGE_KEY, new NBTTagCompound());
-		
-		NBTTagCompound nbt = stack.getTagCompound().getCompoundTag(DAMAGE_KEY);
-		
-		for (DamageType type : DamageType.values())
-		if (damageMap.containsKey(type)) {
-			nbt.setFloat(type.name(), damageMap.get(type));
-		}
 		
 		return stack;
 	}
 	
-	public static ItemStack constructWeapon(Weapon base, String name, ExtendedMaterial material) {
-		ItemStack stack = new ItemStack(base);
-		
-		stack.setStackDisplayName(name);
+	@Deprecated
+	protected static ItemStack constructWeapon(Weapon base, String name, ExtendedMaterial material, int durability) {
+//		ItemStack stack = new ItemStack(base);
+//		
+//		stack.setStackDisplayName(name);
+//		if (!stack.hasTagCompound())
+//			stack.setTagCompound(new NBTTagCompound());
+//		
+//		if (!stack.getTagCompound().hasKey(DAMAGE_KEY, NBT.TAG_COMPOUND))
+//			stack.getTagCompound().setTag(DAMAGE_KEY, new NBTTagCompound());
+//		
+//		NBTTagCompound nbt = stack.getTagCompound().getCompoundTag(DAMAGE_KEY);
+//		
+//		Map<DamageType, Float> damageMap = DamageType.freshMap(),
+//				cache = base.getDamageModifierMap();
+//		for (DamageType key : material.getDamageMap().keySet()) {
+//			damageMap.put(key, 
+//					material.getDamageMap().get(key) * cache.get(key) 
+//					);
+//		}
+//		
+//		for (DamageType type : DamageType.values())
+//		if (damageMap.containsKey(type)) {
+//			nbt.setFloat(type.name(), damageMap.get(type));
+//		}
+//		
+//		return stack;
+		return constructWeaponFrom(base, name, material.getDamageMap(), durability);
+	}
+	
+	protected static void setDamageValues(ItemStack stack, Map<DamageType, Float> damageMap) {
 		if (!stack.hasTagCompound())
 			stack.setTagCompound(new NBTTagCompound());
 		
@@ -393,20 +425,10 @@ public abstract class Weapon extends Item implements ClientInitializable {
 		
 		NBTTagCompound nbt = stack.getTagCompound().getCompoundTag(DAMAGE_KEY);
 		
-		Map<DamageType, Float> damageMap = DamageType.freshMap(),
-				cache = base.getDamageModifierMap();
-		for (DamageType key : material.getDamageMap().keySet()) {
-			damageMap.put(key, 
-					material.getDamageMap().get(key) * cache.get(key) 
-					);
-		}
-		
 		for (DamageType type : DamageType.values())
 		if (damageMap.containsKey(type)) {
 			nbt.setFloat(type.name(), damageMap.get(type));
 		}
-		
-		return stack;
 	}
 	
 	public Map<DamageType, Float> getDamageModifierMap() {
@@ -488,5 +510,86 @@ public abstract class Weapon extends Item implements ClientInitializable {
 //		
 //		
 //	}
+	
+	@Override
+	public void setDamage(ItemStack stack, int damage) {
+		int change = stack.getItemDamage() - damage;
+		
+		//damage secret internal damage, and update
+		//itemstack damage to reflect it
+		int actual = getUnderlyingDamage(stack),
+		    max = getUnderlyingMaxDamage(stack);
+		if (actual == -1 || actual >= max) {
+			//error, bug, glitch, etc OR it is now broken
+			super.setDamage(stack, 101); //set damage over break point to break
+			return;
+		}
+		
+		actual += change;
+		if (actual < 0)
+			actual = 0;
+		setUnderlyingDamage(stack, actual);
+		
+		//                              \/ 99 because it shouldn't be broken, and we don't want it to end up rounding down and causing it to break
+		super.setDamage(stack, Math.min(99, Math.round((float) actual / (float) max)));
+	}
+	
+	/**
+	 * Returns the nbt-stored damage this weapon has, if it exists
+	 * @param stack
+	 * @return the damage, or -1 if it can't be found
+	 */
+	protected static int getUnderlyingDamage(ItemStack stack) {
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		NBTTagCompound nbt = stack.getTagCompound();
+		if (nbt.hasKey(INTERNAL_DAMAGE, NBT.TAG_INT))
+			return nbt.getInteger(INTERNAL_DAMAGE);
+		
+		return -1;
+	}
+	
+	/**
+	 * sets the nbt-stored damage this weapon has
+	 * @param stack
+	 * @param damage the amount of damage this weapon has
+	 */
+	protected static void setUnderlyingDamage(ItemStack stack, int damage) {
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		NBTTagCompound nbt = stack.getTagCompound();
+		nbt.setInteger(INTERNAL_DAMAGE, damage);
+	}
+	
+	/**
+	 * Returns the nbt-stored max damage this weapon can have, if it exists
+	 * @param stack
+	 * @return the damage, or -1 if it can't be found
+	 */
+	protected static int getUnderlyingMaxDamage(ItemStack stack) {
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		NBTTagCompound nbt = stack.getTagCompound();
+		if (nbt.hasKey(INTERNAL_MAXDAMAGE, NBT.TAG_INT))
+			return nbt.getInteger(INTERNAL_MAXDAMAGE);
+		
+		return -1;
+	}
+	
+	/**
+	 * sets the nbt-stored max damage this weapon has
+	 * @param stack
+	 * @param damage the amount of damage this weapon has
+	 */
+	protected static void setUnderlyingMaxDamage(ItemStack stack, int damage) {
+		if (!stack.hasTagCompound())
+			stack.setTagCompound(new NBTTagCompound());
+		
+		NBTTagCompound nbt = stack.getTagCompound();
+		nbt.setInteger(INTERNAL_MAXDAMAGE, damage);
+	}
 
 }

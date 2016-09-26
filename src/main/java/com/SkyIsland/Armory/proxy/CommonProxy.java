@@ -8,8 +8,8 @@ import com.SkyIsland.Armory.forge.ForgeBlocks.ArmoryBlocks;
 import com.SkyIsland.Armory.gui.GuiHandler;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ArmorItems.Armors;
-import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
 import com.SkyIsland.Armory.items.common.AComponent;
+import com.SkyIsland.Armory.items.common.ExtendedMaterial;
 import com.SkyIsland.Armory.items.tools.ArmoryBook;
 import com.SkyIsland.Armory.world.ArmoryOreGenerator;
 

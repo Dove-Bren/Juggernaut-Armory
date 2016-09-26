@@ -7,7 +7,7 @@ import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.MetalRecord;
 import com.SkyIsland.Armory.blocks.CopperOreBlock;
 import com.SkyIsland.Armory.items.ItemBase;
-import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
+import com.SkyIsland.Armory.items.common.ExtendedMaterial;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.client.Minecraft;

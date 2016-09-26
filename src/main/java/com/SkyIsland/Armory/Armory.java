@@ -24,7 +24,7 @@ import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.ToolItems;
 import com.SkyIsland.Armory.items.WeaponItems;
-import com.SkyIsland.Armory.items.armor.ExtendedMaterial;
+import com.SkyIsland.Armory.items.common.ExtendedMaterial;
 import com.SkyIsland.Armory.listeners.ItemListener;
 import com.SkyIsland.Armory.mechanics.ArmorModificationManager;
 import com.SkyIsland.Armory.proxy.CommonProxy;

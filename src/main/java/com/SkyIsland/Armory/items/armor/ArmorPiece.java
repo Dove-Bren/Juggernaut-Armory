@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.items.common.AComponent;
+import com.SkyIsland.Armory.items.common.ExtendedMaterial;
 import com.SkyIsland.Armory.mechanics.DamageType;
 
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -16,10 +17,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ArmorPiece extends AComponent {
-	
-	private static final String INTERNAL_DAMAGE = "component_damage";
-	
-	private static final String INTERNAL_MAXDAMAGE = "component_maxdamage";
 	
 	//protected Map<DamageType, Float> protectionMap;
 	//stored in nbt, not on item
@@ -131,7 +128,6 @@ public class ArmorPiece extends AComponent {
 			return null;
 		}
 		Map<DamageType, Float> materialValues = material.getDamageReductionAmount(parentSlot);
-		System.out.println("Material map: " + materialValues);
 		
 		ItemStack stack = new ItemStack(this);
 		stack.setStackDisplayName(material.getName() + " " + stack.getDisplayName());
@@ -207,87 +203,6 @@ public class ArmorPiece extends AComponent {
 	public int hashCode() {
 		return 1793
 				+ uniqueKey.hashCode();
-	}
-	
-	@Override
-	public void setDamage(ItemStack stack, int damage) {
-		int change = stack.getItemDamage() - damage;
-		
-		//damage secret internal damage, and update
-		//itemstack damage to reflect it
-		int actual = getUnderlyingDamage(stack),
-		    max = getUnderlyingMaxDamage(stack);
-		if (actual == -1 || actual >= max) {
-			//error, bug, glitch, etc OR it is now broken
-			super.setDamage(stack, 101); //set damage over break point to break
-			return;
-		}
-		
-		actual += change;
-		if (actual < 0)
-			actual = 0;
-		setUnderlyingDamage(stack, actual);
-		
-		//                              \/ 99 because it shouldn't be broken, and we don't want it to end up rounding down and causing it to break
-		super.setDamage(stack, Math.min(99, Math.round((float) actual / (float) max)));
-	}
-	
-	/**
-	 * Returns the nbt-stored damage this weapon has, if it exists
-	 * @param stack
-	 * @return the damage, or -1 if it can't be found
-	 */
-	private int getUnderlyingDamage(ItemStack stack) {
-		if (!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-		
-		NBTTagCompound nbt = stack.getTagCompound();
-		if (nbt.hasKey(INTERNAL_DAMAGE, NBT.TAG_INT))
-			return nbt.getInteger(INTERNAL_DAMAGE);
-		
-		return -1;
-	}
-	
-	/**
-	 * sets the nbt-stored damage this weapon has
-	 * @param stack
-	 * @param damage the amount of damage this weapon has
-	 */
-	private void setUnderlyingDamage(ItemStack stack, int damage) {
-		if (!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-		
-		NBTTagCompound nbt = stack.getTagCompound();
-		nbt.setInteger(INTERNAL_DAMAGE, damage);
-	}
-	
-	/**
-	 * Returns the nbt-stored max damage this weapon can have, if it exists
-	 * @param stack
-	 * @return the damage, or -1 if it can't be found
-	 */
-	private int getUnderlyingMaxDamage(ItemStack stack) {
-		if (!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-		
-		NBTTagCompound nbt = stack.getTagCompound();
-		if (nbt.hasKey(INTERNAL_MAXDAMAGE, NBT.TAG_INT))
-			return nbt.getInteger(INTERNAL_MAXDAMAGE);
-		
-		return -1;
-	}
-	
-	/**
-	 * sets the nbt-stored max damage this weapon has
-	 * @param stack
-	 * @param damage the amount of damage this weapon has
-	 */
-	private void setUnderlyingMaxDamage(ItemStack stack, int damage) {
-		if (!stack.hasTagCompound())
-			stack.setTagCompound(new NBTTagCompound());
-		
-		NBTTagCompound nbt = stack.getTagCompound();
-		nbt.setInteger(INTERNAL_MAXDAMAGE, damage);
 	}
 	
 }
