@@ -834,28 +834,20 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 	 */
 	public static class BrazierContainer extends Container {
 		
-		private BrazierTileEntity brazier;
-		
 		public BrazierContainer(IInventory playerInv, BrazierTileEntity brazier) {
-			this.brazier = brazier;
-			short slotID = 0;
-			
 			// Construct slots for player to interact with
 			// Brazier only needs '1' inventory slot to interact with
 			// Uses slot ID 0
-			this.addSlotToContainer(new Slot(brazier, 0, 17, 30));
-			slotID = 1;
+			this.addSlotToContainer(new Slot(brazier, 0, 80, 33));
 			// Construct player inventory
 			for (int y = 0; y < 3; y++) {
 				for (int x = 0; x < 9; x++) {
 					this.addSlotToContainer(new Slot(playerInv, x + y * 9 + 9, 8 + (x * 18), 84 + (y * 18)));
-					slotID++;
 				}
 			}
 			// Construct player hotbar
 			for (int x = 0; x < 9; x++) {
 				this.addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 142));
-				slotID++;
 			}
 		}
 		
