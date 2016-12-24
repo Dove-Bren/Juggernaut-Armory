@@ -589,7 +589,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			// Construct slots for player to interact with
 			// Brazier only needs '1' inventory slot to interact with
 			// Uses slot ID 0
-			this.addSlotToContainer(new Slot(forge, 0, 124, 34));
+			this.addSlotToContainer(new Slot(forge, 0, 39, 34));
 			// Construct player inventory
 			for (int y = 0; y < 3; y++) {
 				for (int x = 0; x < 9; x++) {
@@ -600,6 +600,8 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			for (int x = 0; x < 9; x++) {
 				this.addSlotToContainer(new Slot(playerInv, x, 8 + x * 18, 142));
 			}
+			
+			
 		}
 		
 		@Override
@@ -709,6 +711,20 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 					String heat = String.format("%.1f", te.getHeat());
 					this.fontRendererObj.drawString("Heat:", horizontalMargin + offset, verticalMargin + 20, 0x000000);
 					this.fontRendererObj.drawString(heat + "", horizontalMargin + offset + this.fontRendererObj.getStringWidth("Heat: "), verticalMargin + 20, color);
+					
+
+					//130, 43
+					//2, 168 //first text
+					//28, 168
+					//size is 22x22
+					left_x = 2;
+					if (forge.meltedItems.isEmpty()) {
+						left_x = 28;
+					}
+					
+					drawTexturedModalRect(horizontalMargin + 130, verticalMargin + 43,
+							left_x, 168, 22, 22);
+					
 				}
 			}
 		}
