@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.forge;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
 import com.SkyIsland.Armory.Armory;
@@ -13,7 +15,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -28,6 +33,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidEvent;
@@ -132,6 +138,7 @@ public class Trough extends BlockBase implements ITileEntityProvider {
         	FluidStack fluid = entity.getFluid();
         	if (fluid != null) {
         		worldIn.setBlockState(pos, fluid.getFluid().getBlock().getDefaultState());
+        		worldIn.markBlockForUpdate(pos);
         		entity.fluid = null;
         	}
         	
@@ -158,6 +165,8 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 		TroughTileEntity tank = (TroughTileEntity) tent;
 		
 		FluidUtil.interactWithTank(playerIn.getHeldItem(), playerIn, tank, side);
+		worldIn.markBlockForUpdate(pos);
+		//System.out.println("Fluid now: " + tank.fluid == null ? "None" : tank.fluid.getFluid().getUnlocalizedName());
 		
 		return true;
 	}
@@ -296,6 +305,18 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 		@SideOnly(Side.CLIENT)
 		public static class Renderer extends TileEntitySpecialRenderer<TroughTileEntity> {
 
+			private static final double POS_XMIN = 0.05;
+			
+			private static final double POS_ZMIN = 0.05;
+			
+			private static final double POS_XMAX = 0.95;
+			
+			private static final double POS_ZMAX = 0.95;
+			
+			private static final double TEX_UMAX = 1;
+			
+			private static final double TEX_VMAX = (double) 1/ (double) 16;
+			
 			@Override
 			public void renderTileEntityAt(TroughTileEntity te, double x, double y, double z, float partialTicks,
 					int destroyStage) {
@@ -307,37 +328,42 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 //				if (te.getBlockMetadata() > 3) //3 and 4 are W and E facings
 //					rotate = true;
 				
-				GlStateManager.pushMatrix();
+				GL11.glPushMatrix();
+				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 				
-
-				
-				//don't use GL11 stuff, use the manager
-				//GL11.glTranslated(x, y + 1.0f, z);
-				GlStateManager.translate(x + 0.5, y + 1.85, z + 0.5);
-				
-
-				
-//				if (rotate) {
-				//GlStateManager.rotate(90.0f, 0.0f, 1.0f, 0.0f);
-//				GlStateManager.rotate(
-//						ModConfig.config.getTestValue(Key.ROTATE_ANGLE),
-//						ModConfig.config.getTestValue(Key.ROTATE_X),
-//						ModConfig.config.getTestValue(Key.ROTATE_Y),
-//						ModConfig.config.getTestValue(Key.ROTATE_Z));
-//				}
-
-//				if (te.heldRig.getItem() instanceof ItemSword
-//						|| te.heldRig.getItem() instanceof Weapon)
-				//GlStateManager.rotate(225.0f, 0.0f, 0.0f, 1.0f);
-					
-				
-				GlStateManager.enableRescaleNormal();
+				GlStateManager.translate(x, y + .1 + (.7 * ((float) te.fluid.amount / 1000.0)), z);
 				GlStateManager.scale(1.0, 1.0, 1.0); //tweak for making smaller!
+
+				// set the key rendering flags appropriately...
+			    GL11.glDisable(GL11.GL_LIGHTING);     // turn off "item" lighting (face brightness depends on which direction it is facing)
+			    GL11.glDisable(GL11.GL_BLEND);        // turn off "alpha" transparency blending
+			    GL11.glDisable(GL11.GL_CULL_FACE);
+		      	GL11.glDepthMask(true); // gem is hidden behind other objects
 				
-				//TODO render fluid!
-//				Minecraft.getMinecraft().getRenderItem().renderItem(te.heldItem, TransformType.GROUND);
-				GlStateManager.disableRescaleNormal();
+				ResourceLocation rloc = te.fluid.getFluid().getStill(te.fluid);
+				rloc = new ResourceLocation(rloc.getResourceDomain(), "textures/" + rloc.getResourcePath() + ".png");
 				
+//				float red, green, blue;
+//				int base = te.fluid.getFluid().getColor();
+//				red = base / (255^2);
+//				green = (base / (255)) % 255;
+//				blue = base % 255;
+//				GlStateManager.color(red, green, blue);
+				Color color = new Color(te.fluid.getFluid().getColor());
+				
+				this.bindTexture(rloc);
+				WorldRenderer renderer = Tessellator.getInstance().getWorldRenderer();
+				GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+				renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				
+				renderer.pos(POS_XMIN, 0, POS_ZMIN).tex(0, 0).endVertex();
+				renderer.pos(POS_XMAX, 0, POS_ZMIN).tex(TEX_UMAX, 0).endVertex();
+				renderer.pos(POS_XMAX, 0, POS_ZMAX).tex(TEX_UMAX, TEX_VMAX).endVertex();
+				renderer.pos(POS_XMIN, 0, POS_ZMAX).tex(0, TEX_VMAX).endVertex();
+				
+				Tessellator.getInstance().draw();
+				
+				GL11.glPopAttrib();
 				GL11.glPopMatrix();
 				
 			}
@@ -439,7 +465,7 @@ public class Trough extends BlockBase implements ITileEntityProvider {
 
 	        if (fluid == null)
 	        {
-	            fluid = new FluidStack(resource, Math.min(capacity, resource.amount));
+	        	fluid = new FluidStack(resource, Math.min(capacity, resource.amount));
 
                 FluidEvent.fireEvent(new FluidEvent.FluidFillingEvent(fluid, getWorld(), getPos(), this, fluid.amount));
 	            return fluid.amount;

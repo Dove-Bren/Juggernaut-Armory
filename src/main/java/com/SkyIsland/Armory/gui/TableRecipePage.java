@@ -26,14 +26,19 @@ public class TableRecipePage implements IBookPage {
 	
 	private static final int COLOR = new Color(31, 68, 20).getRGB();
 	
+	private static final int TITLE_COLOR = new Color(0, 0, 0).getRGB();
+	
 	private boolean[][] map;
+	
+	private String title;
 	
 //	private int widthCache;
 //	
 //	private int heightCache;
 	
-	public TableRecipePage(boolean[][] map) {
+	public TableRecipePage(String title, boolean[][] map) {
 		this.map = map;
+		this.title = title;
 	}
 
 	@Override
@@ -50,6 +55,10 @@ public class TableRecipePage implements IBookPage {
 		
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, TEXT_WIDTH, TEXT_HEIGHT, TEXT_WIDTH, TEXT_HEIGHT);
+		
+		//draw title
+		double len = .5 * fonter.getStringWidth(this.title);
+		fonter.drawString(this.title, (int) (centerx - len), yoffset + 10, TITLE_COLOR, false);
 		
 		//now draw cells
 		int xpos, ypos;
@@ -74,5 +83,10 @@ public class TableRecipePage implements IBookPage {
 	public void overlay(ArmoryBookScreen parent, FontRenderer fonter, int mouseX, int mouseY, int trueX, int trueY) {
 		;
 	}
+	
+	public String getTitle() {
+		return this.title;
+	}
+
 	
 }

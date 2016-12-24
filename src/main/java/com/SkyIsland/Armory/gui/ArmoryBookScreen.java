@@ -56,7 +56,6 @@ public class ArmoryBookScreen extends GuiScreen {
 		this.pages = pages;
 		this.currentPage = 0;
 		this.maxPage = (pages.size() - 1) / 2;
-		System.out.println("maxpages: " + maxPage);
 	}
 
 	@Override

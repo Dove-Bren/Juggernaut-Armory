@@ -69,15 +69,6 @@
         "west":  { "uv": [ 1.5, 0.5, 14.5, 14 ], "texture": "#trough_base_side" },
         "east":  { "uv": [ 1.5, 0.5, 14.5, 14 ], "texture": "#trough_base_side" }
     }
-},
-{
-    "__comment": "FluidLevel",
-    "from": [ 1, 14.49, 1 ],
-    "to": [ 15, 14.5, 15 ],
-    "faces": {
-        "down":  { "uv": [ 15, 15, 1, 1 ], "texture": "#texture" },
-        "up":    { "uv": [ 1, 1, 15, 15 ], "texture": "#texture" }
-    }
 }
 ]
 }

@@ -100,7 +100,7 @@ public class ForgeRecipeBook extends ArmoryBook {
 		int playerLevel = ExtendedSmith.get(player, true).getLevel();
 		map = produceMess(map, playerLevel, recipe.getRequiredLevel(), rand);
 		
-		return new TableRecipePage(map);
+		return new TableRecipePage(recipe.getTitle(), map);
 	}
 	
 	private boolean[][] produceMess(boolean[][] original, int level, int reqLevel, Random random) {

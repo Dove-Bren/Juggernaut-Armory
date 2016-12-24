@@ -320,7 +320,7 @@ public class ArmorTorso extends Armor {
 		
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
-				-5, metalMap, recipe
+				"Breastplate", -5, metalMap, recipe
 				));
 		
 		pieceContribution = DamageType.freshMap();
@@ -340,7 +340,7 @@ public class ArmorTorso extends Armor {
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
-				-4, metalMap, recipe
+				"Left Vambrace", -4, metalMap, recipe
 				));
 		
 		pieceContribution = DamageType.freshMap();
@@ -360,7 +360,7 @@ public class ArmorTorso extends Armor {
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
-				-3, metalMap, recipe
+				"Right Vambrace", -3, metalMap, recipe
 				));
 		
 		pieceContribution = DamageType.freshMap();
@@ -380,7 +380,7 @@ public class ArmorTorso extends Armor {
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
-				-2, metalMap, recipe
+				"Left Pauldron", -2, metalMap, recipe
 				));
 		
 		pieceContribution = DamageType.freshMap();
@@ -400,7 +400,7 @@ public class ArmorTorso extends Armor {
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
-				-1, metalMap, recipe
+				"Right Pauldron", -1, metalMap, recipe
 				));
 		
 		pieceContribution = DamageType.freshMap();
