@@ -1,6 +1,15 @@
 # Juggernaut's Armory - Jarmory
 
 Jaggernaut's Armory is a Forge Mod that introduced a much heavier style of damage, armor, and weapons to Minecraft. Armor progression in Vanilla Minecraft is very limited -- a maximum of 20 armor points with a capped damage reduction value. In 1.8 mechanics, this equates to a flat 80% damage reduction, in steps of 4%. While protection enchantments provide further modification and variation, the progression is very linear. In addition, there are no checks and balances to armor (like drawbacks for using diamond against iron or gold). Becaues of this, the player simply wears diamond armor as soon as they can, and have no need to ever consider again what they're wearing. Juggernaut's Armory (_Jarmory_) seeks to remedy this in two ways; split damage into multiple types, and provide much closer customization of armor. 
+
+1. [Damage Types]
+2. [Customization]
+    2.1. [Creating Components]
+4. [Support For Vanilla]
+5. [Interfacing with JArmory (APIs)]
+6. [Configuration (Server)]
+7. [Configuration (Client)]
+
 ### Damage Types
 JARMORY splits damage and protection into different damage types. By default, these are the classic _Slashing_, _Crushing_, and _Piercing_ damage. In addition, _Magic_ and _Other_ damages are also defined to directly correspond to the respective damage types from Vanilla. By doing so, damage and protection amounts are allowed to very in more than a single dimension, which allows developers much more freedom when deciding the details of armors and weapons. This added variation enables developers to hand-tune where exactly a piece of armor excels, and where it doesn't. In this way, armor and weapons become better balanced, and nonlinearity introduced to armor and weapon progression. Both armor and weapons use the split damage types.
 
@@ -82,3 +91,11 @@ In-game modification of the config is available as well. Simply press [ESC] to g
 [WeaponCraft API]: <https://github.com/Dove-Bren/SkylanderArmory/blob/master/src/main/java/com/SkyIsland/Armory/api/WeaponCraftingManager.java> "Jarmory/WeaponCraftingManager.java"
 [Fuel API]: <https://github.com/Dove-Bren/SkylanderArmory/blob/master/src/main/java/com/SkyIsland/Armory/api/ForgeManager.java> "Jarmory/ForgeManager.java"
 [Coolant API]: <https://github.com/Dove-Bren/SkylanderArmory/blob/master/src/main/java/com/SkyIsland/Armory/api/ForgeManager.java> "Jarmory/ForgeManager.java"
+
+[Damage Types]: <#damage-types>
+[Customization]: <#customization-of-armor-and-weapons>
+[Creating Components]: <#creating-components>
+[Support For Vanilla]: <#support-for-vanilla>
+[Interfacing with JArmory (APIs)]: <#interfacing-with-jarmory>
+[Configuration (Server)]: <#configuration-server>
+[Configuration (Client)]: <#configuration-client>
