@@ -4,7 +4,7 @@ Jaggernaut's Armory is a Forge Mod that introduced a much heavier style of damag
 
 1. [Damage Types]
 2. [Customization]
-    2.1. [Creating Components]
+    1. [Creating Components]
 4. [Support For Vanilla]
 5. [Interfacing with JArmory (APIs)]
 6. [Configuration (Server)]
