@@ -59,14 +59,14 @@ Much of the specifics of the interfaces can be found attached the actual API cla
 * [Metals & Materials] [MetMat API] - Register custom metals and materials for use in component crafting
 * [Alloying API] - Specify how alloyed materials are made
 * [Component API] - Add recipes for new components
-* [ArmorPiece API]* - Create new pieces of armor, with their own set of components
-* [WeaponCraft API] - Define new weapon types and the pieces that make them up
+* [Custom Armor Pieces] [ArmorPiece API]* - Create new pieces of armor, with their own set of components
+* [Custom Weapons] [WeaponCraft API] - Define new weapon types and the pieces that make them up
 * [Fuel API] - Register fuels that can be used with the braziers (and optionally the forge)
 * [Coolant API] - Define fluids that can be used as coolants and how well they work
 
 > \* - The ArmorPiece API is not an official API. Developers can still create and define new armor pieces and their list of components, but do so in a less-defined manner
 
-All of the above API's are expected to be used during the **init** phase. Doing so before will almost certainly cause *Null Pointer Exception*s, and doing so after is not gauranteed to catch your additions before creating caches. While some APIs (like the [Weapon API] are very tolerant to changes during execution, no support is available for making modifications later than the **init** phase.
+All of the above API's are expected to be used during the **init** phase. Doing so before will almost certainly cause *Null Pointer Exception*s, and doing so after is not gauranteed to catch your additions before creating caches. While some APIs (like the [Weapon API]) are very tolerant to changes during execution, no support is available for making modifications later than the **init** phase.
 
 ### Configuration (Server)
 Aside from mod developers, server administrators can also specify exactly how several different components of Jarmory works. Changes made in configuration do not add or specify new things, but dictate exactly how things should operate and what assumptions should be made. For example, serverside configuration dictates at what rate non-defined (vanilla or armor added by other mods that do not register with Jarmory) armor is converted into the respected armor categories. The default value is 70% (so armor with 10 protection ends up with 7 protection in _Slashing_, _Piercing_, and _Crushing_ damage types). This value, however, is set through configuration.
