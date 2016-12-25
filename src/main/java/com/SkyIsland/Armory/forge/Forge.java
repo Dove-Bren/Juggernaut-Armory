@@ -1,8 +1,12 @@
 package com.SkyIsland.Armory.forge;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.ForgeManager;
@@ -673,8 +677,25 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 			int textWidth = 176, textHeight = 166;
 			drawTexturedModalRect(horizontalMargin, verticalMargin, 0,0, textWidth, textHeight);
 			
+			//draw filling icon
+
+
+			//130, 43
+			//2, 168 //first text
+			//28, 168
+			//size is 22x22
+			int left_x, right_x;
+			left_x = 2;
+			if (forgeContainer.forge.meltedItems.isEmpty()) {
+				left_x = 28;
+			}
+			
+			drawTexturedModalRect(horizontalMargin + 130, verticalMargin + 43,
+					left_x, 168, 22, 22);
+			
 			//draw progress bar
-			int left_x = 85 + horizontalMargin, right_x = 92 + horizontalMargin;
+			left_x = 85 + horizontalMargin;
+			right_x = 92 + horizontalMargin;
 			int y = 63 + verticalMargin, height = (63 - 25);
 			
 			GuiContainer.drawRect(left_x, y - height, right_x, y, (new Color(0, 0, 0, 255)).getRGB());
@@ -712,22 +733,39 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 					this.fontRendererObj.drawString("Heat:", horizontalMargin + offset, verticalMargin + 20, 0x000000);
 					this.fontRendererObj.drawString(heat + "", horizontalMargin + offset + this.fontRendererObj.getStringWidth("Heat: "), verticalMargin + 20, color);
 					
-
-					//130, 43
-					//2, 168 //first text
-					//28, 168
-					//size is 22x22
-					left_x = 2;
-					if (forge.meltedItems.isEmpty()) {
-						left_x = 28;
-					}
-					
-					drawTexturedModalRect(horizontalMargin + 130, verticalMargin + 43,
-							left_x, 168, 22, 22);
-					
 				}
 			}
+			
+			
 		}
+		
+		@Override
+		protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+			int horizontalMargin = (width - xSize) / 2;
+			int verticalMargin = (height - ySize) / 2;
+			if (mouseX >= horizontalMargin + 130 && mouseX <= horizontalMargin + 152
+			 && mouseY >= verticalMargin + 43 && mouseY <= verticalMargin + 65) {
+				
+				//Disclaimer: Ugly solution ahead.
+				//Possible remedies: assemble list as items are put in.
+				
+				List<String> lines = new ArrayList<String>();
+				Map<String, Integer> counts = new HashMap<String, Integer>();
+				for (ItemStack item : forgeContainer.forge.meltedItems) {
+					if (!counts.containsKey(item.getDisplayName()))
+						counts.put(item.getDisplayName(), 1);
+					else
+						counts.put(item.getDisplayName(), counts.get(item.getDisplayName()) + 1);
+				}
+				for (Entry<String, Integer> entry : counts.entrySet()) {
+					lines.add(entry.getValue() + " x " + entry.getKey());
+				}
+				this.drawHoveringText(lines, 0, 0);
+			}
+		}
+		
+		
+		
 		
 		
 	}

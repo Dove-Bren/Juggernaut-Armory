@@ -916,6 +916,5 @@ public class Brazier extends BlockBase implements ITileEntityProvider {
 			drawTexturedModalRect(horizontalMargin, verticalMargin, 0,0, xSize, ySize);
 		}
 		
-		
 	}
 }
