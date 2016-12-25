@@ -1,6 +1,7 @@
 package com.SkyIsland.Armory.proxy;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.blocks.CopperOreBlock;
 import com.SkyIsland.Armory.blocks.Pedestal;
 import com.SkyIsland.Armory.blocks.WhetstoneBlock;
 import com.SkyIsland.Armory.forge.ForgeBlocks;
@@ -37,6 +38,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init() {
 		WhetstoneBlock.clientInit();
+		CopperOreBlock.clientInit();
 		Pedestal.clientInit();
 		
 //		for (Weapons key : Weapons.values())

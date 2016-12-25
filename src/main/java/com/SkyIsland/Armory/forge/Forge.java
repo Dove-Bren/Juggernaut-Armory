@@ -690,7 +690,7 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 				left_x = 28;
 			}
 			
-			drawTexturedModalRect(horizontalMargin + 130, verticalMargin + 43,
+			drawTexturedModalRect(horizontalMargin + 120, verticalMargin + 34,
 					left_x, 168, 22, 22);
 			
 			//draw progress bar
@@ -760,7 +760,8 @@ public class Forge extends BlockBase implements ITileEntityProvider {
 				for (Entry<String, Integer> entry : counts.entrySet()) {
 					lines.add(entry.getValue() + " x " + entry.getKey());
 				}
-				this.drawHoveringText(lines, 0, 0);
+				this.drawHoveringText(lines, mouseX - horizontalMargin, 
+						mouseY - verticalMargin);
 			}
 		}
 		
