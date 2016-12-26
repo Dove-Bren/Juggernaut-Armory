@@ -75,8 +75,8 @@ public class ArmorPlayerModel extends ModelBiped {
 		
 		GlStateManager.pushMatrix();
 //	
-		GlStateManager.rotate(parent.renderYawOffset, 0f, 1.0f, 0.0f);
 		GlStateManager.translate(transx, transy, transz);
+		GlStateManager.rotate(parent.renderYawOffset, 0f, 1.0f, 0.0f);
 //		
 		
 		//Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);

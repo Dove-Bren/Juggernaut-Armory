@@ -10,10 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
- * Piece of junk metal formed by failing to shape metal correctly or by letting
- * it cool before it was finished.
- * Scrap can be melted down (in Forge construct) to get back some of the input ingredients back. The
- * exact ingredient is set at construction, but defaults to iron.
+ * More durable and advanced piece of leather. Material for crafting.
  * @author Skyler
  *
  */
