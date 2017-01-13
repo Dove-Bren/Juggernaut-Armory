@@ -94,6 +94,7 @@ public class ClientProxy extends CommonProxy {
 //		.register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(Armory.MODID + ":" + unlocalizedName, "normal"));
 		
 		ModelRegistry.instance.registerTexture(new ResourceLocation(Armory.MODID + ":" + ExtendedMaterial.textureLocation + extendedArmorMaterial.getTexturePrefix()));
+		//ModelRegistry.instance.registerTexture(new ResourceLocation(Armory.MODID + ":" + ExtendedMaterial.modelTextureLocation + extendedArmorMaterial.getTexturePrefix()));
 	}
 	
 	@Override

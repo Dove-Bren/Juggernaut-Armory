@@ -22,6 +22,7 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 public class ExtendedMaterial {
 	
 	public static final String textureLocation = "";
+	public static final String modelTextureLocation = "textures/models/armor/";
 	
 	private String name;
 	

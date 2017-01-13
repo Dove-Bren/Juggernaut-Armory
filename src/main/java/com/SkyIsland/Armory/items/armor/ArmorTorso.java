@@ -10,6 +10,7 @@ import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.api.ArmorPieceRecipe;
 import com.SkyIsland.Armory.api.ForgeManager;
 import com.SkyIsland.Armory.api.ForgeManager.ForgeRecipe;
+import com.SkyIsland.Armory.client.armor.LayerArmor;
 import com.SkyIsland.Armory.api.IForgeTemplate;
 import com.SkyIsland.Armory.gui.ArmorerStandGui;
 import com.SkyIsland.Armory.gui.ArmorerStandGui.Location;
@@ -489,6 +490,19 @@ public class ArmorTorso extends Armor {
 		
 		return has;
 	}
+	
+	/**
+	 * Returns the subitem in the provided slot.
+	 * If there is no item, null is returned.
+	 * @param stack
+	 * @param slot
+	 * @return
+	 */
+	public ItemStack getArmorPiece(ItemStack stack, Slot slot) {
+		NestedSlotInventory<Slot> components = makeWrapper(stack);
+		
+		return components.getStackInSlot(slot);
+	}
 
 	@Override
 	public Collection<ItemStack> getNestedArmorStacks(ItemStack stack) {
@@ -531,7 +545,9 @@ public class ArmorTorso extends Armor {
 	@Override
 	@SideOnly(Side.CLIENT)
 	protected ModelBiped getModelBiped() {
-		return armorModel;
+		return LayerArmor.instance();
+		
+		//return armorModel;
 	}
 
 	@Override
