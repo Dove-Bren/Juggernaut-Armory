@@ -10,10 +10,10 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.items.armor.ArmorLegs;
+import com.SkyIsland.Armory.items.armor.ArmorLegs.Slot;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.armor.ArmorSlot;
-import com.SkyIsland.Armory.items.armor.ArmorTorso;
-import com.SkyIsland.Armory.items.armor.ArmorTorso.Slot;
 import com.google.common.collect.Lists;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -28,11 +28,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Less lossy wrapper for all torso model renderers
+ * Less lossy wrapper for all leg model renderers
  * @author Skyler
  *
  */
-public class RendererArmorChest extends ModelBiped {
+public class RendererArmorLegs extends ModelBiped {
 
 	private SmartModelRenderer PauldronLeftAccent;
 	private SmartModelRenderer PauldronLeftTop;
@@ -56,13 +56,13 @@ public class RendererArmorChest extends ModelBiped {
 	private SmartModelRenderer CapeBottom;
 	
 	private ResourceLocation missingTexture
-		= new ResourceLocation(Armory.MODID, "textures/models/armor/missing_torso.png");
+		= new ResourceLocation(Armory.MODID, "textures/models/armor/missing_legs.png");
 	
-	private Map<ArmorTorso.Slot, Collection<SmartModelRenderer>> pieceMap;
+	private Map<ArmorLegs.Slot, Collection<SmartModelRenderer>> pieceMap;
 	private Set<SmartModelRenderer> activeRenderers;
 	private Map<UUID, Float> capeRotations;
 	  
-	public RendererArmorChest(float scale) {
+	public RendererArmorLegs(float scale) {
 		super(scale, 0, 128, 128);
 		textureWidth = 128;
 		textureHeight = 64;
@@ -277,19 +277,17 @@ public class RendererArmorChest extends ModelBiped {
 	    activeRenderers.add(CapeTopStripe);
         
 
-		pieceMap = new EnumMap<ArmorTorso.Slot, Collection<SmartModelRenderer>>(ArmorTorso.Slot.class);
+		pieceMap = new EnumMap<ArmorLegs.Slot, Collection<SmartModelRenderer>>(ArmorLegs.Slot.class);
 		
-		pieceMap.put(ArmorTorso.Slot.BREASTPLATE,
+		pieceMap.put(ArmorLegs.Slot.CUISSE_LEFT,
 				Lists.newArrayList(Breastplate, BreastplateAccentRight, BreastplateAccentLeft, BreastplateAccentRight2, BreastplateAccentLeft2));
-		pieceMap.put(ArmorTorso.Slot.PAULDRON_LEFT,
+		pieceMap.put(ArmorLegs.Slot.CUISSE_RIGHT,
 				Lists.newArrayList(PauldronLeftAccent, PauldronLeftTop));
-		pieceMap.put(ArmorTorso.Slot.PAULDRON_RIGHT,
+		pieceMap.put(ArmorLegs.Slot.POLEYN_LEFT,
 				Lists.newArrayList(PauldronRightAccent, PauldronRightTop));
-		pieceMap.put(ArmorTorso.Slot.VAMBRACE_LEFT,
+		pieceMap.put(ArmorLegs.Slot.POLEYN_RIGHT,
 				Lists.newArrayList(VambraceLeftAccent, VambraceLeft));
-		pieceMap.put(ArmorTorso.Slot.VAMBRACE_RIGHT,
-				Lists.newArrayList(VambraceRightAccent, VambraceRight));
-		pieceMap.put(ArmorTorso.Slot.CAPE,
+		pieceMap.put(ArmorLegs.Slot.SKIRT,
 				Lists.newArrayList(CapeShoulderLeft, CapeShoulderRight, CapeShoulderConnection, CapeTopStripe, CapeMiddle, CapeLowerMiddle, CapeBottom));
 	
     }
@@ -305,9 +303,9 @@ public class RendererArmorChest extends ModelBiped {
 			EntityLivingBase e = (EntityLivingBase) entity;
 			ItemStack item = e.getEquipmentInSlot(ArmorSlot.TORSO.getPlayerSlot() + 1);
 			
-			if (item != null && item.getItem() instanceof ArmorTorso) {
+			if (item != null && item.getItem() instanceof ArmorLegs) {
 				//torso armor in torso position. Set children attributes
-				ArmorTorso armor = (ArmorTorso) item.getItem();
+				ArmorLegs armor = (ArmorLegs) item.getItem();
 				ArmorPiece piece;
 				for (Entry<Slot, Collection<SmartModelRenderer>> entry : pieceMap.entrySet()) {
 					piece = armor.getComponentItem(entry.getKey());
@@ -333,7 +331,7 @@ public class RendererArmorChest extends ModelBiped {
 					ResourceLocation text = new ResourceLocation(
 							Armory.MODID, "textures/models/armor/" +
 							piece.getTexturePrefix(pieceItem)
-							+ "_torso.png");
+							+ "_legs.png");
 					
 //					if (text == null) {
 //						System.out.println("Returned null texture for piece: "

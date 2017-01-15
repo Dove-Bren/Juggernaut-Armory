@@ -1,7 +1,6 @@
 package com.SkyIsland.Armory.client.armor;
 
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelRenderer;
 
 /**
  * Less lossy wrapper for all chest/torso model renderers
