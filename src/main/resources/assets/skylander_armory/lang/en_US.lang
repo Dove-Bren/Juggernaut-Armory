@@ -10,6 +10,7 @@ item.studded_leather.name=Studded Leather
 item.copper_ingot.name=Copper Ingot
 
 item.torso_base.name=Chestplate Armor Piece
+item.legs_base.name=Leg Armor Piece
 
 item.armorpiece_breastplate.name=Breastplate
 item.armorpiece_vambrace_right.name=Right Vambrace
@@ -17,6 +18,11 @@ item.armorpiece_vambrace_left.name=Left Vambrace
 item.armorpiece_pauldron_right.name=Right Pauldron
 item.armorpiece_pauldron_left.name=Left Pauldron
 item.armorpiece_cape.name=Cape
+item.armorpiece_cuisse_left.name=Left Cuisse
+item.armorpiece_cuisse_right.name=Right Cuisse
+item.armorpiece_poleyn_left.name=Left Poleyn
+item.armorpiece_poleyn_right.name=Right Poleyn
+item.armorpiece_skirt.name=Armor Skirt
 
 tile.skylander_armory_whetstone_block.name=Whetstone Block
 tile.skylander_armory_pedestal.name=Pedestal

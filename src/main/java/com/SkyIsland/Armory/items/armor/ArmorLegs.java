@@ -118,7 +118,7 @@ public class ArmorLegs extends Armor {
 	protected ArmorPlayerModel armorModel;
 	
 	public ArmorLegs(String unlocalizedName) {
-		super(ArmorSlot.TORSO, unlocalizedName);
+		super(ArmorSlot.LEGS, unlocalizedName);
 		pieces = new EnumMap<Slot, ArmorPiece>(Slot.class);
 		
 		

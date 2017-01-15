@@ -345,6 +345,8 @@ public class RendererArmorChest extends ModelBiped {
 						r.showModel = true;
 					}
 				}
+			} else {
+				return;
 			}
 		} else {
 			System.out.print("|");

@@ -59,53 +59,57 @@ public class RendererArmorLegs extends ModelBiped {
 		activeRenderers = new HashSet<SmartModelRenderer>();
 		
 		CuisseLeft = new SmartModelRenderer(this, 0, 30, missingTexture);
-		CuisseLeft.addBox(1F, 11F, 0F, 4, 5, 6, scale);
+		CuisseLeft.addBox(-2F, 0F, 0F, 4, 5, 6, scale);
 		CuisseLeft.setRotationPoint(0F, 0F, -3F);
 		CuisseLeft.setTextureSize(128, 64);
 		CuisseLeft.mirror = true;
 		setRotation(CuisseLeft, 0F, 0F, 0F);
 		CuisseLeftAccent = new SmartModelRenderer(this, 0, 41, missingTexture);
-		CuisseLeftAccent.addBox(0F, 12F, -4F, 6, 1, 6, scale);
+		CuisseLeftAccent.addBox(-2F, 1F, -4F, 6, 1, 6, scale);
 		CuisseLeftAccent.setRotationPoint(0F, 0F, 0F);
 		CuisseLeftAccent.setTextureSize(128, 64);
 		CuisseLeftAccent.mirror = true;
 		setRotation(CuisseLeftAccent, 0F, 0F, 0F);
 		CuisseRight = new SmartModelRenderer(this, 20, 30, missingTexture);
-		CuisseRight.addBox(-5F, 11F, -3F, 4, 5, 6, scale);
+		CuisseRight.addBox(-3F, 0F, 0F, 4, 5, 6, scale);
 		CuisseRight.setRotationPoint(0F, 0F, 0F);
 		CuisseRight.setTextureSize(128, 64);
 		CuisseRight.mirror = true;
 		setRotation(CuisseRight, 0F, 0F, 0F);
 		CuisseRightAccent = new SmartModelRenderer(this, 24, 41, missingTexture);
-		CuisseRightAccent.addBox(-6F, 12F, -4F, 6, 1, 6, scale);
+		CuisseRightAccent.addBox(-4F, 1F, -4F, 6, 1, 6, scale);
 		CuisseRightAccent.setRotationPoint(0F, 0F, 0F);
 		CuisseRightAccent.setTextureSize(128, 64);
 		CuisseRightAccent.mirror = true;
 		setRotation(CuisseRightAccent, 0F, 0F, 0F);
 		PoleynLeft = new SmartModelRenderer(this, 0, 52, missingTexture);
-		PoleynLeft.addBox(0F, 15F, -4F, 4, 3, 2, scale);
+		PoleynLeft.addBox(-2F, 4F, -4F, 4, 3, 2, scale);
 		PoleynLeft.setRotationPoint(0F, 0F, 0F);
 		PoleynLeft.setTextureSize(128, 64);
 		PoleynLeft.mirror = true;
 		setRotation(PoleynLeft, 0F, 0F, 0F);
 		PoleynLeftAccent = new SmartModelRenderer(this, 0, 57, missingTexture);
-		PoleynLeftAccent.addBox(4F, 16F, -3F, 1, 2, 4, scale);
+		PoleynLeftAccent.addBox(2F, 5F, -3F, 1, 2, 4, scale);
 		PoleynLeftAccent.setRotationPoint(0F, 0F, 0F);
 		PoleynLeftAccent.setTextureSize(128, 64);
 		PoleynLeftAccent.mirror = true;
 		setRotation(PoleynLeftAccent, 0F, 0F, 0F);
 		PoleynRight = new SmartModelRenderer(this, 12, 52, missingTexture);
-		PoleynRight.addBox(-4F, 15F, -4F, 4, 3, 2, scale);
+		PoleynRight.addBox(-2F, 4F, -4F, 4, 3, 2, scale);
 		PoleynRight.setRotationPoint(0F, 0F, 0F);
 		PoleynRight.setTextureSize(128, 64);
 		PoleynRight.mirror = true;
 		setRotation(PoleynRight, 0F, 0F, 0F);
 		PoleynRightAccent = new SmartModelRenderer(this, 12, 57, missingTexture);
-		PoleynRightAccent.addBox(-5F, 16F, -3F, 1, 2, 4, scale);
+		PoleynRightAccent.addBox(-3F, 5F, -3F, 1, 2, 4, scale);
 		PoleynRightAccent.setRotationPoint(0F, 0F, 0F);
 		PoleynRightAccent.setTextureSize(128, 64);
 		PoleynRightAccent.mirror = true;
 		setRotation(PoleynRightAccent, 0F, 0F, 0F);
+		
+		//skirt is slightly larger
+		scale = scale + 0.05f;
+		
 		SkirtLeftTop = new SmartModelRenderer(this, 32, 0, missingTexture);
 		SkirtLeftTop.addBox(5F, 11F, -3F, 1, 1, 6, scale);
 		SkirtLeftTop.setRotationPoint(0F, 0F, 0F);
@@ -191,10 +195,9 @@ public class RendererArmorLegs extends ModelBiped {
 		//rendering chest
 		if (entity instanceof EntityLivingBase) {
 			EntityLivingBase e = (EntityLivingBase) entity;
-			ItemStack item = e.getEquipmentInSlot(ArmorSlot.TORSO.getPlayerSlot() + 1);
+			ItemStack item = e.getEquipmentInSlot(ArmorSlot.LEGS.getPlayerSlot() + 1);
 			
 			if (item != null && item.getItem() instanceof ArmorLegs) {
-				//torso armor in torso position. Set children attributes
 				ArmorLegs armor = (ArmorLegs) item.getItem();
 				ArmorPiece piece;
 				for (Entry<Slot, Collection<SmartModelRenderer>> entry : pieceMap.entrySet()) {
@@ -233,6 +236,8 @@ public class RendererArmorLegs extends ModelBiped {
 						r.showModel = true;
 					}
 				}
+			} else {
+				return;
 			}
 		} else {
 			System.out.print("|");

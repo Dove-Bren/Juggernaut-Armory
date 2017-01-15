@@ -5,7 +5,9 @@ import java.util.Map;
 import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ArmorItems.Armors;
+import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.armor.Armor;
+import com.SkyIsland.Armory.items.armor.ArmorLegs;
 import com.SkyIsland.Armory.items.armor.ArmorTorso;
 import com.SkyIsland.Armory.items.armor.ArmorTorso.Slot;
 import com.SkyIsland.Armory.items.common.ExtendedMaterial;
@@ -79,12 +81,27 @@ public class ArmorModificationManager {
 				
 				ArmorTorso torso = (ArmorTorso) ArmorItems.getArmorBase(Armors.TORSO);
 				stack = new ItemStack(torso);
-				ExtendedMaterial mat = ExtendedMaterial.lookupMaterial(Items.iron_ingot);
+				ExtendedMaterial mat = ExtendedMaterial.lookupMaterial(
+						MiscItems.getItem(MiscItems.Items.COPPER_INGOT)
+						);
 				
 				for (Slot s : ArmorTorso.Slot.values()) {
 					piece = torso.getComponentItem(s).constructPiece(mat
 							);
 					torso.setArmorPiece(stack, s, piece);
+				}
+				
+				event.entityPlayer.inventory.addItemStackToInventory(stack);
+				
+				
+				ArmorLegs legs = (ArmorLegs) ArmorItems.getArmorBase(Armors.LEGS);
+				stack = new ItemStack(legs);
+				mat = ExtendedMaterial.lookupMaterial(Items.iron_ingot);
+				
+				for (ArmorLegs.Slot s : ArmorLegs.Slot.values()) {
+					piece = legs.getComponentItem(s).constructPiece(mat
+							);
+					legs.setArmorPiece(stack, s, piece);
 				}
 				
 				event.entityPlayer.inventory.addItemStackToInventory(stack);
