@@ -147,8 +147,16 @@ public class ArmorLegs extends Armor {
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.CUISSE_LEFT, piece);
 		metalMap = ForgeRecipe.drawMap(new String[]{
-			" ", "  ..  ..", "  ......", "   ....", "   ....", "   ....",
-			"    ..", "   ....", "  ......", " "
+			"          ",
+			"          ",
+			"    ...   ",
+			"   ...    ",
+			"  ....    ",
+			"  ....    ",
+			"  ....    ",
+			"  ....    ",
+			"          ",
+			"          "
 		});
 		
 		recipe = new ArmorPieceRecipe(piece);
@@ -168,8 +176,16 @@ public class ArmorLegs extends Armor {
 		//piece.setzOffset(-0.4f);
 		pieces.put(Slot.CUISSE_RIGHT, piece);
 		metalMap = ForgeRecipe.drawMap(new String[]{
-				" ", " ", "     .", "  . ..", "  ....", "    ..",
-				"    ..", "   . .", " ", " "
+				"          ",
+				"          ",
+				"   ...    ",
+				"    ...   ",
+				"    ....  ",
+				"    ....  ",
+				"    ....  ",
+				"    ....  ",
+				"          ",
+				"          "
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
@@ -190,8 +206,16 @@ public class ArmorLegs extends Armor {
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.POLEYN_LEFT, piece);
 		metalMap = ForgeRecipe.drawMap(new String[]{
-				" ", " ", "    .", "    .. .", "    ....", "    ..",
-				"    ..", "    . .", " ", " "
+				"          ",
+				"  ..      ",
+				" ...      ",
+				"  ....    ",
+				" ......   ",
+				"  .....   ",
+				"   ...    ",
+				"          ",
+				"          ",
+				"          "
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
@@ -210,8 +234,16 @@ public class ArmorLegs extends Armor {
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.POLEYN_RIGHT, piece);
 		metalMap = ForgeRecipe.drawMap(new String[]{
-				" ", "   .", " ...", " . ...", "   ....", "   ...",
-				" ", " ", " ", " "
+				"          ",
+				"      ..  ",
+				"      ... ",
+				"    ....  ",
+				"   ...... ",
+				"   .....  ",
+				"    ...   ",
+				"          ",
+				"          ",
+				"          "
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(

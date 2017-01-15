@@ -59,7 +59,7 @@ public class RendererArmorLegs extends ModelBiped {
 		activeRenderers = new HashSet<SmartModelRenderer>();
 		
 		CuisseLeft = new SmartModelRenderer(this, 0, 30, missingTexture);
-		CuisseLeft.addBox(-2F, 0F, 0F, 4, 5, 6, scale);
+		CuisseLeft.addBox(-2F, 0F, -3F, 4, 5, 6, scale);
 		CuisseLeft.setRotationPoint(0F, 0F, -3F);
 		CuisseLeft.setTextureSize(128, 64);
 		CuisseLeft.mirror = true;
@@ -71,7 +71,7 @@ public class RendererArmorLegs extends ModelBiped {
 		CuisseLeftAccent.mirror = true;
 		setRotation(CuisseLeftAccent, 0F, 0F, 0F);
 		CuisseRight = new SmartModelRenderer(this, 20, 30, missingTexture);
-		CuisseRight.addBox(-3F, 0F, 0F, 4, 5, 6, scale);
+		CuisseRight.addBox(-3F, 0F, -3F, 4, 5, 6, scale);
 		CuisseRight.setRotationPoint(0F, 0F, 0F);
 		CuisseRight.setTextureSize(128, 64);
 		CuisseRight.mirror = true;
