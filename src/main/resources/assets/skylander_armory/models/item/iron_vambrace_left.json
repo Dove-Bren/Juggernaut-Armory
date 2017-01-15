@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "items/arrow"
+        "layer0": "skylander_armory:items/iron_vambrace_left"
     },
     "display": {
         "thirdperson": {

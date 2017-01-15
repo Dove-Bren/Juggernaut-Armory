@@ -1,10 +1,9 @@
 package com.SkyIsland.Armory.client.armor;
 
-import com.SkyIsland.Armory.Armory;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,12 +39,12 @@ public class SmartModelRenderer extends ModelRenderer {
 			System.out.println("passed null texture!");
 			return;
 		}
-		System.out.println("provided texture " + texture.getResourcePath());
-		if (Minecraft.getMinecraft().getRenderManager().renderEngine
-				.getTexture(cache) == null) {
-			this.cache = missing;
-			System.out.print("[X]");
-		}
+//		System.out.println("provided texture " + texture.getResourcePath());
+//		if (Minecraft.getMinecraft().getRenderManager().renderEngine
+//				.getTexture(cache) == null) {
+//			this.cache = missing;
+//			System.out.print("[X]");
+//		}
 		
 	}
 	
@@ -56,8 +55,14 @@ public class SmartModelRenderer extends ModelRenderer {
 			return;
 		
 		//same as LayerAmorBiped's this.renderer.bindTexture
-		if (cache != null)
-			Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(cache);
+		if (cache != null) {
+			try {
+				Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(cache);
+			} catch (ReportedException e) {
+				cache = missing;
+				Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(cache);
+			}
+		} 
 		
 //		p_78785_1_ = ModConfig.config.getTestValue(ModConfig.Key.ARMOR_SCALE);
 //		System.out.println("  > show: " + this.showModel + " | scale: " + p_78785_1_);

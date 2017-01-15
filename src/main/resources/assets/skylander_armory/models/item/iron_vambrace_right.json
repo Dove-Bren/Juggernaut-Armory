@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "skylander_armory:items/iron_breastplate"
+        "layer0": "skylander_armory:items/iron_vambrace_right"
     },
     "display": {
         "thirdperson": {

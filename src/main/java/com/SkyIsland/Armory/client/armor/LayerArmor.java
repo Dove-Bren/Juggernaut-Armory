@@ -1,7 +1,5 @@
 package com.SkyIsland.Armory.client.armor;
 
-import com.SkyIsland.Armory.config.ModConfig;
-
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 

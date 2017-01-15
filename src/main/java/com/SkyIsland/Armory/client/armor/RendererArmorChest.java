@@ -84,57 +84,61 @@ public class RendererArmorChest extends ModelBiped {
 //	      LegRight.mirror = true;
 //	      setRotation(LegRight, 0F, 0F, 0F);
 	    PauldronLeftAccent = new SmartModelRenderer(this, 0, 56, missingTexture);
-	    PauldronLeftAccent.addBox(5F, -3F, -2F, 7, 4, 4, scale);
+	    PauldronLeftAccent.addBox(1F, -4F, -2F, 7, 4, 4, scale);
 	    //was 1, -3, 0
+	    //next was 5, -3, -2
 	    PauldronLeftAccent.setRotationPoint(0F, 0F, 0F);
 	    //PauldronLeftAccent.setRotationPoint(4F, 0F, -1F);
 	    PauldronLeftAccent.setTextureSize(textureWidth, textureHeight);
 	    PauldronLeftAccent.mirror = true;
 	    setRotation(PauldronLeftAccent, 0F, 0F, 0F);
 	    PauldronLeftTop = new SmartModelRenderer(this, 23, 53, missingTexture);
-	    PauldronLeftTop.addBox(4F, -2F, -3F, 6, 5, 6, scale);
+	    PauldronLeftTop.addBox(0F, -3F, -3F, 6, 5, 6, scale);
 	    //was 0, -2, -1
+	    //next was 4
 	    PauldronLeftTop.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(4F, 0F, -1F);
 	    PauldronLeftTop.setTextureSize(textureWidth, textureHeight);
 	    PauldronLeftTop.mirror = true;
 	    setRotation(PauldronLeftTop, 0F, 0F, 0F);
 	    PauldronRightTop = new SmartModelRenderer(this, 47, 53, missingTexture);
-	    PauldronRightTop.addBox(-11F, -2F, -3F, 6, 5, 6, scale);
+	    PauldronRightTop.addBox(-6F, -3F, -3F, 6, 5, 6, scale);
 	    //was -2, -2, -1
+	    //next was -11
 	    PauldronRightTop.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-8F, 0F, -1F);
 	    PauldronRightTop.setTextureSize(textureWidth, textureHeight);
 	    PauldronRightTop.mirror = true;
 	    setRotation(PauldronRightTop, 0F, 0F, 0F);
 	    PauldronRightAccent = new SmartModelRenderer(this, 71, 56, missingTexture);
-	    PauldronRightAccent.addBox(-13F, -3F, -2F, 7, 4, 4, scale);
+	    PauldronRightAccent.addBox(-8F, -4F, -2F, 7, 4, 4, scale);
 	    //was -4, -3, 0
+	    //next was -13
 	    PauldronRightAccent.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-8F, 0F, -1F);
 	    PauldronRightAccent.setTextureSize(textureWidth, textureHeight);
 	    PauldronRightAccent.mirror = true;
 	    setRotation(PauldronRightAccent, 0F, 0F, 0F);
 	    VambraceLeft = new SmartModelRenderer(this, 0, 43, missingTexture);
-	    VambraceLeft.addBox(6F, 6F, -3F, 3, 5, 5, scale);
+	    VambraceLeft.addBox(2F, 5F, -3F, 3, 5, 4, scale);
 	    //was 2 6 -1
 	    VambraceLeft.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(4F, 0F, -1F);
 	    VambraceLeft.setTextureSize(textureWidth, textureHeight);
 	    VambraceLeft.mirror = true;
 	    setRotation(VambraceLeft, 0F, 0F, 0F);
 	    VambraceLeftAccent = new SmartModelRenderer(this, 16, 43, missingTexture);
-	    VambraceLeftAccent.addBox(9F, 7F, -2F, 1, 3, 3, scale);
+	    VambraceLeftAccent.addBox(5F, 6F, -2F, 1, 3, 3, scale);
 	    //was 5 7 0
 	    VambraceLeftAccent.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(4F, 0F, -1F);
 	    VambraceLeftAccent.setTextureSize(textureWidth, textureHeight);
 	    VambraceLeftAccent.mirror = true;
 	    setRotation(VambraceLeftAccent, 0F, 0F, 0F);
 	    VambraceRight = new SmartModelRenderer(this, 32, 43, missingTexture);
-	    VambraceRight.addBox(-9F, 6F, -3F, 3, 5, 5, scale);
+	    VambraceRight.addBox(-4F, 5F, -3F, 3, 5, 4, scale);
 	    //was -1 6 -1
 	    VambraceRight.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-8F, 0F, -1F);
 	    VambraceRight.setTextureSize(textureWidth, textureHeight);
 	    VambraceRight.mirror = true;
 	    setRotation(VambraceRight, 0F, 0F, 0F);
 	    VambraceRightAccent = new SmartModelRenderer(this, 24, 43, missingTexture);
-	    VambraceRightAccent.addBox(-10F, 7F, -2F, 1, 3, 3, scale);
+	    VambraceRightAccent.addBox(-5F, 6F, -2F, 1, 3, 3, scale);
 	    //was -2 7 0
 	    VambraceRightAccent.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-8F, 0F, -1F);
 	    VambraceRightAccent.setTextureSize(textureWidth, textureHeight);
