@@ -1,5 +1,7 @@
 package com.SkyIsland.Armory.client.armor;
 
+import com.SkyIsland.Armory.config.ModConfig;
+
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 
@@ -30,20 +32,22 @@ public class LayerArmor extends ModelBiped {
 		;
 	}
 	
-	private float scaleCache;
+	private float cacheX, cacheY, cacheZ;
 	
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 //		head.render(entity, f, f1, f2, f3, f4, f5);
 		
-//		//TEST CODE
-//		float config = ModConfig.config.getTestValue(ModConfig.Key.ARMOR_SCALE);
-//		if (config - scaleCache < -.01 || config - scaleCache > .01) {
-//			scaleCache = config;
-//			System.out.println("Changing scale to " + scaleCache);
-//			chest = new RendererArmorChest(
-//				scaleCache);
-//		}
+		//TEST CODE
+		float config = ModConfig.config.getTestValue(ModConfig.Key.CAPE_X);
+		if (Math.abs(config - cacheX) > -.01) {
+			cacheX = config;
+			cacheY = ModConfig.config.getTestValue(ModConfig.Key.CAPE_Y);
+			cacheZ = ModConfig.config.getTestValue(ModConfig.Key.CAPE_Z);
+			System.out.println("Changing xyz to (" + cacheX + ", " + cacheY + ", " + cacheZ + ")");
+			chest = new RendererArmorChest(
+				0);
+		}
 		
 		chest.render(entity, f, f1, f2, f3, f4, f5);
 //		legs.render(entity, f, f1, f2, f3, f4, f5);

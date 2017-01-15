@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.armor.ArmorSlot;
 import com.SkyIsland.Armory.items.armor.ArmorTorso;
@@ -16,6 +17,7 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -41,6 +43,14 @@ public class RendererArmorChest extends ModelBiped {
 	private SmartModelRenderer BreastplateAccentLeft;
 	private SmartModelRenderer BreastplateAccentLeft2;
 	private SmartModelRenderer BreastplateAccentRight2;
+	private SmartModelRenderer CapeShoulderRight;
+	private SmartModelRenderer CapeShoulderLeft;
+	private SmartModelRenderer CapeShoulderConnection;
+	private SmartModelRenderer CapeTopStripe;
+	private SmartModelRenderer CapeMiddle;
+	private SmartModelRenderer CapeLowerMiddle;
+	private SmartModelRenderer CapeBottom;
+	
 	private ResourceLocation missingTexture
 		= new ResourceLocation(Armory.MODID, "textures/models/armor/missing_torso.png");
 	
@@ -56,31 +66,31 @@ public class RendererArmorChest extends ModelBiped {
 //	      Chest = new ModelRenderer(this, 0, 0);
 //	      Chest.addBox(0F, 0F, 0F, 8, 12, 4);
 //	      Chest.setRotationPoint(-4F, 0F, -1F);
-//	      Chest.setTextureSize(128, 64);
+//	      Chest.setTextureSize(textureWidth, textureHeight);
 //	      Chest.mirror = true;
 //	      setRotation(Chest, 0F, 0F, 0F);
 //	      ArmLeft = new ModelRenderer(this, 0, 0);
 //	      ArmLeft.addBox(0F, 0F, 0F, 4, 12, 4);
 //	      ArmLeft.setRotationPoint(4F, 0F, -1F);
-//	      ArmLeft.setTextureSize(128, 64);
+//	      ArmLeft.setTextureSize(textureWidth, textureHeight);
 //	      ArmLeft.mirror = true;
 //	      setRotation(ArmLeft, 0F, 0F, 0F);
 //	      ArmRight = new ModelRenderer(this, 0, 0);
 //	      ArmRight.addBox(0F, 0F, 0F, 4, 12, 4);
 //	      ArmRight.setRotationPoint(-8F, 0F, -1F);
-//	      ArmRight.setTextureSize(128, 64);
+//	      ArmRight.setTextureSize(textureWidth, textureHeight);
 //	      ArmRight.mirror = true;
 //	      setRotation(ArmRight, 0F, 0F, 0F);
 //	      LegLeft = new ModelRenderer(this, 0, 0);
 //	      LegLeft.addBox(0F, 0F, 0F, 4, 12, 4);
 //	      LegLeft.setRotationPoint(0F, 12F, -1F);
-//	      LegLeft.setTextureSize(128, 64);
+//	      LegLeft.setTextureSize(textureWidth, textureHeight);
 //	      LegLeft.mirror = true;
 //	      setRotation(LegLeft, 0F, 0F, 0F);
 //	      LegRight = new ModelRenderer(this, 0, 0);
 //	      LegRight.addBox(0F, 0F, 0F, 4, 12, 4);
 //	      LegRight.setRotationPoint(-4F, 12F, -1F);
-//	      LegRight.setTextureSize(128, 64);
+//	      LegRight.setTextureSize(textureWidth, textureHeight);
 //	      LegRight.mirror = true;
 //	      setRotation(LegRight, 0F, 0F, 0F);
 	    PauldronLeftAccent = new SmartModelRenderer(this, 0, 56, missingTexture);
@@ -175,6 +185,55 @@ public class RendererArmorChest extends ModelBiped {
 	    BreastplateAccentRight2.setTextureSize(textureWidth, textureHeight);
 	    BreastplateAccentRight2.mirror = true;
 	    setRotation(BreastplateAccentRight2, 0F, 0F, 0F);
+	    
+	    CapeShoulderRight = new SmartModelRenderer(this, 32, 0, missingTexture);
+	    CapeShoulderRight.addBox(-2F, -3F, -2F, 6, 2, 2);
+	    CapeShoulderRight.setRotationPoint(0F, 0F, 0F);
+	    CapeShoulderRight.setTextureSize(128, 64);
+	    CapeShoulderRight.mirror = true;
+	    setRotation(CapeShoulderRight, 0F, 0F, 0F);
+	    CapeShoulderLeft = new SmartModelRenderer(this, 32, 4, missingTexture);
+	    CapeShoulderLeft.addBox(6F, -3F, -2F, 6, 2, 2);
+	    CapeShoulderLeft.setRotationPoint(0F, 0F, 0F);
+	    CapeShoulderLeft.setTextureSize(128, 64);
+	    CapeShoulderLeft.mirror = true;
+	    setRotation(CapeShoulderLeft, 0F, 0F, 0F);
+	    CapeShoulderConnection = new SmartModelRenderer(this, 32, 8, missingTexture);
+	    CapeShoulderConnection.addBox(-1F, -1F, -1F, 12, 2, 1);
+	    CapeShoulderConnection.setRotationPoint(0F, 0F, 0F);
+	    CapeShoulderConnection.setTextureSize(128, 64);
+	    CapeShoulderConnection.mirror = true;
+	    setRotation(CapeShoulderConnection, 0F, 0F, 0F);
+	    CapeTopStripe = new SmartModelRenderer(this, 48, 0, missingTexture);
+	    CapeTopStripe.addBox(ModConfig.config.getTestValue(ModConfig.Key.CAPE_X),
+	    		ModConfig.config.getTestValue(ModConfig.Key.CAPE_Y),
+	    		ModConfig.config.getTestValue(ModConfig.Key.CAPE_Z), 10, 3, 1);
+	    CapeTopStripe.setRotationPoint(0F, 0F, 0F);
+	    CapeTopStripe.setTextureSize(128, 64);
+	    CapeTopStripe.mirror = true;
+	    setRotation(CapeTopStripe, 0F, 0F, 0F);
+	    CapeMiddle = new SmartModelRenderer(this, 70, 0, missingTexture);
+	    CapeMiddle.addBox(0F, 3F, 0F, 10, 7, 1);
+	    CapeMiddle.setRotationPoint(0F, 0F, 0F);
+	    CapeMiddle.setTextureSize(128, 64);
+	    CapeMiddle.mirror = true;
+	    setRotation(CapeMiddle, 0F, 0F, 0F);
+	    CapeLowerMiddle = new SmartModelRenderer(this, 92, 0, missingTexture);
+	    CapeLowerMiddle.addBox(-1F, 9F, 1F, 12, 9, 1);
+	    CapeLowerMiddle.setRotationPoint(0F, 0F, 0F);
+	    CapeLowerMiddle.setTextureSize(128, 64);
+	    CapeLowerMiddle.mirror = true;
+	    setRotation(CapeLowerMiddle, 0F, 0F, 0F);
+	    CapeBottom = new SmartModelRenderer(this, 90, 10, missingTexture);
+	    CapeBottom.addBox(-2F, 18F, 1F, 14, 1, 1);
+	    CapeBottom.setRotationPoint(0F, 0F, 0F);
+	    CapeBottom.setTextureSize(128, 64);
+	    CapeBottom.mirror = true;
+	    setRotation(CapeBottom, 0F, 0F, 0F);
+
+
+	    
+	    
 	      
 	    bipedLeftArm.addChild(PauldronLeftTop);
 	    bipedLeftArm.addChild(PauldronLeftAccent);
@@ -187,6 +246,14 @@ public class RendererArmorChest extends ModelBiped {
 	    bipedRightArm.addChild(VambraceRightAccent);
 	      
 	    bipedBody.addChild(Breastplate);
+	    bipedBody.addChild(CapeTopStripe);
+	    
+	    CapeTopStripe.addChild(CapeShoulderRight);
+	    CapeTopStripe.addChild(CapeShoulderLeft);
+	    CapeTopStripe.addChild(CapeShoulderConnection);
+	    CapeTopStripe.addChild(CapeMiddle);
+	    CapeTopStripe.addChild(CapeLowerMiddle);
+	    CapeTopStripe.addChild(CapeBottom);
 	    
 	    
 	    Breastplate.addChild(BreastplateAccentRight);
@@ -203,6 +270,7 @@ public class RendererArmorChest extends ModelBiped {
 	    activeRenderers.add(PauldronRightAccent);
 	    activeRenderers.add(VambraceRight);
 	    activeRenderers.add(VambraceRightAccent);
+	    activeRenderers.add(CapeTopStripe);
         
 
 		pieceMap = new EnumMap<ArmorTorso.Slot, Collection<SmartModelRenderer>>(ArmorTorso.Slot.class);
@@ -295,9 +363,28 @@ public class RendererArmorChest extends ModelBiped {
 		copyModelAngles(this.bipedRightArm, this.VambraceRight);
 		copyModelAngles(this.bipedRightArm, this.VambraceRightAccent);
 		
+		GlStateManager.pushMatrix();
+
+        if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isChild()) {
+            float s = 2.0F;
+            GlStateManager.scale(1.0F / s, 1.0F / s, 1.0F / s);
+            GlStateManager.translate(0.0F, 24.0F * f5, 0.0F);
+            for (ModelRenderer r : activeRenderers)
+    			r.render(f5);
+        } else {
+        	if (entity.isSneaking()) {
+                GlStateManager.translate(0.0F, 0.2F, 0.0F);
+            }
+        	
+            for (ModelRenderer r : activeRenderers)
+    			r.render(f5);
+        }
+        
+        GlStateManager.popMatrix();
 		
-		for (ModelRenderer r : activeRenderers)
-			r.render(f5);
+		
+//		for (ModelRenderer r : activeRenderers)
+//			r.render(f5);
 //		}
 		  
 	    
