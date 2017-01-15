@@ -2,23 +2,29 @@ package com.SkyIsland.Armory.client.armor;
 
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.config.ModConfig;
 import com.SkyIsland.Armory.items.armor.ArmorPiece;
 import com.SkyIsland.Armory.items.armor.ArmorSlot;
 import com.SkyIsland.Armory.items.armor.ArmorTorso;
 import com.SkyIsland.Armory.items.armor.ArmorTorso.Slot;
 import com.google.common.collect.Lists;
 
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -55,12 +61,14 @@ public class RendererArmorChest extends ModelBiped {
 	
 	private Map<ArmorTorso.Slot, Collection<SmartModelRenderer>> pieceMap;
 	private Set<SmartModelRenderer> activeRenderers;
+	private Map<UUID, Float> capeRotations;
 	  
 	public RendererArmorChest(float scale) {
 		super(scale, 0, 128, 128);
 		textureWidth = 128;
 		textureHeight = 64;
 		activeRenderers = new HashSet<SmartModelRenderer>();
+		capeRotations = new HashMap<UUID, Float>();
 	    
 //	      Chest = new ModelRenderer(this, 0, 0);
 //	      Chest.addBox(0F, 0F, 0F, 8, 12, 4);
@@ -350,6 +358,42 @@ public class RendererArmorChest extends ModelBiped {
 //				ModConfig.config.getTestValue(ModConfig.Key.ARMORBIPED)) < 0.5f) {
 //			super.render(entity, f, f1, f2, f3, f4, f5);
 //		} else {
+		
+		this.isSneak = entity.isSneaking();
+		this.isRiding = entity.isRiding();
+		
+		if (entity instanceof EntityLivingBase) {
+			EntityLivingBase ent = (EntityLivingBase) entity;
+			this.isChild = ent.isChild();
+			this.swingProgress = ent.swingProgress;
+			if (ent instanceof EntitySkeleton) {
+				this.aimedBow = ((EntitySkeleton) ent).getSkeletonType() == 1;
+			} else if (ent instanceof AbstractClientPlayer && !((AbstractClientPlayer) ent).isSpectator()) {
+				AbstractClientPlayer clientPlayer = (AbstractClientPlayer) ent;
+				ItemStack itemstack = clientPlayer.inventory.getCurrentItem();
+				this.heldItemRight = 0;
+				if (itemstack == null) {
+					this.heldItemRight = 0;
+				} else {
+					this.heldItemRight = 1;
+					if (clientPlayer.getItemInUseCount() > 0)
+	                {
+	                    EnumAction enumaction = itemstack.getItemUseAction();
+
+	                    if (enumaction == EnumAction.BLOCK)
+	                    {
+	                        heldItemRight = 3;
+	                    }
+	                    else if (enumaction == EnumAction.BOW)
+	                    {
+	                        aimedBow = true;
+	                    }
+	                }
+				}
+			}
+		}
+		
+		
 		this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		copyModelAngles(this.bipedBody, this.Breastplate);
 		copyModelAngles(this.bipedLeftArm, this.PauldronLeftAccent);
@@ -364,7 +408,7 @@ public class RendererArmorChest extends ModelBiped {
 		
 		GlStateManager.pushMatrix();
 
-        if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isChild()) {
+        if (this.isChild) {
             float s = 2.0F;
             GlStateManager.scale(1.0F / s, 1.0F / s, 1.0F / s);
             GlStateManager.translate(0.0F, 24.0F * f5, 0.0F);
@@ -410,17 +454,62 @@ public class RendererArmorChest extends ModelBiped {
 //	    BreastplateAccentRight2.render(f5);
     }
 	  
-	  private void setRotation(ModelRenderer model, float x, float y, float z)
-	  {
-	    model.rotateAngleX = x;
-	    model.rotateAngleY = y;
-	    model.rotateAngleZ = z;
-	  }
-	  
-	  @Override
-	  public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity e)
-	  {
-	    super.setRotationAngles(f, f1, f2, f3, f4, f5, e);
-	  }
+	private void setRotation(ModelRenderer model, float x, float y, float z)
+	{
+		model.rotateAngleX = x;
+		model.rotateAngleY = y;
+		model.rotateAngleZ = z;
+	}
+	
+	@Override
+	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity e)
+	{
+		//set cape living animation
+		if (!CapeTopStripe.isHidden) {
+			boolean windFlag = false;
+			if (e instanceof EntityLivingBase) {
+				windFlag = ( (EntityLivingBase) e).isSprinting();
+			}
+			
+
+			float windBase = .6f;
+			
+			if (!windFlag) {
+				if (!e.onGround && (e.motionY < -0.4)) {
+					windFlag = true;
+					windBase = 1.5f;
+				}
+			}
+			
+			float timeConst = 0.04F; //times f is angle
+			float range = 0.1f;
+			Float ret = capeRotations.get(e.getUniqueID());
+			float oldAngle = (ret == null ? 0.0f : ret);
+			
+			//float oldAngle = CapeTopStripe.rotateAngleX;
+			float targ = range * (float) ((Math.cos(f2 * timeConst) + 1.0) / 2.0);
+			
+			if (windFlag) {
+				//add angle offset for sprint
+				//use old angle to cap transition
+				targ = targ + windBase;
+			} else if (this.isSneak) {
+				targ = targ + 0.5f;
+			}
+			
+			float diff = 0.03f;
+			if (oldAngle - targ > diff) {
+				CapeTopStripe.rotateAngleX = oldAngle - diff;
+			} else if (targ - oldAngle > diff) {
+				CapeTopStripe.rotateAngleX = oldAngle + diff;
+			} else {
+				CapeTopStripe.rotateAngleX = targ;
+			}
+			
+			capeRotations.put(e.getUniqueID(), CapeTopStripe.rotateAngleX);
+		}
+
+		super.setRotationAngles(f, f1, f2, f3, f4, f5, e);
+	}
 
 }

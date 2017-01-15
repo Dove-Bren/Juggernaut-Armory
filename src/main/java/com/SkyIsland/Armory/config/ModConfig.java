@@ -42,9 +42,10 @@ public class ModConfig {
 		DISPLAY_SMITH_LEVEL(Category.DISPLAY, "display_level", true, false, "Display your smith level when holding tongs"),
 		USE_GL(Category.TEST, "use_gl", false, false, "use gl"),
 		USE_PUSH(Category.TEST, "use_pushpop", false, false, "use pushpop"),
-		CAPE_X(Category.TEST, "cape_x", -5.0f, false, "cape x offset"),
-		CAPE_Y(Category.TEST, "cape_y", 1.0f, false, "cape y offset"),
-		CAPE_Z(Category.TEST, "cape_z", 3.0f, false, "cape z offset");
+		CAPE_RANGE(Category.TEST, "cape_range", 0.1f, false, "cape rotation range"),
+		CAPE_MOTION(Category.TEST, "cape_motion", 0.4f, false, "motion before cape goes into falling anim"),
+		CAPE_DIFF(Category.TEST, "cape_diff", .05f, false, "max move of cape");
+		
 		
 //		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
 //		DEPTH_N(Category.TEST, "depth_n", new Float(0.1f), false, "north depth"),
