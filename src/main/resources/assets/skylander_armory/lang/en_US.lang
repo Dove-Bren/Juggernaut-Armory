@@ -11,6 +11,7 @@ item.copper_ingot.name=Copper Ingot
 
 item.torso_base.name=Chestplate Armor Piece
 item.legs_base.name=Leg Armor Piece
+item.feet_base.name=Feet Armor Piece
 
 item.armorpiece_breastplate.name=Breastplate
 item.armorpiece_vambrace_right.name=Right Vambrace
@@ -23,6 +24,10 @@ item.armorpiece_cuisse_right.name=Right Cuisse
 item.armorpiece_poleyn_left.name=Left Poleyn
 item.armorpiece_poleyn_right.name=Right Poleyn
 item.armorpiece_skirt.name=Armor Skirt
+item.armorpiece_greave_left.name=Left Greave
+item.armorpiece_greave_right.name=Right Greave
+item.armorpiece_sabaton_left.name=Left Sabaton
+item.armorpiece_sabaton_right.name=Right Sabaton
 
 tile.skylander_armory_whetstone_block.name=Whetstone Block
 tile.skylander_armory_pedestal.name=Pedestal

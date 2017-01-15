@@ -7,6 +7,7 @@ import com.SkyIsland.Armory.items.ArmorItems;
 import com.SkyIsland.Armory.items.ArmorItems.Armors;
 import com.SkyIsland.Armory.items.MiscItems;
 import com.SkyIsland.Armory.items.armor.Armor;
+import com.SkyIsland.Armory.items.armor.ArmorFeet;
 import com.SkyIsland.Armory.items.armor.ArmorLegs;
 import com.SkyIsland.Armory.items.armor.ArmorTorso;
 import com.SkyIsland.Armory.items.armor.ArmorTorso.Slot;
@@ -102,6 +103,18 @@ public class ArmorModificationManager {
 					piece = legs.getComponentItem(s).constructPiece(mat
 							);
 					legs.setArmorPiece(stack, s, piece);
+				}
+				
+				event.entityPlayer.inventory.addItemStackToInventory(stack);
+				
+				ArmorFeet feet = (ArmorFeet) ArmorItems.getArmorBase(Armors.FEET);
+				stack = new ItemStack(feet);
+				mat = ExtendedMaterial.lookupMaterial(Items.iron_ingot);
+				
+				for (ArmorFeet.Slot s : ArmorFeet.Slot.values()) {
+					piece = feet.getComponentItem(s).constructPiece(mat
+							);
+					feet.setArmorPiece(stack, s, piece);
 				}
 				
 				event.entityPlayer.inventory.addItemStackToInventory(stack);

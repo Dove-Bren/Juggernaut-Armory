@@ -37,8 +37,9 @@ public class ItemListener {
 	public void onItemTooltip(ItemTooltipEvent event){
 		ItemStack stack = event.itemStack;
 		if (stack != null) {
-			if (stack.getItem() instanceof ItemArmor
-					|| stack.getItem() instanceof ArmorPiece) {
+			if (stack.getItem() instanceof ItemArmor ||
+				(stack.getItem() instanceof ArmorPiece && ModConfig.config.getShowPieceValues())) {
+				
 		
 			
 				Map<DamageType, Float> protectionMap = ArmorUtils.getValues(stack);

@@ -4,6 +4,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.SkyIsland.Armory.Armory;
+import com.SkyIsland.Armory.items.ToolItems;
+import com.SkyIsland.Armory.items.ToolItems.Tools;
 import com.SkyIsland.Armory.items.armor.Armor;
 import com.SkyIsland.Armory.items.armor.ArmorSlot;
 
@@ -12,6 +14,7 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -203,6 +206,11 @@ public class EntityArmorerStand extends EntityArmorStand implements IEntityAddit
 			}
 				
 		}
+	}
+	
+	@Override
+	public ItemStack getPickedResult(MovingObjectPosition target) {
+		return new ItemStack(ToolItems.getItem(Tools.ARMORER_STAND));
 	}
 
 }
