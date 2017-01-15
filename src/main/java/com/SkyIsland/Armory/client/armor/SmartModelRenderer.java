@@ -19,12 +19,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class SmartModelRenderer extends ModelRenderer {
 
-	private static final ResourceLocation missing =
-			new ResourceLocation(Armory.MODID, "textures/models/armor/missing.png");
+	private final ResourceLocation missing;
 	private ResourceLocation cache;
 	
-	public SmartModelRenderer(ModelBase model, int texOffX, int texOffY) {
+	public SmartModelRenderer(ModelBase model, int texOffX, int texOffY, ResourceLocation missingTexture) {
 		super(model, texOffX, texOffY);
+		missing = missingTexture;
 	}
 	
 	/**
@@ -59,7 +59,9 @@ public class SmartModelRenderer extends ModelRenderer {
 		if (cache != null)
 			Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(cache);
 		
-		System.out.println("  > show: " + this.showModel + " | scale: " + p_78785_1_);
+//		p_78785_1_ = ModConfig.config.getTestValue(ModConfig.Key.ARMOR_SCALE);
+//		System.out.println("  > show: " + this.showModel + " | scale: " + p_78785_1_);
+		
 		
 		super.render(p_78785_1_);
 	}

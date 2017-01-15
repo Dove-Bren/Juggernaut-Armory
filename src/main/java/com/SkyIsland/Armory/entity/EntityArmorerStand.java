@@ -27,12 +27,31 @@ public class EntityArmorerStand extends EntityArmorStand implements IEntityAddit
 	public EntityArmorerStand(World worldIn, double posX, double posY, double posZ) {
 		super(worldIn, posX, posY, posZ);
 		
+		
 		armors = new EnumMap<ArmorSlot, ItemStack>(ArmorSlot.class);
+        setShowArms(true);
 	}
+	
+	private void setShowArms(boolean p_175413_1_)
+    {
+        byte b0 = this.dataWatcher.getWatchableObjectByte(10);
+
+        if (p_175413_1_)
+        {
+            b0 = (byte)(b0 | 4);
+        }
+        else
+        {
+            b0 = (byte)(b0 & -5);
+        }
+
+        this.dataWatcher.updateObject(10, Byte.valueOf(b0));
+    }
 	
 	public EntityArmorerStand(World worldIn) {
         super(worldIn);
         armors = new EnumMap<ArmorSlot, ItemStack>(ArmorSlot.class);
+        setShowArms(true);
         
     }
 	

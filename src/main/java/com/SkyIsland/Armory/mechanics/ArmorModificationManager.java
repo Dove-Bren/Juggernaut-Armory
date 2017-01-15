@@ -2,14 +2,13 @@ package com.SkyIsland.Armory.mechanics;
 
 import java.util.Map;
 
-import com.SkyIsland.Armory.api.ForgeManager.ForgeRecipe;
 import com.SkyIsland.Armory.config.ModConfig;
-import com.SkyIsland.Armory.items.HeldMetal;
-import com.SkyIsland.Armory.items.MiscItems;
-import com.SkyIsland.Armory.items.ToolItems;
-import com.SkyIsland.Armory.items.ToolItems.Tools;
+import com.SkyIsland.Armory.items.ArmorItems;
+import com.SkyIsland.Armory.items.ArmorItems.Armors;
 import com.SkyIsland.Armory.items.armor.Armor;
-import com.SkyIsland.Armory.items.tools.Tongs;
+import com.SkyIsland.Armory.items.armor.ArmorTorso;
+import com.SkyIsland.Armory.items.armor.ArmorTorso.Slot;
+import com.SkyIsland.Armory.items.common.ExtendedMaterial;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -63,22 +62,36 @@ public class ArmorModificationManager {
 			@SubscribeEvent
 			public void onTest(UseHoeEvent event) {
 						
-				Tongs inst = (Tongs) ToolItems.getItem(Tools.TONGS);
-				ItemStack tongs = new ItemStack(inst);
-				HeldMetal held = (HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL);
-
-				boolean[][] metalMap = ForgeRecipe.drawMap(new String[]{
-						" ", "  ..  ..", "  ......", "   ....", "   ....", "   ....",
-						"    ..", "   ....", "  ......", " "
-					});
+//				Tongs inst = (Tongs) ToolItems.getItem(Tools.TONGS);
+//				ItemStack tongs = new ItemStack(inst);
+//				HeldMetal held = (HeldMetal) MiscItems.getItem(MiscItems.Items.HELD_METAL);
+//
+//				boolean[][] metalMap = ForgeRecipe.drawMap(new String[]{
+//						" ", "  ..  ..", "  ......", "   ....", "   ....", "   ....",
+//						"    ..", "   ....", "  ......", " "
+//					});
+//				
+//				ItemStack metal = held.createStack(new ItemStack(Items.iron_ingot), 2500.0f, 0);
+//				held.setMetalMap(metal, metalMap);
+//				inst.setHeldItem(tongs, metal);
 				
-				ItemStack metal = held.createStack(new ItemStack(Items.iron_ingot), 2500.0f, 0);
-				held.setMetalMap(metal, metalMap);
-				inst.setHeldItem(tongs, metal);
+				ItemStack stack, piece;
 				
-				event.entityPlayer.inventory.addItemStackToInventory(tongs);
+				ArmorTorso torso = (ArmorTorso) ArmorItems.getArmorBase(Armors.TORSO);
+				stack = new ItemStack(torso);
+				ExtendedMaterial mat = ExtendedMaterial.lookupMaterial(Items.iron_ingot);
 				
-				ExtendedSmith.get(event.entityPlayer, true).addAbsoluteProgress(.2f);
+				for (Slot s : ArmorTorso.Slot.values()) {
+					piece = torso.getComponentItem(s).constructPiece(mat
+							);
+					torso.setArmorPiece(stack, s, piece);
+				}
+				
+				event.entityPlayer.inventory.addItemStackToInventory(stack);
+				
+				
+				
+				//ExtendedSmith.get(event.entityPlayer, true).addAbsoluteProgress(.2f);
 //				ItemStack stack;
 //				HeldMetal.test();
 				

@@ -42,7 +42,8 @@ public class ModConfig {
 		DISPLAY_SMITH_LEVEL(Category.DISPLAY, "display_level", true, false, "Display your smith level when holding tongs"),
 		USE_GL(Category.TEST, "use_gl", false, false, "use gl"),
 		USE_PUSH(Category.TEST, "use_pushpop", false, false, "use pushpop"),
-		ARMOR_SCALE(Category.TEST, "armor_scale", 1.0F, true, "scale for armor biped");
+		ARMOR_SCALE(Category.TEST, "armor_scale", 1.0F, false, "scale for armor biped"),
+		ARMORBIPED(Category.TEST, "armorbiped_renderall", 0.0F, false, "0.0 for render whole biped");
 		
 //		DEPTH_S(Category.TEST, "depth_s", new Float(0.1f), false, "south depth"),
 //		DEPTH_N(Category.TEST, "depth_n", new Float(0.1f), false, "north depth"),

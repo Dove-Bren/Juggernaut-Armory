@@ -197,8 +197,14 @@ public abstract class Armor extends ItemArmor {
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot, net.minecraft.client.model.ModelBiped _default) {
-        return this.getModelBiped();
+    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot, net.minecraft.client.model.ModelBiped default_model) {
+        ModelBiped model = this.getModelBiped();
+        
+        model.isSneak = default_model.isSneak;
+        model.isRiding = default_model.isRiding;
+        model.isChild = default_model.isChild;
+        
+        return model;
     }
 	
 	public ArmorSlot getSlot() {
