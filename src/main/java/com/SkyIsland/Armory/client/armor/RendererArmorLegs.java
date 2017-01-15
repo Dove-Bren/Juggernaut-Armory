@@ -2,12 +2,10 @@ package com.SkyIsland.Armory.client.armor;
 
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.UUID;
 
 import com.SkyIsland.Armory.Armory;
 import com.SkyIsland.Armory.items.armor.ArmorLegs;
@@ -34,261 +32,153 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RendererArmorLegs extends ModelBiped {
 
-	private SmartModelRenderer PauldronLeftAccent;
-	private SmartModelRenderer PauldronLeftTop;
-	private SmartModelRenderer PauldronRightTop;
-	private SmartModelRenderer PauldronRightAccent;
-	private SmartModelRenderer VambraceLeft;
-	private SmartModelRenderer VambraceLeftAccent;
-	private SmartModelRenderer VambraceRight;
-	private SmartModelRenderer VambraceRightAccent;
-	private SmartModelRenderer Breastplate;
-	private SmartModelRenderer BreastplateAccentRight;
-	private SmartModelRenderer BreastplateAccentLeft;
-	private SmartModelRenderer BreastplateAccentLeft2;
-	private SmartModelRenderer BreastplateAccentRight2;
-	private SmartModelRenderer CapeShoulderRight;
-	private SmartModelRenderer CapeShoulderLeft;
-	private SmartModelRenderer CapeShoulderConnection;
-	private SmartModelRenderer CapeTopStripe;
-	private SmartModelRenderer CapeMiddle;
-	private SmartModelRenderer CapeLowerMiddle;
-	private SmartModelRenderer CapeBottom;
+	private SmartModelRenderer CuisseLeft;
+	private SmartModelRenderer CuisseLeftAccent;
+	private SmartModelRenderer CuisseRight;
+	private SmartModelRenderer CuisseRightAccent;
+	private SmartModelRenderer PoleynLeft;
+	private SmartModelRenderer PoleynLeftAccent;
+	private SmartModelRenderer PoleynRight;
+	private SmartModelRenderer PoleynRightAccent;
+	private SmartModelRenderer SkirtLeftTop;
+	private SmartModelRenderer SkirtLeft;
+	private SmartModelRenderer SkirtRightTop;
+	private SmartModelRenderer SkirtRight;
+	private SmartModelRenderer SkirtBack;
 	
 	private ResourceLocation missingTexture
 		= new ResourceLocation(Armory.MODID, "textures/models/armor/missing_legs.png");
 	
 	private Map<ArmorLegs.Slot, Collection<SmartModelRenderer>> pieceMap;
 	private Set<SmartModelRenderer> activeRenderers;
-	private Map<UUID, Float> capeRotations;
 	  
 	public RendererArmorLegs(float scale) {
 		super(scale, 0, 128, 128);
 		textureWidth = 128;
 		textureHeight = 64;
 		activeRenderers = new HashSet<SmartModelRenderer>();
-		capeRotations = new HashMap<UUID, Float>();
-	    
-//	      Chest = new ModelRenderer(this, 0, 0);
-//	      Chest.addBox(0F, 0F, 0F, 8, 12, 4);
-//	      Chest.setRotationPoint(-4F, 0F, -1F);
-//	      Chest.setTextureSize(textureWidth, textureHeight);
-//	      Chest.mirror = true;
-//	      setRotation(Chest, 0F, 0F, 0F);
-//	      ArmLeft = new ModelRenderer(this, 0, 0);
-//	      ArmLeft.addBox(0F, 0F, 0F, 4, 12, 4);
-//	      ArmLeft.setRotationPoint(4F, 0F, -1F);
-//	      ArmLeft.setTextureSize(textureWidth, textureHeight);
-//	      ArmLeft.mirror = true;
-//	      setRotation(ArmLeft, 0F, 0F, 0F);
-//	      ArmRight = new ModelRenderer(this, 0, 0);
-//	      ArmRight.addBox(0F, 0F, 0F, 4, 12, 4);
-//	      ArmRight.setRotationPoint(-8F, 0F, -1F);
-//	      ArmRight.setTextureSize(textureWidth, textureHeight);
-//	      ArmRight.mirror = true;
-//	      setRotation(ArmRight, 0F, 0F, 0F);
-//	      LegLeft = new ModelRenderer(this, 0, 0);
-//	      LegLeft.addBox(0F, 0F, 0F, 4, 12, 4);
-//	      LegLeft.setRotationPoint(0F, 12F, -1F);
-//	      LegLeft.setTextureSize(textureWidth, textureHeight);
-//	      LegLeft.mirror = true;
-//	      setRotation(LegLeft, 0F, 0F, 0F);
-//	      LegRight = new ModelRenderer(this, 0, 0);
-//	      LegRight.addBox(0F, 0F, 0F, 4, 12, 4);
-//	      LegRight.setRotationPoint(-4F, 12F, -1F);
-//	      LegRight.setTextureSize(textureWidth, textureHeight);
-//	      LegRight.mirror = true;
-//	      setRotation(LegRight, 0F, 0F, 0F);
-	    PauldronLeftAccent = new SmartModelRenderer(this, 0, 56, missingTexture);
-	    PauldronLeftAccent.addBox(1F, -4F, -2F, 7, 4, 4, scale);
-	    //was 1, -3, 0
-	    //next was 5, -3, -2
-	    PauldronLeftAccent.setRotationPoint(0F, 0F, 0F);
-	    //PauldronLeftAccent.setRotationPoint(4F, 0F, -1F);
-	    PauldronLeftAccent.setTextureSize(textureWidth, textureHeight);
-	    PauldronLeftAccent.mirror = true;
-	    setRotation(PauldronLeftAccent, 0F, 0F, 0F);
-	    PauldronLeftTop = new SmartModelRenderer(this, 23, 53, missingTexture);
-	    PauldronLeftTop.addBox(0F, -3F, -3F, 6, 5, 6, scale);
-	    //was 0, -2, -1
-	    //next was 4
-	    PauldronLeftTop.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(4F, 0F, -1F);
-	    PauldronLeftTop.setTextureSize(textureWidth, textureHeight);
-	    PauldronLeftTop.mirror = true;
-	    setRotation(PauldronLeftTop, 0F, 0F, 0F);
-	    PauldronRightTop = new SmartModelRenderer(this, 47, 53, missingTexture);
-	    PauldronRightTop.addBox(-6F, -3F, -3F, 6, 5, 6, scale);
-	    //was -2, -2, -1
-	    //next was -11
-	    PauldronRightTop.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-8F, 0F, -1F);
-	    PauldronRightTop.setTextureSize(textureWidth, textureHeight);
-	    PauldronRightTop.mirror = true;
-	    setRotation(PauldronRightTop, 0F, 0F, 0F);
-	    PauldronRightAccent = new SmartModelRenderer(this, 71, 56, missingTexture);
-	    PauldronRightAccent.addBox(-8F, -4F, -2F, 7, 4, 4, scale);
-	    //was -4, -3, 0
-	    //next was -13
-	    PauldronRightAccent.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-8F, 0F, -1F);
-	    PauldronRightAccent.setTextureSize(textureWidth, textureHeight);
-	    PauldronRightAccent.mirror = true;
-	    setRotation(PauldronRightAccent, 0F, 0F, 0F);
-	    VambraceLeft = new SmartModelRenderer(this, 0, 43, missingTexture);
-	    VambraceLeft.addBox(2F, 5F, -3F, 3, 5, 4, scale);
-	    //was 2 6 -1
-	    VambraceLeft.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(4F, 0F, -1F);
-	    VambraceLeft.setTextureSize(textureWidth, textureHeight);
-	    VambraceLeft.mirror = true;
-	    setRotation(VambraceLeft, 0F, 0F, 0F);
-	    VambraceLeftAccent = new SmartModelRenderer(this, 16, 43, missingTexture);
-	    VambraceLeftAccent.addBox(5F, 6F, -2F, 1, 3, 3, scale);
-	    //was 5 7 0
-	    VambraceLeftAccent.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(4F, 0F, -1F);
-	    VambraceLeftAccent.setTextureSize(textureWidth, textureHeight);
-	    VambraceLeftAccent.mirror = true;
-	    setRotation(VambraceLeftAccent, 0F, 0F, 0F);
-	    VambraceRight = new SmartModelRenderer(this, 32, 43, missingTexture);
-	    VambraceRight.addBox(-4F, 5F, -3F, 3, 5, 4, scale);
-	    //was -1 6 -1
-	    VambraceRight.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-8F, 0F, -1F);
-	    VambraceRight.setTextureSize(textureWidth, textureHeight);
-	    VambraceRight.mirror = true;
-	    setRotation(VambraceRight, 0F, 0F, 0F);
-	    VambraceRightAccent = new SmartModelRenderer(this, 24, 43, missingTexture);
-	    VambraceRightAccent.addBox(-5F, 6F, -2F, 1, 3, 3, scale);
-	    //was -2 7 0
-	    VambraceRightAccent.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-8F, 0F, -1F);
-	    VambraceRightAccent.setTextureSize(textureWidth, textureHeight);
-	    VambraceRightAccent.mirror = true;
-	    setRotation(VambraceRightAccent, 0F, 0F, 0F);
-	    Breastplate = new SmartModelRenderer(this, 0, 25, missingTexture);
-	    Breastplate.addBox(-5F, -1F, -3F, 10, 12, 6, scale);
-	    Breastplate.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-4F, 0F, -1F);
-	    Breastplate.setTextureSize(textureWidth, textureHeight);
-	    Breastplate.mirror = true;
-	    //-4 ~ -2
-	    setRotation(Breastplate, 0F, 0F, 0F);
-	    BreastplateAccentRight = new SmartModelRenderer(this, 32, 25, missingTexture);
-	    BreastplateAccentRight.addBox(-6F, 11F, -4F, 4, 1, 8, scale);
-	    BreastplateAccentRight.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-4F, 0F, -1F);
-	    BreastplateAccentRight.setTextureSize(textureWidth, textureHeight);
-	    BreastplateAccentRight.mirror = true;
-	    setRotation(BreastplateAccentRight, 0F, 0F, 0F);
-	    BreastplateAccentLeft = new SmartModelRenderer(this, 32, 34, missingTexture);
-	    BreastplateAccentLeft.addBox(2F, 11F, -4F, 4, 1, 8, scale);
-	    BreastplateAccentLeft.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-4F, 0F, -1F);
-	    BreastplateAccentLeft.setTextureSize(textureWidth, textureHeight);
-	    BreastplateAccentLeft.mirror = true;
-	    setRotation(BreastplateAccentLeft, 0F, 0F, 0F);
-	    BreastplateAccentLeft2 = new SmartModelRenderer(this, 56, 25, missingTexture);
-	    BreastplateAccentLeft2.addBox(3F, 12F, -5F, 4, 1, 10, scale);
-	    BreastplateAccentLeft2.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-4F, 0F, -1F);
-	    BreastplateAccentLeft2.setTextureSize(textureWidth, textureHeight);
-	    BreastplateAccentLeft2.mirror = true;
-	    setRotation(BreastplateAccentLeft2, 0F, 0F, 0F);
-	    BreastplateAccentRight2 = new SmartModelRenderer(this, 56, 36, missingTexture);
-	    BreastplateAccentRight2.addBox(-7F, 12F, -5F, 4, 1, 10, scale);
-	    BreastplateAccentRight2.setRotationPoint(0F, 0F, 0F);// .setRotationPoint(-4F, 0F, -1F);
-	    BreastplateAccentRight2.setTextureSize(textureWidth, textureHeight);
-	    BreastplateAccentRight2.mirror = true;
-	    setRotation(BreastplateAccentRight2, 0F, 0F, 0F);
-	    
-	    CapeShoulderRight = new SmartModelRenderer(this, 32, 0, missingTexture);
-	    CapeShoulderRight.addBox(-7F, -2F, 2F, 6, 2, 2);
-	    CapeShoulderRight.setRotationPoint(0F, 0F, 0F);
-	    CapeShoulderRight.setTextureSize(128, 64);
-	    CapeShoulderRight.mirror = true;
-	    setRotation(CapeShoulderRight, 0F, 0F, 0F);
-	    CapeShoulderLeft = new SmartModelRenderer(this, 32, 4, missingTexture);
-	    CapeShoulderLeft.addBox(1F, -2F, 2F, 6, 2, 2);
-	    CapeShoulderLeft.setRotationPoint(0F, 0F, 0F);
-	    CapeShoulderLeft.setTextureSize(128, 64);
-	    CapeShoulderLeft.mirror = true;
-	    setRotation(CapeShoulderLeft, 0F, 0F, 0F);
-	    CapeShoulderConnection = new SmartModelRenderer(this, 32, 8, missingTexture);
-	    CapeShoulderConnection.addBox(-6F, 0F, 3F, 12, 2, 1);
-	    CapeShoulderConnection.setRotationPoint(0F, 0F, 0F);
-	    CapeShoulderConnection.setTextureSize(128, 64);
-	    CapeShoulderConnection.mirror = true;
-	    setRotation(CapeShoulderConnection, 0F, 0F, 0F);
-	    CapeTopStripe = new SmartModelRenderer(this, 48, 0, missingTexture);
-	    CapeTopStripe.addBox(-5, 1, 4, 10, 3, 1);
-	    CapeTopStripe.setRotationPoint(0F, 0F, 0F);
-	    CapeTopStripe.setTextureSize(128, 64);
-	    CapeTopStripe.mirror = true;
-	    setRotation(CapeTopStripe, 0F, 0F, 0F);
-	    CapeMiddle = new SmartModelRenderer(this, 70, 0, missingTexture);
-	    CapeMiddle.addBox(-5F, 4F, 4F, 10, 7, 1);
-	    CapeMiddle.setRotationPoint(0F, 0F, 0F);
-	    CapeMiddle.setTextureSize(128, 64);
-	    CapeMiddle.mirror = true;
-	    setRotation(CapeMiddle, 0F, 0F, 0F);
-	    CapeLowerMiddle = new SmartModelRenderer(this, 92, 0, missingTexture);
-	    CapeLowerMiddle.addBox(-6F, 10F, 5F, 12, 9, 1);
-	    CapeLowerMiddle.setRotationPoint(0F, 0F, 0F);
-	    CapeLowerMiddle.setTextureSize(128, 64);
-	    CapeLowerMiddle.mirror = true;
-	    setRotation(CapeLowerMiddle, 0F, 0F, 0F);
-	    CapeBottom = new SmartModelRenderer(this, 90, 10, missingTexture);
-	    CapeBottom.addBox(-7F, 19F, 5F, 14, 1, 1);
-	    CapeBottom.setRotationPoint(0F, 0F, 0F);
-	    CapeBottom.setTextureSize(128, 64);
-	    CapeBottom.mirror = true;
-	    setRotation(CapeBottom, 0F, 0F, 0F);
+		
+		CuisseLeft = new SmartModelRenderer(this, 0, 30, missingTexture);
+		CuisseLeft.addBox(1F, 11F, 0F, 4, 5, 6, scale);
+		CuisseLeft.setRotationPoint(0F, 0F, -3F);
+		CuisseLeft.setTextureSize(128, 64);
+		CuisseLeft.mirror = true;
+		setRotation(CuisseLeft, 0F, 0F, 0F);
+		CuisseLeftAccent = new SmartModelRenderer(this, 0, 41, missingTexture);
+		CuisseLeftAccent.addBox(0F, 12F, -4F, 6, 1, 6, scale);
+		CuisseLeftAccent.setRotationPoint(0F, 0F, 0F);
+		CuisseLeftAccent.setTextureSize(128, 64);
+		CuisseLeftAccent.mirror = true;
+		setRotation(CuisseLeftAccent, 0F, 0F, 0F);
+		CuisseRight = new SmartModelRenderer(this, 20, 30, missingTexture);
+		CuisseRight.addBox(-5F, 11F, -3F, 4, 5, 6, scale);
+		CuisseRight.setRotationPoint(0F, 0F, 0F);
+		CuisseRight.setTextureSize(128, 64);
+		CuisseRight.mirror = true;
+		setRotation(CuisseRight, 0F, 0F, 0F);
+		CuisseRightAccent = new SmartModelRenderer(this, 24, 41, missingTexture);
+		CuisseRightAccent.addBox(-6F, 12F, -4F, 6, 1, 6, scale);
+		CuisseRightAccent.setRotationPoint(0F, 0F, 0F);
+		CuisseRightAccent.setTextureSize(128, 64);
+		CuisseRightAccent.mirror = true;
+		setRotation(CuisseRightAccent, 0F, 0F, 0F);
+		PoleynLeft = new SmartModelRenderer(this, 0, 52, missingTexture);
+		PoleynLeft.addBox(0F, 15F, -4F, 4, 3, 2, scale);
+		PoleynLeft.setRotationPoint(0F, 0F, 0F);
+		PoleynLeft.setTextureSize(128, 64);
+		PoleynLeft.mirror = true;
+		setRotation(PoleynLeft, 0F, 0F, 0F);
+		PoleynLeftAccent = new SmartModelRenderer(this, 0, 57, missingTexture);
+		PoleynLeftAccent.addBox(4F, 16F, -3F, 1, 2, 4, scale);
+		PoleynLeftAccent.setRotationPoint(0F, 0F, 0F);
+		PoleynLeftAccent.setTextureSize(128, 64);
+		PoleynLeftAccent.mirror = true;
+		setRotation(PoleynLeftAccent, 0F, 0F, 0F);
+		PoleynRight = new SmartModelRenderer(this, 12, 52, missingTexture);
+		PoleynRight.addBox(-4F, 15F, -4F, 4, 3, 2, scale);
+		PoleynRight.setRotationPoint(0F, 0F, 0F);
+		PoleynRight.setTextureSize(128, 64);
+		PoleynRight.mirror = true;
+		setRotation(PoleynRight, 0F, 0F, 0F);
+		PoleynRightAccent = new SmartModelRenderer(this, 12, 57, missingTexture);
+		PoleynRightAccent.addBox(-5F, 16F, -3F, 1, 2, 4, scale);
+		PoleynRightAccent.setRotationPoint(0F, 0F, 0F);
+		PoleynRightAccent.setTextureSize(128, 64);
+		PoleynRightAccent.mirror = true;
+		setRotation(PoleynRightAccent, 0F, 0F, 0F);
+		SkirtLeftTop = new SmartModelRenderer(this, 32, 0, missingTexture);
+		SkirtLeftTop.addBox(5F, 11F, -3F, 1, 1, 6, scale);
+		SkirtLeftTop.setRotationPoint(0F, 0F, 0F);
+		SkirtLeftTop.setTextureSize(128, 64);
+		SkirtLeftTop.mirror = true;
+		setRotation(SkirtLeftTop, 0F, 0F, 0F);
+		SkirtLeft = new SmartModelRenderer(this, 30, 7, missingTexture);
+		SkirtLeft.addBox(6F, 11F, -4F, 1, 6, 7, scale);
+		SkirtLeft.setRotationPoint(0F, 0F, 0F);
+		SkirtLeft.setTextureSize(128, 64);
+		SkirtLeft.mirror = true;
+		setRotation(SkirtLeft, 0F, 0F, 0F);
+		SkirtRightTop = new SmartModelRenderer(this, 46, 0, missingTexture);
+		SkirtRightTop.addBox(-6F, 11F, -3F, 1, 1, 6, scale);
+		SkirtRightTop.setRotationPoint(0F, 0F, 0F);
+		SkirtRightTop.setTextureSize(128, 64);
+		SkirtRightTop.mirror = true;
+		setRotation(SkirtRightTop, 0F, 0F, 0F);
+		SkirtRight = new SmartModelRenderer(this, 46, 7, missingTexture);
+		SkirtRight.addBox(-7F, 11F, -4F, 1, 6, 7, scale);
+		SkirtRight.setRotationPoint(0F, 0F, 0F);
+		SkirtRight.setTextureSize(128, 64);
+		SkirtRight.mirror = true;
+		setRotation(SkirtRight, 0F, 0F, 0F);
+		SkirtBack = new SmartModelRenderer(this, 66, 0, missingTexture);
+		SkirtBack.addBox(-6F, 11F, 3F, 12, 7, 1, scale);
+		SkirtBack.setRotationPoint(0F, 0F, 0F);
+		SkirtBack.setTextureSize(128, 64);
+		SkirtBack.mirror = true;
+		setRotation(SkirtBack, 0F, 0F, 0F);
 
-
-	    
-	    
+		
 	      
-	    bipedLeftArm.addChild(PauldronLeftTop);
-	    bipedLeftArm.addChild(PauldronLeftAccent);
-	    bipedLeftArm.addChild(VambraceLeft);
-	    bipedLeftArm.addChild(VambraceLeftAccent);
+	    bipedLeftLeg.addChild(CuisseLeft);
+	    bipedLeftLeg.addChild(PoleynLeft);
 	      
-	    bipedRightArm.addChild(PauldronRightTop);
-	    bipedRightArm.addChild(PauldronRightAccent);
-	    bipedRightArm.addChild(VambraceRight);
-	    bipedRightArm.addChild(VambraceRightAccent);
+	    bipedRightLeg.addChild(CuisseRight);
+	    bipedRightLeg.addChild(PoleynRight);
 	      
-	    bipedBody.addChild(Breastplate);
-	    bipedBody.addChild(CapeTopStripe);
+	    bipedBody.addChild(SkirtBack);
+	    bipedBody.addChild(SkirtLeft);
+	    bipedBody.addChild(SkirtLeftTop);
+	    bipedBody.addChild(SkirtRight);
+	    bipedBody.addChild(SkirtRightTop);
 	    
-	    CapeTopStripe.addChild(CapeShoulderRight);
-	    CapeTopStripe.addChild(CapeShoulderLeft);
-	    CapeTopStripe.addChild(CapeShoulderConnection);
-	    CapeTopStripe.addChild(CapeMiddle);
-	    CapeTopStripe.addChild(CapeLowerMiddle);
-	    CapeTopStripe.addChild(CapeBottom);
+	    CuisseLeft.addChild(CuisseLeftAccent);
+	    CuisseRight.addChild(CuisseRightAccent);
+	    PoleynLeft.addChild(PoleynLeftAccent);
+	    PoleynRight.addChild(PoleynRightAccent);
 	    
 	    
-	    Breastplate.addChild(BreastplateAccentRight);
-	    Breastplate.addChild(BreastplateAccentLeft);
-	    Breastplate.addChild(BreastplateAccentLeft2);
-	    Breastplate.addChild(BreastplateAccentRight2);
-	    
-	    activeRenderers.add(Breastplate);
-	    activeRenderers.add(PauldronLeftTop);
-	    activeRenderers.add(PauldronLeftAccent);
-	    activeRenderers.add(VambraceLeft);
-	    activeRenderers.add(VambraceLeftAccent);
-	    activeRenderers.add(PauldronRightTop);
-	    activeRenderers.add(PauldronRightAccent);
-	    activeRenderers.add(VambraceRight);
-	    activeRenderers.add(VambraceRightAccent);
-	    activeRenderers.add(CapeTopStripe);
-        
+	    activeRenderers.add(CuisseLeft);
+	    activeRenderers.add(CuisseRight);
+	    activeRenderers.add(PoleynLeft);
+	    activeRenderers.add(PoleynRight);
+	    activeRenderers.add(SkirtBack);
+	    activeRenderers.add(SkirtLeft);
+	    activeRenderers.add(SkirtRight);
+	    activeRenderers.add(SkirtRightTop);
+	    activeRenderers.add(SkirtLeftTop);
 
 		pieceMap = new EnumMap<ArmorLegs.Slot, Collection<SmartModelRenderer>>(ArmorLegs.Slot.class);
 		
 		pieceMap.put(ArmorLegs.Slot.CUISSE_LEFT,
-				Lists.newArrayList(Breastplate, BreastplateAccentRight, BreastplateAccentLeft, BreastplateAccentRight2, BreastplateAccentLeft2));
+				Lists.newArrayList(CuisseLeft, CuisseLeftAccent));
 		pieceMap.put(ArmorLegs.Slot.CUISSE_RIGHT,
-				Lists.newArrayList(PauldronLeftAccent, PauldronLeftTop));
+				Lists.newArrayList(CuisseRight, CuisseRightAccent));
 		pieceMap.put(ArmorLegs.Slot.POLEYN_LEFT,
-				Lists.newArrayList(PauldronRightAccent, PauldronRightTop));
+				Lists.newArrayList(PoleynLeft, PoleynLeftAccent));
 		pieceMap.put(ArmorLegs.Slot.POLEYN_RIGHT,
-				Lists.newArrayList(VambraceLeftAccent, VambraceLeft));
+				Lists.newArrayList(PoleynRight, PoleynRightAccent));
 		pieceMap.put(ArmorLegs.Slot.SKIRT,
-				Lists.newArrayList(CapeShoulderLeft, CapeShoulderRight, CapeShoulderConnection, CapeTopStripe, CapeMiddle, CapeLowerMiddle, CapeBottom));
+				Lists.newArrayList(SkirtBack, SkirtLeft, SkirtLeftTop, SkirtRight, SkirtRightTop));
 	
     }
 	  
@@ -392,17 +282,16 @@ public class RendererArmorLegs extends ModelBiped {
 		
 		
 		this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-		copyModelAngles(this.bipedBody, this.Breastplate);
-		copyModelAngles(this.bipedLeftArm, this.PauldronLeftAccent);
-		copyModelAngles(this.bipedLeftArm, this.PauldronLeftTop);
-		copyModelAngles(this.bipedLeftArm, this.VambraceLeft);
-		copyModelAngles(this.bipedLeftArm, this.VambraceLeftAccent);
+		copyModelAngles(this.bipedBody, this.SkirtBack);
+		copyModelAngles(this.bipedBody, this.SkirtLeft);
+		copyModelAngles(this.bipedBody, this.SkirtLeftTop);
+		copyModelAngles(this.bipedBody, this.SkirtRight);
+		copyModelAngles(this.bipedBody, this.SkirtRightTop);
+		copyModelAngles(this.bipedLeftLeg, this.CuisseLeft);
+		copyModelAngles(this.bipedLeftLeg, this.PoleynLeft);
+		copyModelAngles(this.bipedRightLeg, this.CuisseRight);
+		copyModelAngles(this.bipedRightLeg, this.PoleynRight);
 
-		copyModelAngles(this.bipedRightArm, this.PauldronRightAccent);
-		copyModelAngles(this.bipedRightArm, this.PauldronRightTop);
-		copyModelAngles(this.bipedRightArm, this.VambraceRight);
-		copyModelAngles(this.bipedRightArm, this.VambraceRightAccent);
-		
 		GlStateManager.pushMatrix();
 
         if (this.isChild) {
@@ -461,50 +350,50 @@ public class RendererArmorLegs extends ModelBiped {
 	@Override
 	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity e)
 	{
-		//set cape living animation
-		if (!CapeTopStripe.isHidden) {
-			boolean windFlag = false;
-			if (e instanceof EntityLivingBase) {
-				windFlag = ( (EntityLivingBase) e).isSprinting();
-			}
-			
-
-			float windBase = .6f;
-			
-			if (!windFlag) {
-				if (!e.onGround && (e.motionY < -0.4)) {
-					windFlag = true;
-					windBase = 1.5f;
-				}
-			}
-			
-			float timeConst = 0.04F; //times f is angle
-			float range = 0.1f;
-			Float ret = capeRotations.get(e.getUniqueID());
-			float oldAngle = (ret == null ? 0.0f : ret);
-			
-			//float oldAngle = CapeTopStripe.rotateAngleX;
-			float targ = range * (float) ((Math.cos(f2 * timeConst) + 1.0) / 2.0);
-			
-			if (windFlag) {
-				//add angle offset for sprint
-				//use old angle to cap transition
-				targ = targ + windBase;
-			} else if (this.isSneak) {
-				targ = targ + 0.5f;
-			}
-			
-			float diff = 0.03f;
-			if (oldAngle - targ > diff) {
-				CapeTopStripe.rotateAngleX = oldAngle - diff;
-			} else if (targ - oldAngle > diff) {
-				CapeTopStripe.rotateAngleX = oldAngle + diff;
-			} else {
-				CapeTopStripe.rotateAngleX = targ;
-			}
-			
-			capeRotations.put(e.getUniqueID(), CapeTopStripe.rotateAngleX);
-		}
+//		//set cape living animation
+//		if (!CapeTopStripe.isHidden) {
+//			boolean windFlag = false;
+//			if (e instanceof EntityLivingBase) {
+//				windFlag = ( (EntityLivingBase) e).isSprinting();
+//			}
+//			
+//
+//			float windBase = .6f;
+//			
+//			if (!windFlag) {
+//				if (!e.onGround && (e.motionY < -0.4)) {
+//					windFlag = true;
+//					windBase = 1.5f;
+//				}
+//			}
+//			
+//			float timeConst = 0.04F; //times f is angle
+//			float range = 0.1f;
+//			Float ret = capeRotations.get(e.getUniqueID());
+//			float oldAngle = (ret == null ? 0.0f : ret);
+//			
+//			//float oldAngle = CapeTopStripe.rotateAngleX;
+//			float targ = range * (float) ((Math.cos(f2 * timeConst) + 1.0) / 2.0);
+//			
+//			if (windFlag) {
+//				//add angle offset for sprint
+//				//use old angle to cap transition
+//				targ = targ + windBase;
+//			} else if (this.isSneak) {
+//				targ = targ + 0.5f;
+//			}
+//			
+//			float diff = 0.03f;
+//			if (oldAngle - targ > diff) {
+//				CapeTopStripe.rotateAngleX = oldAngle - diff;
+//			} else if (targ - oldAngle > diff) {
+//				CapeTopStripe.rotateAngleX = oldAngle + diff;
+//			} else {
+//				CapeTopStripe.rotateAngleX = targ;
+//			}
+//			
+//			capeRotations.put(e.getUniqueID(), CapeTopStripe.rotateAngleX);
+//		}
 
 		super.setRotationAngles(f, f1, f2, f3, f4, f5, e);
 	}
