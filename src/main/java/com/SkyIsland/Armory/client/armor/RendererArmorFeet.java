@@ -60,7 +60,6 @@ public class RendererArmorFeet extends ModelBiped {
 		textureHeight = 64;
 		activeRenderers = new HashSet<SmartModelRenderer>();
 		
-		float offsetx, offsety, offsetz;
 		scale += .01; //extend beyond feet box
 		
 		SabatonLeft = new SmartModelRenderer(this, 0, 55, missingTexture);

@@ -26,6 +26,7 @@ public class LayerArmor extends ModelBiped {
 		chest = new RendererArmorChest(0);
 		legs = new RendererArmorLegs(0);
 		feet = new RendererArmorFeet(0);
+		head = new RendererArmorHead(0);
 //		System.out.println("=============> Scale set to : " + 
 //				ModConfig.config.getTestValue(ModConfig.Key.ARMOR_SCALE));
 		;
@@ -52,6 +53,7 @@ public class LayerArmor extends ModelBiped {
 		chest.render(entity, f, f1, f2, f3, f4, f5);
 		legs.render(entity, f, f1, f2, f3, f4, f5);
 		feet.render(entity, f, f1, f2, f3, f4, f5);
+		head.render(entity, f, f1, f2, f3, f4, f5);
 	}
 	
 	

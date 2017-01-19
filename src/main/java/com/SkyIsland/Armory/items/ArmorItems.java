@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.SkyIsland.Armory.items.armor.Armor;
 import com.SkyIsland.Armory.items.armor.ArmorFeet;
+import com.SkyIsland.Armory.items.armor.ArmorHead;
 import com.SkyIsland.Armory.items.armor.ArmorLegs;
 import com.SkyIsland.Armory.items.armor.ArmorTorso;
 
@@ -15,7 +16,8 @@ public final class ArmorItems {
 	public static enum Armors {
 		TORSO,
 		LEGS,
-		FEET;
+		FEET,
+		HEAD;
 	}
 	
 	private static Map<Armors, Armor> itemMap;
@@ -32,6 +34,9 @@ public final class ArmorItems {
 		
 		itemMap.put(Armors.FEET, new ArmorFeet("feet_base"));
 		GameRegistry.registerItem(itemMap.get(Armors.FEET), "feet_base");
+		
+		itemMap.put(Armors.HEAD, new ArmorHead("head_base"));
+		GameRegistry.registerItem(itemMap.get(Armors.HEAD), "head_base");
 		
 	}
 	
