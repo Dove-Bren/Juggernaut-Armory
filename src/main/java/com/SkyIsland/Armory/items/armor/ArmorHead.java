@@ -117,8 +117,16 @@ public class ArmorHead extends Armor {
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.HELM, piece);
 		metalMap = ForgeRecipe.drawMap(new String[]{
-			" ", "  ..  ..", "  ......", "   ....", "   ....", "   ....",
-			"    ..", "   ....", "  ......", " "
+				"          ",
+				"          ",
+				"  ..  ..  ",
+				"   ....   ",
+				"  ......  ",
+				" ..    .. ",
+				" ..    .. ",
+				" .      . ",
+				"          ",
+				"          "
 		});
 		
 		recipe = new ArmorPieceRecipe(piece);
@@ -138,8 +146,16 @@ public class ArmorHead extends Armor {
 		piece.setzOffset(0.5f);
 		pieces.put(Slot.VISOR, piece);
 		metalMap = ForgeRecipe.drawMap(new String[]{
-				" ", " ", "     .", "  . ..", "  ....", "    ..",
-				"    ..", "   . .", " ", " "
+				"          ",
+				"   ....   ",
+				"  ..  ..  ",
+				" ........ ",
+				" .      . ",
+				"          ",
+				"          ",
+				"          ",
+				"          ",
+				"          "
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
@@ -158,8 +174,16 @@ public class ArmorHead extends Armor {
 //		piece.setzOffset(0.0f);
 		pieces.put(Slot.BEVOR, piece);
 		metalMap = ForgeRecipe.drawMap(new String[]{
-				" ", " ", "    .", "    .. .", "    ....", "    ..",
-				"    ..", "    . .", " ", " "
+				"          ",
+				"          ",
+				"          ",
+				"          ",
+				"          ",
+				" .      . ",
+				" ........ ",
+				"  ..  ..  ",
+				"   ....   ",
+				"          "
 			});
 		recipe = new ArmorPieceRecipe(piece);
 		ForgeManager.instance().registerForgeRecipe(new ForgeRecipe(
