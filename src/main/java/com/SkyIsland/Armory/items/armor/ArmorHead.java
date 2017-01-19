@@ -40,15 +40,15 @@ public class ArmorHead extends Armor {
 	
 	private static final int GUI_HEIGHT = 71;
 	
-	private static final int[] SUB_COMPONENT_HOFFSET = new int[]{1, 3, 21, 39, 40};
+	private static final int[] SUB_COMPONENT_HOFFSET = new int[]{6, 21, 35};
 	
-	private static final int[] SUB_COMPONENT_VOFFSET = new int[]{3, 21, 36, 52};
+	private static final int[] SUB_COMPONENT_VOFFSET = new int[]{8, 30, 51};
 	
 	public static enum Slot {
-		COMB(false, 2, 1),
-		HELM(true, 2, 3),
-		VISOR(true, 0, 2),
-		BEVOR(true, 4, 2);
+		COMB(false, 1, 2),
+		HELM(true, 1, 0),
+		VISOR(true, 0, 1),
+		BEVOR(true, 2, 1);
 		
 		/**
 		 * Does this slot contribute protection bonuses?
