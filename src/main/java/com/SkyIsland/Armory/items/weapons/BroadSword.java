@@ -1,18 +1,19 @@
 package com.SkyIsland.Armory.items.weapons;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.SkyIsland.Armory.api.IWeaponTemplate;
 import com.SkyIsland.Armory.api.WeaponCraftingManager;
-import com.SkyIsland.Armory.api.WeaponCraftingManager.WeaponRecipe;
+import com.SkyIsland.Armory.api.WeaponRecipe;
+import com.SkyIsland.Armory.api.WeaponRecipe.Restriction;
 import com.SkyIsland.Armory.items.common.NestedSlotInventory;
 import com.SkyIsland.Armory.items.weapons.components.EnumWeaponComponents;
 import com.SkyIsland.Armory.items.weapons.components.WeaponComponent;
 import com.SkyIsland.Armory.mechanics.DamageType;
-import com.google.common.collect.Lists;
 
 import net.minecraft.item.ItemStack;
 
@@ -31,12 +32,18 @@ public class BroadSword extends ASword {
 		//IWeaponTemplate template = 
 		
 		final BroadSword sword = this;
+		Map<WeaponComponent, Restriction> parts =
+				new HashMap<WeaponComponent, Restriction>();
+		
+		parts.put(EnumWeaponComponents.BLADE_MEDIUM.getComponent(), Restriction.REQUIRED);
+		parts.put(EnumWeaponComponents.GUARD_LARGE.getComponent(), Restriction.REQUIRED);
+		parts.put(EnumWeaponComponents.HANDLE_MEDIUM.getComponent(), Restriction.REQUIRED);
+		parts.put(EnumWeaponComponents.POMMEL_TAIL.getComponent(), Restriction.OPTIONAL);
+		
+		
 		WeaponCraftingManager.instance.registerRecipe(
 				new WeaponRecipe(
-						Lists.newArrayList(EnumWeaponComponents.BLADE_MEDIUM.getComponent(),
-								EnumWeaponComponents.GUARD_LARGE.getComponent(),
-								EnumWeaponComponents.HANDLE_MEDIUM.getComponent(),
-								EnumWeaponComponents.POMMEL_TAIL.getComponent()),
+						parts,
 						new IWeaponTemplate() {
 							public ItemStack construct(List<ItemStack> components) {
 								return sword.construct(components.get(0), components.get(1), components.get(2), components.get(3));

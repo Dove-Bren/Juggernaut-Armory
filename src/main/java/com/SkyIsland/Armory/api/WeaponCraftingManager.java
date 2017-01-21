@@ -3,7 +3,7 @@ package com.SkyIsland.Armory.api;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.SkyIsland.Armory.items.weapons.components.WeaponComponent;
+import net.minecraft.item.ItemStack;
 
 public class WeaponCraftingManager {
 	
@@ -31,7 +31,7 @@ public class WeaponCraftingManager {
 	 * will match a recipe that begins with the list of parts.
 	 * @return
 	 */
-	public boolean isValid(List<WeaponComponent> parts, boolean full) {
+	public boolean isValid(List<ItemStack> parts, boolean full) {
 		if (recipes.isEmpty())
 			return false;
 		
@@ -49,7 +49,7 @@ public class WeaponCraftingManager {
 	 * @return The first recipe for which <em>isValid(parts, true)</em>
 	 * returns true.
 	 */
-	public WeaponRecipe getMatch(List<WeaponComponent> parts) {
+	public WeaponRecipe getMatch(List<ItemStack> parts) {
 		if (recipes.isEmpty())
 			return null;
 		
