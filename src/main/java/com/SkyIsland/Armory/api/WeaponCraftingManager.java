@@ -1,67 +1,11 @@
 package com.SkyIsland.Armory.api;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.SkyIsland.Armory.items.weapons.components.WeaponComponent;
 
 public class WeaponCraftingManager {
-
-	public static class WeaponRecipe {
-		
-		private List<WeaponComponent> requiredParts;
-		private IWeaponTemplate template;
-		
-		/**
-		 * Creates a weapon recipe on the given list of components.
-		 * @param requiredComponents
-		 * @param template
-		 */
-		public WeaponRecipe(List<WeaponComponent> requiredComponents,
-				IWeaponTemplate template) {
-			this.requiredParts = requiredComponents;
-			this.template = template;
-		}
-		
-		/**
-		 * Checks to see if the given parts match (so far) this recipe.
-		 * If checking for full match, will only return true if the entire
-		 * recipe is matched and there is no extra. If false, just checks
-		 * to see if what we have so far (parts) is inline with this recipe.
-		 * @param parts The current parts.
-		 * @param full whether to see if it's an exact match (parts == recipe components)
-		 * or if the given parts are just headed in the direction of this recipe (blade,hilt > blade,hilt,pommel)
-		 * @return
-		 */
-		public boolean match(List<WeaponComponent> parts, boolean full) {
-			if (parts.isEmpty())
-				return !full;
-			
-			Iterator<WeaponComponent> itIn = parts.iterator(),
-			itReq = requiredParts.iterator();
-			
-			while (itIn.hasNext()) {
-				if (!itReq.hasNext()) //ran out of required materials, but still have some in input
-					return false;
-				
-				if (!itIn.next().equals(itReq.next()))
-					return false;
-			}
-			
-			if (itReq.hasNext()) {
-				//still have some in the required list
-				return (!full);
-			}
-			
-			return true; //perfect match. works on full too
-		}
-		
-		public IWeaponTemplate getTemplate() {
-			return template;
-		}
-		
-	}
 	
 	public static WeaponCraftingManager instance;
 	

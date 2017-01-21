@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WeaponComponent extends AComponent {
 	
 	private static final String NBT_DAMAGE_PREFIX = "damageValues";
+	private static final String NBT_COMP_ID = "wcomp_id";
 	
 	protected String modelSuffix;
 	protected Map<DamageType, Float> damageRatios;
@@ -140,6 +141,42 @@ public class WeaponComponent extends AComponent {
 			return 0.0f;
 		
 		return durabilityRate * material.getRawDurability();
+	}
+	
+	public void stampCompID(ItemStack component) {
+		NBTTagCompound nbt = component.getTagCompound();
+		if (nbt == null) {
+			nbt = new NBTTagCompound();
+			component.setTagCompound(nbt);
+		}
+		
+		nbt.setString(NBT_COMP_ID, modelSuffix);
+		
+		component.setTagCompound(nbt);
+	}
+	
+	public String getCompID(ItemStack component) {
+		NBTTagCompound nbt = component.getTagCompound();
+		if (nbt == null) {
+			nbt = new NBTTagCompound();
+			component.setTagCompound(nbt);
+		}
+		
+		return nbt.getString(NBT_COMP_ID);
+	}
+	
+	/**
+	 * Checks whether the given item is an instance of this same
+	 * component.
+	 * @return true if the item were that like the result of
+	 * a {@link #constructPiece(ExtendedMaterial, float)} method call.
+	 */
+	public boolean matchesComponent(ItemStack component) {
+		String id = getCompID(component);
+		if (id == null || id.trim().isEmpty())
+			return false;
+		
+		return id.equals(modelSuffix);
 	}
 	
 }
