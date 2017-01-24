@@ -40,6 +40,12 @@ public class BroadSword extends ASword {
 		parts.put(EnumWeaponComponents.HANDLE_MEDIUM.getComponent(), Restriction.REQUIRED);
 		parts.put(EnumWeaponComponents.POMMEL_TAIL.getComponent(), Restriction.OPTIONAL);
 		
+//		There isn't any way for parts to be created right now.
+//		In addition, there isn't a table or RIG that can hold the 
+//		pieces and initialize the formation process of the Weapon.
+//		Considering adding more complicated recipes, to help distringuish
+//		different parts. The 10x10 map is getting kind of crowded already.
+//		Maybe shape, reheat, shape, etc could be a part.
 		
 		WeaponCraftingManager.instance.registerRecipe(
 				new WeaponRecipe(
