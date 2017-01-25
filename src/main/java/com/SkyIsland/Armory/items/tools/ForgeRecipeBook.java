@@ -67,7 +67,7 @@ public class ForgeRecipeBook extends ArmoryBook {
 	private ArmoryBookScreen generateGui(EntityPlayer player) {
 		List<IBookPage> pages = new LinkedList<IBookPage>();
 		pages.add(new PlainTextPage(""));
-		pages.add(new HSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/recipe_book_front.png"), 75, 75, 0, 0, 75, 75, null), new PlainTextPage("A Smith's Guide")));
+		pages.add(new HSplitPage(new ImagePage(new ResourceLocation(Armory.MODID + ":textures/gui/recipe_book_front.png"), 75, 75, 0, 0, 75, 75, null), new PlainTextPage("The Smith's Recipe Book")));
 		
 		pages.add(new PlainTextPage("Within this book are your notes on what you've learned about smithing. You've jotted down what you've discovered, and what you think each piece should look like."));
 		pages.add(new PlainTextPage("You are certain you can learn more as you gain experience, and will commit your knowledge here as you learn more."));

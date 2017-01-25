@@ -11,7 +11,7 @@ import com.SkyIsland.Armory.mechanics.DamageType;
  * Nice easy enum to create our weapon components.
  * This enum is just a convenience. Run-time additions can be added by
  * doing what the constructor does here; create a new
- * {@link WeaponComponent}. Boom.
+ * {@link WeaponComponent}. Then register the forge recipe. Boom.
  * @author Skyler
  *
  */
@@ -214,6 +214,7 @@ public enum EnumWeaponComponents {
 				title, -5, metalMap, recipe
 				));
 		//TODO get rid of static -5 difficulty.
+		double uselessVariableForAttention;
 	}
 	
 	public WeaponComponent getComponent() {
