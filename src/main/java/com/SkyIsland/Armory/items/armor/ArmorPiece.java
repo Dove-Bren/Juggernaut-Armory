@@ -67,7 +67,7 @@ public class ArmorPiece extends AComponent {
 		
 		this.maxStackSize = 1;
 		this.setMaxDamage(100);
-		this.setCreativeTab(Armory.creativeTab);
+		//this.setCreativeTab(Armory.creativeTab);
 		this.canRepair = false;
 		this.setUnlocalizedName("armorpiece_" + itemKey);
 	}
