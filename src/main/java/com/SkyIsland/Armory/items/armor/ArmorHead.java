@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ArmorHead extends Armor {
 
-	private static final ResourceLocation TEXT = new ResourceLocation(Armory.MODID + ":textures/gui/container/torso_head.png");
+	private static final ResourceLocation TEXT = new ResourceLocation(Armory.MODID + ":textures/gui/container/head_back.png");
 	
 	private static final int GUI_WIDTH = 57;
 	
